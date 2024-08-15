@@ -9,7 +9,9 @@ jobs:
     name: conventional commits
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: webiny/action-conventional-commits@v1.3.0
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: conventional commits check
+        uses: webiny/action-conventional-commits@v1.3.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
