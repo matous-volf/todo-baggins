@@ -5,7 +5,8 @@ on:
     types: [ opened, synchronize, reopened, edited ]
 
 jobs:
-  validate-pr-title:
+  build:
+    name: conventional pull requests
     runs-on: ubuntu-22.04
     steps:
       - name: conventional pull requests check
