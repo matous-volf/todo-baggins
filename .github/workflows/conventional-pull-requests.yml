@@ -4,11 +4,19 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened, edited ]
 
+permissions: { }
+
 jobs:
-  validate-pr-title:
+  build:
+    name: conventional pull requests
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      pull-requests: read
+      packages: read
+      statuses: write
     steps:
-      - name: PR Conventional Commit Validation
+      - name: conventional pull requests check
         uses: ytanikin/PRConventionalCommits@1.1.0
         with:
           task_types: '["build","chore","ci","docs","feat","fix","perf","refactor","revert","style","test"]'
