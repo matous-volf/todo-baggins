@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      dockerfile: docker/dev/app/Dockerfile
+    ports: [ "8000:8000" ]
+    volumes:
+      - .:/srv/app
+      - /srv/app/.git/
+      - /srv/app/.dioxus/
+      - /srv/app/dist/
+      - /srv/app/debug/
+      - /srv/app/docker/
+      - /srv/app/node_modules/
+      - /srv/app/static/
+      - /srv/app/target/
+      - /dev/null:/srv/app/docker-compose-dev.yml
+      - /dev/null:/srv/app/docker-compose-prod.yml
+    restart: always
+    depends_on: [ "db" ]
+
+  db:
+    image: postgres:16.4-bookworm
+    environment:
+      POSTGRES_DB: todo_baggins
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes: [ "db_data:/var/lib/postgresql/data" ]
+    restart: always
+
+volumes:
+  db_data:

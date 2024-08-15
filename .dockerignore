@@ -1,0 +1,11 @@
+/.dioxus/
+/.git/
+/.github/
+/dist/
+/debug/
+/docker/
+/node_modules/
+/static/
+/target/
+/docker-compose-dev.yml
+/docker-compose-prod.yml
