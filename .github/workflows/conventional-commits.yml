@@ -4,10 +4,17 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened, edited ]
 
+permissions: { }
+
 jobs:
   build:
     name: conventional commits
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      pull-requests: read
+      packages: read
+      statuses: write
     steps:
       - name: checkout code
         uses: actions/checkout@v3
