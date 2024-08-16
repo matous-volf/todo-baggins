@@ -9,7 +9,14 @@ edition = "2021"
 [dependencies]
 diesel = { version = "2.2.2", features = ["postgres"] }
 
-dioxus = { version = "0.5", features = ["web", "router"] }
+dioxus = { version = "0.5", features = ["fullstack", "router"] }
 
 # Debug
 dioxus-logger = "0.5.1"
+dotenvy = "0.15.7"
+serde = "1.0.208"
+
+[features]
+default = []
+server = ["dioxus/axum"]
+web = ["dioxus/web"]
