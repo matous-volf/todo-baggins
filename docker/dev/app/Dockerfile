@@ -7,4 +7,6 @@ RUN apt-get update && apt-get install -y nodejs npm
 COPY . /srv/app
 WORKDIR /srv/app
 
+RUN npm install
+
 CMD npm run watch & dx serve --port 8000
