@@ -3,7 +3,6 @@
 /.github/
 /dist/
 /debug/
-/docker/
 /node_modules/
 /static/
 /target/

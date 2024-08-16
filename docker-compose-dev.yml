@@ -9,7 +9,6 @@ services:
       - /srv/app/.dioxus/
       - /srv/app/dist/
       - /srv/app/debug/
-      - /srv/app/docker/
       - /srv/app/node_modules/
       - /srv/app/static/
       - /srv/app/target/
