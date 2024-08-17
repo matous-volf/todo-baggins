@@ -11,4 +11,5 @@ RUN npm install
 
 COPY docker/dev/app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
