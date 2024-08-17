@@ -11,6 +11,13 @@ RUN npm install
 
 COPY docker/dev/app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+RUN chown -R 1000:1000 /srv/app
+RUN chown -R 1000:1000 /usr/local/cargo
+RUN mkdir -p /.local/share/dioxus
+RUN chown -R 1000:1000 /.local/share/dioxus
+
 HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
-USER root
+
+USER 1000:1000
+
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
