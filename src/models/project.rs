@@ -6,8 +6,18 @@ use serde::{Deserialize, Serialize};
 #[diesel(table_name = crate::schema::projects)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Project {
-    pub(crate) id: i32,
-    pub(crate) title: String,
+    id: i32,
+    title: String,
+}
+
+impl Project {
+    pub fn id(&self) -> i32 {
+        self.id
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
 }
 
 #[derive(Insertable, Serialize, Deserialize)]
