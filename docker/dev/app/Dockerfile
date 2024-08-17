@@ -11,10 +11,10 @@ RUN npm install
 
 COPY docker/dev/app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chown -R 1000:1000 /srv/app
-RUN chown -R 1000:1000 /usr/local/cargo
-RUN mkdir -p /.local/share/dioxus
-RUN chown -R 1000:1000 /.local/share/dioxus
+RUN chown -R 1000:1000 /srv/app && \
+    chown -R 1000:1000 /usr/local/cargo && \
+    mkdir -p /.local/share/dioxus && \
+    chown -R 1000:1000 /.local/share/dioxus
 
 HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
 
