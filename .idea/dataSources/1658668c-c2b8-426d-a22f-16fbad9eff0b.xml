@@ -11,9 +11,9 @@
 4||10|c|G
 4||10|C|G
 4||10|T|G</Grants>
-      <IntrospectionStateNumber>745</IntrospectionStateNumber>
+      <IntrospectionStateNumber>767</IntrospectionStateNumber>
       <ServerVersion>16.4</ServerVersion>
-      <StartupTime>1723806748</StartupTime>
+      <StartupTime>1723847104</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -1412,7 +1412,7 @@ true posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>745</IntrospectionStateNumber>
+      <IntrospectionStateNumber>767</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>app</OwnerName>
     </database>
@@ -4831,58 +4831,72 @@ true posixrules
     <schema id="264" parent="3" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>745</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-08-16.11:25:02</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>767</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-08-16.22:33:41</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
     </schema>
     <routine id="265" parent="264" name="diesel_manage_updated_at">
       <ArgumentsDefinition>_tbl regclass</ArgumentsDefinition>
-      <ObjectId>16395</ObjectId>
+      <ObjectId>16422</ObjectId>
       <ResultsDefinition>void</ResultsDefinition>
       <Rows>0.0</Rows>
       <SourceTextLength>166</SourceTextLength>
-      <StateNumber>744</StateNumber>
+      <StateNumber>761</StateNumber>
       <LanguageName>plpgsql</LanguageName>
       <OwnerName>app</OwnerName>
     </routine>
     <routine id="266" parent="264" name="diesel_set_updated_at">
-      <ObjectId>16396</ObjectId>
+      <ObjectId>16423</ObjectId>
       <PgRoutineKind>pg-trigger</PgRoutineKind>
       <ResultsDefinition>trigger</ResultsDefinition>
       <Rows>0.0</Rows>
       <SourceTextLength>201</SourceTextLength>
-      <StateNumber>744</StateNumber>
+      <StateNumber>761</StateNumber>
       <LanguageName>plpgsql</LanguageName>
       <OwnerName>app</OwnerName>
     </routine>
-    <table id="267" parent="264" name="__diesel_schema_migrations">
+    <sequence id="267" parent="264" name="projects_id_seq">
+      <ObjectId>16424</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>762</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <OwnerName>app</OwnerName>
+    </sequence>
+    <table id="268" parent="264" name="__diesel_schema_migrations">
       <ObjectId>16389</ObjectId>
       <StateNumber>743</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>app</OwnerName>
     </table>
-    <argument id="268" parent="265">
+    <table id="269" parent="264" name="projects">
+      <ObjectId>16425</ObjectId>
+      <StateNumber>762</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>app</OwnerName>
+    </table>
+    <argument id="270" parent="265">
       <ArgumentDirection>R</ArgumentDirection>
       <StoredType>void|0s</StoredType>
     </argument>
-    <argument id="269" parent="265" name="_tbl">
+    <argument id="271" parent="265" name="_tbl">
       <Position>1</Position>
       <StoredType>regclass|0s</StoredType>
     </argument>
-    <argument id="270" parent="266">
+    <argument id="272" parent="266">
       <ArgumentDirection>R</ArgumentDirection>
       <StoredType>trigger|0s</StoredType>
     </argument>
-    <column id="271" parent="267" name="version">
+    <column id="273" parent="268" name="version">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>743</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="272" parent="267" name="run_on">
+    <column id="274" parent="268" name="run_on">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
@@ -4890,7 +4904,7 @@ true posixrules
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <index id="273" parent="267" name="__diesel_schema_migrations_pkey">
+    <index id="275" parent="268" name="__diesel_schema_migrations_pkey">
       <ColNames>version</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16393</ObjectId>
@@ -4902,12 +4916,44 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="274" parent="267" name="__diesel_schema_migrations_pkey">
+    <key id="276" parent="268" name="__diesel_schema_migrations_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16394</ObjectId>
       <Primary>1</Primary>
       <StateNumber>743</StateNumber>
       <UnderlyingIndexId>16393</UnderlyingIndexId>
+    </key>
+    <column id="277" parent="269" name="id">
+      <DefaultExpression>nextval(&apos;projects_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>762</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <SequenceId>16424</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="278" parent="269" name="title">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>762</StateNumber>
+      <StoredType>text|0s</StoredType>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="279" parent="269" name="projects_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16431</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>762</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="280" parent="269" name="projects_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16432</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>762</StateNumber>
+      <UnderlyingIndexId>16431</UnderlyingIndexId>
     </key>
   </database-model>
 </dataSource>
