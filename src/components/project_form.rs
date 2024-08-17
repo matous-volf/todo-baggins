@@ -3,7 +3,7 @@ use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 
 #[component]
-pub(crate) fn FormProject(onsubmit: EventHandler<String>) -> Element {
+pub(crate) fn ProjectForm(onsubmit: EventHandler<String>) -> Element {
     rsx! {
         form {
             onsubmit: move |event| {
