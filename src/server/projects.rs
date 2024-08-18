@@ -8,11 +8,6 @@ use dioxus::prelude::*;
 use validator::Validate;
 
 #[server]
-pub(crate) async fn testing(input: i32) -> Result<i32, ServerFnError> {
-    Ok(input + 1)
-}
-
-#[server]
 pub(crate) async fn create_project(
     new_project: NewProject,
 ) -> Result<Project, ServerFnError<ErrorVec<ProjectCreateError>>> {
