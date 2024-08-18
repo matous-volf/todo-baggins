@@ -22,17 +22,18 @@ pub(crate) async fn create_project(
         .validate()
         .map_err::<ErrorVec<ProjectCreateError>, _>(|errors| errors.into())?;
 
-    let mut connection =
-        establish_database_connection().or::<ErrorVec<ProjectCreateError>>(Err(vec![
-            ProjectCreateError::Error(Error::ServerInternal),
-        ]
-        .into()))?;
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<ProjectCreateError>, _>(
+            |_| vec![ProjectCreateError::Error(Error::ServerInternal), ].into()
+        )?;
 
     let new_project = diesel::insert_into(projects::table)
         .values(&new_project)
         .returning(Project::as_returning())
         .get_result(&mut connection)
-        .expect("error saving a new project");
+        .map_err::<ErrorVec<ProjectCreateError>, _>(
+            |_| vec![ProjectCreateError::Error(Error::ServerInternal), ].into()
+        )?;
 
     Ok(new_project)
 }
