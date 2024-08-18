@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "tailwindcss": "^3.4.6"
+    "tailwindcss": "^3.4.10"
   },
   "scripts": {
     "build": "tailwindcss -c src/styles/tailwind.config.js -i src/styles/tailwind.css -o assets/styles/tailwind_output.css",
