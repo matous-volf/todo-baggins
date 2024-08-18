@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      dockerfile: docker/dev/app/Dockerfile
+    volumes:
+      - ./.env.dev:/srv/app/.env
+      - ./assets:/srv/app/assets
+      - ./src:/srv/app/src
+      - ./migrations:/srv/app/migrations
+      - ./Cargo.lock:/srv/app/Cargo.lock
+      - ./Cargo.toml:/srv/app/Cargo.toml
+      - ./diesel.toml:/srv/app/diesel.toml
+      - ./Dioxus.toml:/srv/app/Dioxus.toml
+      - ./package.json:/srv/app/package.json
+      - ./package-lock.json:/srv/app/package-lock.json
+    restart: always
+    ports: [ "8000:8000" ]
+    depends_on: [ "db" ]
+
+  db:
+    image: postgres:16.4-bookworm
+    volumes: [ "db_data:/var/lib/postgresql/data" ]
+    ports: [ "5432:5432" ]
+    environment:
+      POSTGRES_DB: todo_baggins
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    restart: always
+
+volumes:
+  db_data:
