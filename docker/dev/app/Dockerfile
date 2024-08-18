@@ -20,4 +20,4 @@ HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
 
 USER 1000:1000
 
-CMD sh docker/dev/app/entrypoint.sh
+CMD ["sh", "docker/dev/app/entrypoint.sh"]
