@@ -1,6 +1,10 @@
 use crate::schema::projects;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use validator::Validate;
+
+const TITLE_LENGTH_MIN: u64 = 1;
+const TITLE_LENGTH_MAX: u64 = 255;
 
 #[derive(Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = crate::schema::projects)]
@@ -20,8 +24,19 @@ impl Project {
     }
 }
 
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
 #[diesel(table_name = projects)]
-pub struct NewProject<'a> {
-    pub title: &'a str,
+pub struct NewProject {
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
+    pub title: String,
+}
+
+impl NewProject {
+    pub fn new(title: String) -> Self {
+        Self { title }
+    }
 }

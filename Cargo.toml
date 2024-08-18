@@ -15,6 +15,7 @@ dioxus = { version = "0.5", features = ["fullstack", "router"] }
 dioxus-logger = "0.5.1"
 dotenvy = "0.15.7"
 serde = "1.0.208"
+validator = { version = "0.18.1", features = ["derive"] }
 
 [features]
 default = []
