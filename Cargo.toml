@@ -1,0 +1,23 @@
+[package]
+name = "todo-baggins"
+version = "0.1.0"
+authors = ["Matouš Volf <66163112+matous-volf@users.noreply.github.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+diesel = { version = "2.2.2", features = ["postgres"] }
+
+dioxus = { version = "0.5", features = ["fullstack", "router"] }
+
+# Debug
+dioxus-logger = "0.5.1"
+dotenvy = "0.15.7"
+serde = "1.0.208"
+validator = { version = "0.18.1", features = ["derive"] }
+
+[features]
+default = []
+server = ["dioxus/axum"]
+web = ["dioxus/web"]

@@ -1,0 +1,10 @@
+/target/
+/dist/
+/static/
+/.dioxus/
+/node_modules/
+
+**/*.rs.bk
+
+.env
+.env.prod
