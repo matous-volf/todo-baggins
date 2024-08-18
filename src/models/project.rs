@@ -27,11 +27,7 @@ impl Project {
 #[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
 #[diesel(table_name = projects)]
 pub struct NewProject {
-    #[validate(length(
-        min = "TITLE_LENGTH_MIN",
-        max = "TITLE_LENGTH_MAX",
-        code = "title_length"
-    ))]
+    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
     pub title: String,
 }
 
