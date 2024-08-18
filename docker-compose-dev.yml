@@ -3,6 +3,7 @@ services:
     build:
       dockerfile: docker/dev/app/Dockerfile
     volumes:
+      - ./.env.dev:/srv/app/.env
       - ./assets:/srv/app/assets
       - ./src:/srv/app/src
       - ./migrations:/srv/app/migrations
