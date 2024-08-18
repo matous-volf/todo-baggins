@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 mod components;
+mod errors;
 mod models;
 mod route;
 mod schema;

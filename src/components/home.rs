@@ -10,7 +10,7 @@ pub(crate) fn Home() -> Element {
         ProjectForm {
             onsubmit: move |title| {
                 spawn(async move {
-                    let _ = create_project(title).await;
+                    create_project(title).await;
                 });
             }
         }
