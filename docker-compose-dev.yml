@@ -13,7 +13,6 @@ services:
       - ./Dioxus.toml:/srv/app/Dioxus.toml
       - ./package.json:/srv/app/package.json
       - ./package-lock.json:/srv/app/package-lock.json
-      - ./tailwind.config.js:/srv/app/tailwind.config.js
     restart: always
     ports: [ "8000:8000" ]
     depends_on: [ "db" ]
