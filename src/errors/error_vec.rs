@@ -37,7 +37,7 @@ impl<T: Display> Display for ErrorVec<T> {
 impl<T> FromStr for ErrorVec<T> {
     type Err = ();
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(_: &str) -> Result<Self, Self::Err> {
         Ok(ErrorVec { errors: Vec::new() })
     }
 }
