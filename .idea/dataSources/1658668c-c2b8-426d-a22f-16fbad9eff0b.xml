@@ -3,17 +3,9 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G</Grants>
-      <IntrospectionStateNumber>767</IntrospectionStateNumber>
+      <IntrospectionStateNumber>785</IntrospectionStateNumber>
       <ServerVersion>16.4</ServerVersion>
-      <StartupTime>1723847104</StartupTime>
+      <StartupTime>1724062819</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -1412,7 +1404,7 @@ true posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>767</IntrospectionStateNumber>
+      <IntrospectionStateNumber>785</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>app</OwnerName>
     </database>
@@ -4831,8 +4823,8 @@ true posixrules
     <schema id="264" parent="3" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>767</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-08-16.22:33:41</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>785</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-08-19.17:09:45</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4873,30 +4865,36 @@ true posixrules
     </table>
     <table id="269" parent="264" name="projects">
       <ObjectId>16425</ObjectId>
-      <StateNumber>762</StateNumber>
+      <StateNumber>781</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>app</OwnerName>
     </table>
-    <argument id="270" parent="265">
+    <table id="270" parent="264" name="tasks">
+      <ObjectId>16446</ObjectId>
+      <StateNumber>783</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>app</OwnerName>
+    </table>
+    <argument id="271" parent="265">
       <ArgumentDirection>R</ArgumentDirection>
       <StoredType>void|0s</StoredType>
     </argument>
-    <argument id="271" parent="265" name="_tbl">
+    <argument id="272" parent="265" name="_tbl">
       <Position>1</Position>
       <StoredType>regclass|0s</StoredType>
     </argument>
-    <argument id="272" parent="266">
+    <argument id="273" parent="266">
       <ArgumentDirection>R</ArgumentDirection>
       <StoredType>trigger|0s</StoredType>
     </argument>
-    <column id="273" parent="268" name="version">
+    <column id="274" parent="268" name="version">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>743</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="274" parent="268" name="run_on">
+    <column id="275" parent="268" name="run_on">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>2</Position>
@@ -4904,7 +4902,7 @@ true posixrules
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <index id="275" parent="268" name="__diesel_schema_migrations_pkey">
+    <index id="276" parent="268" name="__diesel_schema_migrations_pkey">
       <ColNames>version</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16393</ObjectId>
@@ -4916,14 +4914,14 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="276" parent="268" name="__diesel_schema_migrations_pkey">
+    <key id="277" parent="268" name="__diesel_schema_migrations_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16394</ObjectId>
       <Primary>1</Primary>
       <StateNumber>743</StateNumber>
       <UnderlyingIndexId>16393</UnderlyingIndexId>
     </key>
-    <column id="277" parent="269" name="id">
+    <column id="278" parent="269" name="id">
       <DefaultExpression>nextval(&apos;projects_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4932,14 +4930,14 @@ true posixrules
       <SequenceId>16424</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="278" parent="269" name="title">
+    <column id="279" parent="269" name="title">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>762</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <index id="279" parent="269" name="projects_pkey">
+    <index id="280" parent="269" name="projects_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16431</ObjectId>
@@ -4948,12 +4946,69 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="280" parent="269" name="projects_pkey">
+    <key id="281" parent="269" name="projects_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16432</ObjectId>
       <Primary>1</Primary>
       <StateNumber>762</StateNumber>
       <UnderlyingIndexId>16431</UnderlyingIndexId>
+    </key>
+    <column id="282" parent="270" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>783</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="283" parent="270" name="title">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>783</StateNumber>
+      <StoredType>text|0s</StoredType>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="284" parent="270" name="deadline">
+      <Position>3</Position>
+      <StateNumber>783</StateNumber>
+      <StoredType>date|0s</StoredType>
+      <TypeId>1082</TypeId>
+    </column>
+    <column id="285" parent="270" name="category">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>783</StateNumber>
+      <StoredType>jsonb|0s</StoredType>
+      <TypeId>3802</TypeId>
+    </column>
+    <column id="286" parent="270" name="project_id">
+      <Position>5</Position>
+      <StateNumber>783</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <foreign-key id="287" parent="270" name="tasks_project_id_fkey">
+      <ColNames>project_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16453</ObjectId>
+      <StateNumber>783</StateNumber>
+      <RefKeyColPositions>1</RefKeyColPositions>
+      <RefTableId>16425</RefTableId>
+    </foreign-key>
+    <index id="288" parent="270" name="tasks_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16451</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>783</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="289" parent="270" name="tasks_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16452</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>783</StateNumber>
+      <UnderlyingIndexId>16451</UnderlyingIndexId>
     </key>
   </database-model>
 </dataSource>
