@@ -22,12 +22,12 @@ impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
                         .map(|validation_error| validation_error.code.as_ref())
                         .map(|code| match code {
                             "title_length" => ProjectCreateError::TitleLengthInvalid,
-                            _ => panic!("unexpected validation error code: {code}"),
+                            _ => panic!("Unexpected validation error code: `{code}`."),
                         })
                         .collect::<Vec<ProjectCreateError>>(),
-                    _ => panic!("unexpected validation error kind"),
+                    _ => panic!("Unexpected validation error kind."),
                 },
-                _ => panic!("unexpected validation field name: {field}"),
+                _ => panic!("Unexpected validation field name: `{field}`."),
             })
             .collect::<Vec<ProjectCreateError>>()
             .into()
