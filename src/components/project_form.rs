@@ -19,6 +19,7 @@ pub(crate) fn ProjectForm() -> Element {
             input {
                 r#type: "text",
                 name: "title",
+                required: true,
                 placeholder: "title"
             }
             button {
