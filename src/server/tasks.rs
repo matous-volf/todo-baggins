@@ -24,7 +24,22 @@ pub(crate) async fn create_task(new_task: NewTask)
         .values(&new_task)
         .returning(Task::as_returning())
         .get_result(&mut connection)
-        .unwrap();
+        .map_err::<ErrorVec<TaskCreateError>, _>(|error| {
+            let error = match error {
+                diesel::result::Error::DatabaseError(
+                    diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
+                ) => {
+                    match info.constraint_name() { 
+                        Some("tasks_project_id_fkey") => TaskCreateError::ProjectNotFound,
+                        _ => TaskCreateError::Error(Error::ServerInternal)
+                    }
+                },
+                _ => {
+                    TaskCreateError::Error(Error::ServerInternal)
+                }
+            };
+            vec![error].into()
+        })?;
 
     Ok(new_task)
 }
