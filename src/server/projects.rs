@@ -33,14 +33,20 @@ pub(crate) async fn create_project(new_project: NewProject)
 
 #[server]
 pub(crate) async fn get_projects()
-    -> Result<Vec<Project>, ServerFnError> {
+    -> Result<Vec<Project>, ServerFnError<ErrorVec<Error>>> {
     use crate::schema::projects::dsl::*;
 
-    let mut connection = establish_database_connection()?;
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(
+            |_| vec![Error::ServerInternal].into()
+        )?;
 
     let results = projects
         .select(Project::as_select())
-        .load::<Project>(&mut connection)?;
+        .load::<Project>(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(
+            |_| vec![Error::ServerInternal].into()
+        )?;
 
     Ok(results)
 }
