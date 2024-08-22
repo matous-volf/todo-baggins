@@ -6,7 +6,7 @@ use validator::Validate;
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Clone, Debug)]
 #[diesel(table_name = crate::schema::projects)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Project {
