@@ -1,7 +1,9 @@
 use std::fmt::Display;
 use std::str::FromStr;
+use serde::Deserialize;
+use serde_with::serde_derive::Serialize;
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ErrorVec<T> {
     errors: Vec<T>,
 }
@@ -37,7 +39,7 @@ impl<T: Display> Display for ErrorVec<T> {
 impl<T> FromStr for ErrorVec<T> {
     type Err = ();
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(_: &str) -> Result<Self, Self::Err> {
         Ok(ErrorVec { errors: Vec::new() })
     }
 }

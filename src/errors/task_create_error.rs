@@ -6,12 +6,13 @@ use std::str::FromStr;
 use validator::{ValidationErrors, ValidationErrorsKind};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub enum ProjectCreateError {
+pub enum TaskCreateError {
     TitleLengthInvalid,
+    ProjectNotFound,
     Error(Error),
 }
 
-impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
+impl From<ValidationErrors> for ErrorVec<TaskCreateError> {
     fn from(validation_errors: ValidationErrors) -> Self {
         validation_errors.errors()
             .iter()
@@ -21,31 +22,31 @@ impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
                         .iter()
                         .map(|validation_error| validation_error.code.as_ref())
                         .map(|code| match code {
-                            "title_length" => ProjectCreateError::TitleLengthInvalid,
+                            "title_length" => TaskCreateError::TitleLengthInvalid,
                             _ => panic!("Unexpected validation error code: `{code}`."),
                         })
-                        .collect::<Vec<ProjectCreateError>>(),
+                        .collect::<Vec<TaskCreateError>>(),
                     _ => panic!("Unexpected validation error kind."),
                 },
                 _ => panic!("Unexpected validation field name: `{field}`."),
             })
-            .collect::<Vec<ProjectCreateError>>()
+            .collect::<Vec<TaskCreateError>>()
             .into()
     }
 }
 
 // Has to be implemented for Dioxus server functions.
-impl Display for ProjectCreateError {
+impl Display for TaskCreateError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
 // Has to be implemented for Dioxus server functions.
-impl FromStr for ProjectCreateError {
+impl FromStr for TaskCreateError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(ProjectCreateError::Error(Error::ServerInternal))
+        Ok(TaskCreateError::Error(Error::ServerInternal))
     }
 }

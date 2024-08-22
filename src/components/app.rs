@@ -6,6 +6,9 @@ use dioxus::prelude::*;
 #[component]
 pub(crate) fn App() -> Element {
     rsx! {
-        Router::<Route> {}
+        div {
+            class: "min-h-screen text-white bg-neutral-800",
+            Router::<Route> {}
+        }
     }
 }
