@@ -1,8 +1,15 @@
 /* stylelint-disable */
+
 /* noinspection CssInvalidAtRule */
 @tailwind base;
 /* noinspection CssInvalidAtRule */
 @tailwind components;
 /* noinspection CssInvalidAtRule */
 @tailwind utilities;
+
+html, body, #main {
+    /* noinspection CssInvalidAtRule */
+    @apply min-h-screen;
+}
+
 /* stylelint-enable */
