@@ -12,8 +12,8 @@ pub enum ProjectCreateError {
 }
 
 impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
-    fn from(e: ValidationErrors) -> Self {
-        e.errors()
+    fn from(validation_errors: ValidationErrors) -> Self {
+        validation_errors.errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {
@@ -34,18 +34,18 @@ impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
     }
 }
 
-// has to be implemented for Dioxus server functions
+// Has to be implemented for Dioxus server functions.
 impl Display for ProjectCreateError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-// has to be implemented for Dioxus server functions
+// Has to be implemented for Dioxus server functions.
 impl FromStr for ProjectCreateError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(ProjectCreateError::TitleLengthInvalid)
+        Ok(ProjectCreateError::Error(Error::ServerInternal))
     }
 }
