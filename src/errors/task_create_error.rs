@@ -13,8 +13,8 @@ pub enum TaskCreateError {
 }
 
 impl From<ValidationErrors> for ErrorVec<TaskCreateError> {
-    fn from(e: ValidationErrors) -> Self {
-        e.errors()
+    fn from(validation_errors: ValidationErrors) -> Self {
+        validation_errors.errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {
@@ -35,18 +35,18 @@ impl From<ValidationErrors> for ErrorVec<TaskCreateError> {
     }
 }
 
-// has to be implemented for Dioxus server functions
+// Has to be implemented for Dioxus server functions.
 impl Display for TaskCreateError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-// has to be implemented for Dioxus server functions
+// Has to be implemented for Dioxus server functions.
 impl FromStr for TaskCreateError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(TaskCreateError::TitleLengthInvalid)
+        Ok(TaskCreateError::Error(Error::ServerInternal))
     }
 }
