@@ -22,6 +22,7 @@ html, body, #main {
         font-display: swap;
         src: url("/fonts/inter_variable.woff2") format("woff2");
     }
+
     @font-face {
         font-family: Inter;
         font-style: italic;
