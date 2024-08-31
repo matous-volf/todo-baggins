@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 pub(crate) fn App() -> Element {
     rsx! {
         div {
-            class: "min-h-screen text-white bg-neutral-800",
+            class: "min-h-screen text-zinc-200 bg-zinc-800",
             Router::<Route> {}
         }
     }
