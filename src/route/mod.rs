@@ -1,4 +1,3 @@
-use crate::components::home::Home;
 use crate::components::pages::category_inbox_page::CategoryInboxPage;
 use crate::components::pages::category_next_steps_page::CategoryNextStepsPage;
 use crate::components::pages::category_today_page::CategoryTodayPage;
@@ -12,7 +11,6 @@ use crate::components::pages::projects_page::ProjectsPage;
 use crate::components::pages::not_found_page::NotFoundPage;
 use crate::components::layout::Layout;
 use dioxus::prelude::*;
-use crate::models::category::Category;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 #[rustfmt::skip]
