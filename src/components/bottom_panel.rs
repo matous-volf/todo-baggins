@@ -6,6 +6,7 @@ use crate::route::Route;
 
 #[component]
 pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
+    #[allow(clippy::redundant_closure)]
     let mut expanded = use_signal(|| display_form());
     let navigation_expanded = use_signal(|| false);
     let current_route = use_route();
@@ -46,7 +47,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                             on_successful_submit: move |_| {
                                 display_form.set(false);
                             }
-                        } 
+                        }
                     }
                 }
             } else {
