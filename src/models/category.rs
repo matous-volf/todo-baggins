@@ -1,3 +1,4 @@
+use std::hash::Hash;
 use crate::schema::tasks;
 use chrono::{Duration, NaiveDate, NaiveTime};
 use diesel::deserialize::FromSql;
@@ -11,7 +12,7 @@ use serde_with::DurationSeconds;
 use std::io::Write;
 
 #[serde_with::serde_as]
-#[derive(AsExpression, FromSqlRow, Serialize, Deserialize, Hash, Clone, Debug)]
+#[derive(AsExpression, FromSqlRow, Serialize, Deserialize, Clone, Debug)]
 #[diesel(sql_type = Jsonb)]
 pub enum Category {
     Inbox,
@@ -42,6 +43,12 @@ impl Category {
             Category::Done => Box::new(category.contains(json!("Done"))),
             Category::Trash => Box::new(category.contains(json!("Trash"))),
         }
+    }
+}
+
+impl Hash for Category {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        std::mem::discriminant(self).hash(state);
     }
 }
 

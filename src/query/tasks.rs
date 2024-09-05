@@ -13,7 +13,7 @@ pub(crate) fn use_tasks_in_category_query(category: Category)
 
 async fn fetch_tasks_in_category(keys: Vec<QueryKey>) -> QueryResult<QueryValue, QueryErrors> {
     if let Some(QueryKey::TasksInCategory(category)) = keys.first() {
-        match get_tasks_in_category(category.clone()).await { 
+        match get_tasks_in_category(category.clone()).await {
             Ok(tasks) => Ok(QueryValue::Tasks(tasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
             Err(error) => panic!("Unexpected error: {:?}", error)
