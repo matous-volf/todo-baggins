@@ -1,4 +1,3 @@
-use std::fmt::Display;
 use crate::components::category_input::CategoryInput;
 use crate::components::reoccurrence_input::ReoccurrenceIntervalInput;
 use crate::models::category::{CalendarTime, Category, Reoccurrence, ReoccurrenceInterval};
@@ -9,6 +8,8 @@ use chrono::{Duration, NaiveDate};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_query::prelude::use_query_client;
+use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
@@ -52,6 +53,8 @@ pub(crate) fn TaskForm() -> Element {
     let mut category_calendar_has_time = use_signal(|| false);
     let mut category_calendar_reminder_offset_index = use_signal(|| REMINDER_OFFSETS.len() - 1);
 
+    let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
+    
     rsx! {
         form {
             onsubmit: move |event| {
@@ -94,6 +97,10 @@ pub(crate) fn TaskForm() -> Element {
                         .as_value().parse::<i32>().ok().filter(|&id| id > 0),
                     );
                     let _ = create_task(new_task).await;
+                    query_client.invalidate_queries(&[
+                        QueryKey::Tasks, 
+                        QueryKey::TasksInCategory(selected_category())
+                    ]);
                 }
             },
             class: "p-4 flex flex-col gap-4",
