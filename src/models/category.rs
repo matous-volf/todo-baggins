@@ -11,7 +11,7 @@ use serde_with::DurationSeconds;
 use std::io::Write;
 
 #[serde_with::serde_as]
-#[derive(AsExpression, FromSqlRow, Serialize, Deserialize, Clone, Debug)]
+#[derive(AsExpression, FromSqlRow, Serialize, Deserialize, Hash, Clone, Debug)]
 #[diesel(sql_type = Jsonb)]
 pub enum Category {
     Inbox,
@@ -51,6 +51,8 @@ impl PartialEq for Category {
     }
 }
 
+impl Eq for Category {}
+
 impl ToSql<Jsonb, Pg> for Category {
     fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Pg>) -> diesel::serialize::Result {
         let json = serde_json::to_string(self)?;
@@ -74,14 +76,14 @@ impl FromSql<Jsonb, Pg> for Category {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Hash, Clone, Debug)]
 pub enum ReoccurrenceInterval {
     Day,
     Month,
     Year,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Hash, Clone, Debug)]
 pub struct Reoccurrence {
     start_date: NaiveDate,
     interval: ReoccurrenceInterval,
@@ -103,7 +105,7 @@ impl Reoccurrence {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Hash, Clone, Debug)]
 pub struct CalendarTime {
     time: NaiveTime,
     #[serde_as(as = "Option<DurationSeconds<i64>>")]

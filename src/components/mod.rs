@@ -11,4 +11,4 @@ pub(crate) mod sticky_bottom;
 pub(crate) mod category_input;
 pub(crate) mod reoccurrence_input;
 pub(crate) mod layout;
-mod navigation_item;
+pub(crate) mod navigation_item;

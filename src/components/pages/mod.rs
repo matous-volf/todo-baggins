@@ -9,3 +9,4 @@ pub(crate) mod category_done_page;
 pub(crate) mod category_trash_page;
 pub(crate) mod not_found_page;
 pub(crate) mod projects_page;
+pub(crate) mod category_page;

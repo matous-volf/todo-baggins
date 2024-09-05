@@ -1,6 +1,5 @@
 use crate::models::category::Category;
 use crate::models::task::Task;
-use crate::server::tasks::get_tasks_in_category;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
@@ -9,11 +8,12 @@ use dioxus::prelude::*;
 pub(crate) fn TaskList(tasks: Vec<Task>, class: Option<&'static str>) -> Element {
     rsx! {
         div {
-            class: format!("pt-3 px-8 flex flex-col {}", class.unwrap_or("")),
+            class: format!("flex flex-col {}", class.unwrap_or("")),
             for task in tasks {
                 div {
+                    key: "{task.id()}",
                     class: format!(
-                        "pt-5 {} flex flex-row gap-4",
+                        "px-8 pt-5 {} flex flex-row gap-4",
                         if task.deadline().is_some() {
                             "pb-0.5"
                         } else if let Category::Calendar { time, .. } = task.category() {
@@ -32,7 +32,7 @@ pub(crate) fn TaskList(tasks: Vec<Task>, class: Option<&'static str>) -> Element
                     div {
                         class: "flex flex-col",
                         div {
-                            class: "mt-1 grow",
+                            class: "mt-1 grow font-medium",
                             {task.title()}
                         },
                         div {
