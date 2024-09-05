@@ -82,7 +82,8 @@ pub(crate) fn CategoryTodayPage() -> Element {
                     div {
                         "Errors occurred: {errors:?}"
                     }
-                }
+                },
+                value => panic!("Unexpected query result: {value:?}")
             }
             match calendar_tasks_query_result.value() {
                 QueryResult::Ok(QueryValue::Tasks(tasks))
@@ -151,7 +152,8 @@ pub(crate) fn CategoryTodayPage() -> Element {
                     div {
                         "Errors occurred: {errors:?}"
                     }
-                }
+                },
+                value => panic!("Unexpected query result: {value:?}")
             }
         }
     }

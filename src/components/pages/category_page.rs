@@ -27,6 +27,7 @@ pub(crate) fn CategoryPage(category: Category) -> Element {
             div {
                 "Errors occurred: {errors:?}"
             }
-        }
+        },
+        value => panic!("Unexpected query result: {value:?}")
     }
 }

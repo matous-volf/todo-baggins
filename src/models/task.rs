@@ -1,9 +1,8 @@
-use std::cmp::Ordering;
+use crate::models::category::Category;
+use crate::schema::tasks;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::models::category::Category;
-use crate::schema::tasks;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
