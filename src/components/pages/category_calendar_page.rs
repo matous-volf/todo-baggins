@@ -71,7 +71,8 @@ pub(crate) fn CategoryCalendarPage() -> Element {
                 div {
                     "Errors occurred: {errors:?}"
                 }
-            }
+            },
+            value => panic!("Unexpected query result: {value:?}")
         }
     }
 }

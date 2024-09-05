@@ -1,6 +1,6 @@
 use crate::components::category_input::CategoryInput;
 use crate::components::reoccurrence_input::ReoccurrenceIntervalInput;
-use crate::models::category::{CalendarTime, Category, Reoccurrence, ReoccurrenceInterval};
+use crate::models::category::{CalendarTime, Category, Reoccurrence};
 use crate::models::task::NewTask;
 use crate::server::projects::get_projects;
 use crate::server::tasks::create_task;
@@ -33,11 +33,11 @@ const REMINDER_OFFSETS: [Option<Duration>; 17] = [
 ];
 
 #[component]
-pub(crate) fn TaskForm() -> Element {
+pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
     let projects = use_server_future(get_projects)?.unwrap().unwrap();
 
     let route = use_route::<Route>();
-    let mut selected_category = use_signal(|| match route { 
+    let selected_category = use_signal(|| match route { 
         Route::CategorySomedayMaybePage => Category::SomedayMaybe,
         Route::CategoryWaitingForPage => Category::WaitingFor(String::new()),
         Route::CategoryNextStepsPage => Category::NextSteps,
@@ -49,7 +49,7 @@ pub(crate) fn TaskForm() -> Element {
         Route::CategoryLongTermPage => Category::LongTerm,
         _ => Category::Inbox,
     });
-    let mut category_calendar_reoccurrence_interval = use_signal(|| None);
+    let category_calendar_reoccurrence_interval = use_signal(|| None);
     let mut category_calendar_has_time = use_signal(|| false);
     let mut category_calendar_reminder_offset_index = use_signal(|| REMINDER_OFFSETS.len() - 1);
 
@@ -101,6 +101,7 @@ pub(crate) fn TaskForm() -> Element {
                         QueryKey::Tasks, 
                         QueryKey::TasksInCategory(selected_category())
                     ]);
+                    on_successful_submit.call(());
                 }
             },
             class: "p-4 flex flex-col gap-4",
@@ -171,7 +172,7 @@ pub(crate) fn TaskForm() -> Element {
                     }
                 },
                 CategoryInput {
-                    selected_category: selected_category.clone(),
+                    selected_category: selected_category,
                     class: "grow"
                 }
             }
