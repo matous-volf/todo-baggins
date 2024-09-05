@@ -1,10 +1,8 @@
 use crate::models::category::Category;
-use crate::server::tasks::get_tasks_in_category;
 use chrono::NaiveDate;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use std::fmt::format;
 
 #[component]
 pub(crate) fn CategoryInput(selected_category: Signal<Category>, class: Option<&'static str>) -> Element {

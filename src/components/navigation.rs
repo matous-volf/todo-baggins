@@ -1,6 +1,4 @@
 use crate::components::navigation_item::NavigationItem;
-use crate::components::task_list::TaskList;
-use crate::models::category::Category;
 use crate::route::Route;
 use dioxus::prelude::*;
 
