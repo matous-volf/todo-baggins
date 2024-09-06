@@ -4,6 +4,8 @@ diesel::table! {
     projects (id) {
         id -> Int4,
         title -> Text,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 

@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use crate::schema::projects;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -12,6 +13,8 @@ const TITLE_LENGTH_MAX: u64 = 255;
 pub struct Project {
     id: i32,
     title: String,
+    created_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
 }
 
 impl Project {
@@ -21,6 +24,14 @@ impl Project {
 
     pub fn title(&self) -> &str {
         &self.title
+    }
+    
+    pub fn created_at(&self) -> NaiveDateTime {
+        self.created_at
+    }
+    
+    pub fn updated_at(&self) -> NaiveDateTime {
+        self.updated_at
     }
 }
 
