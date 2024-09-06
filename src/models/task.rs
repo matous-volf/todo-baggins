@@ -1,13 +1,13 @@
+use crate::models::category::Category;
+use crate::schema::tasks;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::models::category::Category;
-use crate::schema::tasks;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Clone, Debug)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, PartialEq, Clone, Debug)]
 #[diesel(table_name = crate::schema::tasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Task {
