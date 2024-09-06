@@ -6,12 +6,12 @@ use std::str::FromStr;
 use validator::{ValidationErrors, ValidationErrorsKind};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub enum ProjectCreateError {
+pub enum ProjectError {
     TitleLengthInvalid,
     Error(Error),
 }
 
-impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
+impl From<ValidationErrors> for ErrorVec<ProjectError> {
     fn from(validation_errors: ValidationErrors) -> Self {
         validation_errors.errors()
             .iter()
@@ -21,31 +21,31 @@ impl From<ValidationErrors> for ErrorVec<ProjectCreateError> {
                         .iter()
                         .map(|validation_error| validation_error.code.as_ref())
                         .map(|code| match code {
-                            "title_length" => ProjectCreateError::TitleLengthInvalid,
+                            "title_length" => ProjectError::TitleLengthInvalid,
                             _ => panic!("Unexpected validation error code: `{code}`."),
                         })
-                        .collect::<Vec<ProjectCreateError>>(),
+                        .collect::<Vec<ProjectError>>(),
                     _ => panic!("Unexpected validation error kind."),
                 },
                 _ => panic!("Unexpected validation field name: `{field}`."),
             })
-            .collect::<Vec<ProjectCreateError>>()
+            .collect::<Vec<ProjectError>>()
             .into()
     }
 }
 
 // Has to be implemented for Dioxus server functions.
-impl Display for ProjectCreateError {
+impl Display for ProjectError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
 // Has to be implemented for Dioxus server functions.
-impl FromStr for ProjectCreateError {
+impl FromStr for ProjectError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(ProjectCreateError::Error(Error::ServerInternal))
+        Ok(ProjectError::Error(Error::ServerInternal))
     }
 }
