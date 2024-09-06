@@ -6,6 +6,7 @@ use crate::route::Route;
 
 #[component]
 pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
+    // A signal for delaying the application of styles.
     #[allow(clippy::redundant_closure)]
     let mut expanded = use_signal(|| display_form());
     let navigation_expanded = use_signal(|| false);
@@ -16,6 +17,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
             expanded.set(true);
         } else {
             spawn(async move {
+                // Necessary for a smooth – not instant – height transition.
                 async_std::task::sleep(std::time::Duration::from_millis(500)).await;
                 expanded.set(false);
             });
