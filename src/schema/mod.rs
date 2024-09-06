@@ -16,6 +16,8 @@ diesel::table! {
         deadline -> Nullable<Date>,
         category -> Jsonb,
         project_id -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
