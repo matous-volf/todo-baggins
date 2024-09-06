@@ -12,6 +12,8 @@ use crate::components::pages::not_found_page::NotFoundPage;
 use crate::components::layout::Layout;
 use dioxus::prelude::*;
 
+// All variants have the same postfix because they have to match the component names.
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone, Routable, Debug, PartialEq)]
 #[rustfmt::skip]
 pub(crate) enum Route {
