@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use crate::models::category::Category;
 use crate::schema::tasks;
 use diesel::prelude::*;
@@ -16,6 +17,8 @@ pub struct Task {
     deadline: Option<chrono::NaiveDate>,
     category: Category,
     project_id: Option<i32>,
+    created_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
 }
 
 impl Task {
@@ -37,6 +40,14 @@ impl Task {
 
     pub fn project_id(&self) -> Option<i32> {
         self.project_id
+    }
+
+    pub fn created_at(&self) -> NaiveDateTime {
+        self.created_at
+    }
+
+    pub fn updated_at(&self) -> NaiveDateTime {
+        self.updated_at
     }
 }
 
