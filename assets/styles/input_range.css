@@ -35,7 +35,7 @@ input[type="range"].input-range-reverse::-moz-range-progress {
 }
 
 input[type="range"].input-range-reverse::-moz-range-track {
-    background: rgba(113, 113, 122, 0.5);
+    background: rgba(113 113 122 / 50%);
     height: 0.5rem;
     border-radius: 0.25rem;
 }
