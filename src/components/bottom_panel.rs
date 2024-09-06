@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use crate::components::navigation::Navigation;
 use crate::components::project_form::ProjectForm;
 use crate::components::task_form::TaskForm;
+use crate::models::project::Project;
 use crate::route::Route;
 
 #[component]
@@ -11,9 +12,11 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     let mut expanded = use_signal(|| display_form());
     let navigation_expanded = use_signal(|| false);
     let current_route = use_route();
+    
+    let mut project_being_edited = use_context::<Signal<Option<Project>>>();
 
-    use_effect(use_reactive(&display_form, move |creating_task| {
-        if creating_task() {
+    use_effect(use_reactive(&display_form, move |display_form| {
+        if display_form() {
             expanded.set(true);
         } else {
             spawn(async move {
@@ -27,7 +30,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     rsx! {
         div {
             class: format!(
-                "bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] {}",
+                "pointer-events-auto bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] {}",
                 match (display_form(), current_route, navigation_expanded()) {
                     (false, _, false) => "h-[64px]",
                     (false, _, true) => "h-[128px]",
@@ -39,8 +42,10 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                 match current_route {
                     Route::ProjectsPage => rsx! {
                         ProjectForm {
+                            project: project_being_edited(),
                             on_successful_submit: move |_| {
                                 display_form.set(false);
+                                project_being_edited.set(None);
                             }
                         }
                     },

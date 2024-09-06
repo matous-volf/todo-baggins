@@ -3,18 +3,26 @@ use crate::route::Route;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use crate::components::create_task_button::CreateButton;
+use crate::components::form_open_button::FormOpenButton;
 use crate::components::sticky_bottom::StickyBottom;
+use crate::models::project::Project;
 
 #[component]
 pub(crate) fn Layout() -> Element {
-    let display_form = use_signal(|| false);
+    let mut display_form = use_signal(|| false);
+    let project_being_edited = use_context_provider::<Signal<Option<Project>>>(
+        || Signal::new(None)
+    );
+    
+    use_effect(move || {
+        display_form.set(project_being_edited().is_some());
+    });
     
     rsx! {
         Outlet::<Route> {}
         StickyBottom {
-            CreateButton {
-                creating: display_form,
+            FormOpenButton {
+                opened: display_form,
             }
             BottomPanel {
                 display_form: display_form,
