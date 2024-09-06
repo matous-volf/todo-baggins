@@ -4,6 +4,8 @@ diesel::table! {
     projects (id) {
         id -> Int4,
         title -> Text,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -14,6 +16,8 @@ diesel::table! {
         deadline -> Nullable<Date>,
         category -> Jsonb,
         project_id -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
