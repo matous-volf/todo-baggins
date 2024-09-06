@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use crate::components::navigation::Navigation;
 use crate::components::project_form::ProjectForm;
 use crate::components::task_form::TaskForm;
+use crate::models::project::Project;
 use crate::route::Route;
 
 #[component]
@@ -11,9 +12,11 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     let mut expanded = use_signal(|| display_form());
     let navigation_expanded = use_signal(|| false);
     let current_route = use_route();
+    
+    let mut project_being_edited = use_context::<Signal<Option<Project>>>();
 
-    use_effect(use_reactive(&display_form, move |creating_task| {
-        if creating_task() {
+    use_effect(use_reactive(&display_form, move |display_form| {
+        if display_form() {
             expanded.set(true);
         } else {
             spawn(async move {
@@ -39,8 +42,10 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                 match current_route {
                     Route::ProjectsPage => rsx! {
                         ProjectForm {
+                            project: project_being_edited(),
                             on_successful_submit: move |_| {
                                 display_form.set(false);
+                                project_being_edited.set(None);
                             }
                         }
                     },

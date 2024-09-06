@@ -1,5 +1,5 @@
-use crate::models::project::NewProject;
-use crate::server::projects::create_project;
+use crate::models::project::{NewProject, Project};
+use crate::server::projects::{create_project, edit_project};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
@@ -7,17 +7,28 @@ use dioxus_query::prelude::use_query_client;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 
 #[component]
-pub(crate) fn ProjectForm(on_successful_submit: EventHandler<()>) -> Element {
+pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventHandler<()>)
+                          -> Element {
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
+    
+    let project_for_submit = project.clone();
     
     rsx! {
         form {
             onsubmit: move |event| {
+                let project_clone = project_for_submit.clone();
                 async move {
                     let new_project = NewProject::new(
                         event.values().get("title").unwrap().as_value()
                     );
-                    let _ = create_project(new_project).await;
+                    match project_clone {
+                        Some(project) => {
+                            let _ = edit_project(project.id(), new_project).await;
+                        }
+                        None => {
+                            let _ = create_project(new_project).await;
+                        }
+                    }
                     query_client.invalidate_queries(&[
                         QueryKey::Projects
                     ]);
@@ -35,9 +46,10 @@ pub(crate) fn ProjectForm(on_successful_submit: EventHandler<()>) -> Element {
                     }
                 }
                 input {
-                    r#type: "text",
                     name: "title",
                     required: true,
+                    initial_value: project.map(|project| project.title().to_owned()),
+                    r#type: "text",
                     class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
                     id: "input_title"
                 }
