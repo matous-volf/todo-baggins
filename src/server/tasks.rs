@@ -2,10 +2,11 @@ use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::models::task::{NewTask, Task};
 use crate::server::database_connection::establish_database_connection;
-use diesel::{RunQueryDsl, SelectableHelper};
+use diesel::{QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
 use validator::Validate;
 use crate::errors::task_create_error::TaskCreateError;
+use crate::models::category::Category;
 
 #[server]
 pub(crate) async fn create_task(new_task: NewTask)
@@ -42,4 +43,25 @@ pub(crate) async fn create_task(new_task: NewTask)
         })?;
 
     Ok(new_task)
+}
+
+#[server]
+pub(crate) async fn get_tasks_in_category(filtered_category: Category)
+    -> Result<Vec<Task>, ServerFnError<ErrorVec<Error>>> {
+    use crate::schema::tasks::dsl::*;
+
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(
+            |_| vec![Error::ServerInternal].into()
+        )?;
+
+    let results = tasks
+        .select(Task::as_select())
+        .filter(filtered_category.eq_sql_predicate())
+        .load::<Task>(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(
+            |_| vec![Error::ServerInternal].into()
+        )?;
+
+    Ok(results)
 }

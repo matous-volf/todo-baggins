@@ -1,0 +1,12 @@
+pub(crate) mod category_inbox_page;
+pub(crate) mod category_calendar_page;
+pub(crate) mod category_today_page;
+pub(crate) mod category_waiting_for_page;
+pub(crate) mod category_long_term_page;
+pub(crate) mod category_next_steps_page;
+pub(crate) mod category_someday_maybe_page;
+pub(crate) mod category_done_page;
+pub(crate) mod category_trash_page;
+pub(crate) mod not_found_page;
+pub(crate) mod projects_page;
+pub(crate) mod category_page;
