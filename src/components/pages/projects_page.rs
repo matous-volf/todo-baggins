@@ -1,22 +1,32 @@
 use dioxus::prelude::*;
 use dioxus_query::prelude::QueryResult;
+use crate::models::project::Project;
 use crate::query::projects::use_projects_query;
 use crate::query::QueryValue;
 
 #[component]
 pub(crate) fn ProjectsPage() -> Element {
     let projects_query = use_projects_query();
-    
+    let mut project_being_edited = use_context::<Signal<Option<Project>>>();
+
     rsx! {
         match projects_query.result().value() {
             QueryResult::Ok(QueryValue::Projects(projects))
             | QueryResult::Loading(Some(QueryValue::Projects(projects))) => rsx! {
                 div {
                     class: "flex flex-col",
-                    for project in projects {
+                    for project in projects.clone() {
                         div {
                             key: "{project.id()}",
-                            class: "px-8 py-4",
+                            class: format!(
+                                "px-8 py-4 select-none {}",
+                                if project_being_edited().map(|p| p.id()) == Some(project.id()) {
+                                    "bg-zinc-700"
+                                } else { "" }
+                            ),
+                            onclick: move |_| {
+                                project_being_edited.set(Some(project.clone()));
+                            },
                             {project.title()}
                         }
                     }

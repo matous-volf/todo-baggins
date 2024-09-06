@@ -5,7 +5,7 @@ pub(crate) mod task_form;
 pub(crate) mod task_list;
 pub(crate) mod pages;
 pub(crate) mod navigation;
-pub(crate) mod create_task_button;
+pub(crate) mod form_open_button;
 pub(crate) mod bottom_panel;
 pub(crate) mod sticky_bottom;
 pub(crate) mod category_input;
