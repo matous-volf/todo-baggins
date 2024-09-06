@@ -32,7 +32,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                         div {
                             class: "px-8 flex flex-row items-center gap-2 font-bold",
                             i {
-                                class: "fa-solid fa-water text-xl"
+                                class: "fa-solid fa-water text-xl w-6 text-center"
                             }
                             div {
                                 class: "mt-1",
@@ -110,7 +110,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                                 div {
                                     class: "px-8 flex flex-row items-center gap-2 font-bold",
                                     i {
-                                        class: "fa-solid fa-calendar-xmark text-xl"
+                                        class: "fa-solid fa-calendar-xmark text-xl w-6 text-center"
                                     }
                                     div {
                                         class: "mt-1",
@@ -128,7 +128,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                             div {
                                 class: "px-8 flex flex-row items-center gap-2 font-bold",
                                 i {
-                                    class: "fa-solid fa-calendar-check text-xl"
+                                    class: "fa-solid fa-calendar-check text-xl w-6 text-center"
                                 }
                                 div {
                                     class: "mt-1",
