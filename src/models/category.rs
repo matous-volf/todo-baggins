@@ -83,7 +83,7 @@ impl FromSql<Jsonb, Pg> for Category {
     }
 }
 
-#[derive(Serialize, Deserialize, Hash, Clone, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Hash, Clone, Debug)]
 pub enum ReoccurrenceInterval {
     Day,
     Month,
