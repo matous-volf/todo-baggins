@@ -83,7 +83,7 @@ impl FromSql<Jsonb, Pg> for Category {
     }
 }
 
-#[derive(Serialize, Deserialize, Hash, Clone, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Hash, Clone, Debug)]
 pub enum ReoccurrenceInterval {
     Day,
     Month,
@@ -100,6 +100,10 @@ pub struct Reoccurrence {
 impl Reoccurrence {
     pub fn new(start_date: NaiveDate, interval: ReoccurrenceInterval, length: u32) -> Self {
         Self { start_date, interval, length }
+    }
+    
+    pub fn start_date(&self) -> NaiveDate {
+        self.start_date
     }
     
     pub fn interval(&self) -> &ReoccurrenceInterval {
