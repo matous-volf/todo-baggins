@@ -74,7 +74,7 @@ pub(crate) fn CategoryInput(selected_category: Signal<Category>, class: Option<&
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::Calendar {
-                        date: NaiveDate::default(),
+                        date: chrono::Local::now().date_naive(),
                         reoccurrence: None,
                         time: None,
                     });
