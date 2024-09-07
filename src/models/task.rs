@@ -69,3 +69,9 @@ impl NewTask {
         Self { title, deadline, category, project_id }
     }
 }
+
+impl From<Task> for NewTask {
+    fn from(task: Task) -> Self {
+        Self::new(task.title, task.deadline, task.category, task.project_id)
+    }
+}
