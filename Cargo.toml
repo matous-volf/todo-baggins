@@ -23,6 +23,7 @@ tracing-wasm = "0.2.1"
 serde_with = { version = "3.9.0", features = ["chrono_0_4"] }
 async-std = "1.12.0"
 dioxus-query = "0.5.1"
+time = "0.3.36"
 
 [features]
 default = []
