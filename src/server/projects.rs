@@ -1,6 +1,6 @@
 use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
-use crate::errors::project_create_error::ProjectError;
+use crate::errors::project_error::ProjectError;
 use crate::models::project::{NewProject, Project};
 use crate::server::database_connection::establish_database_connection;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
@@ -24,9 +24,7 @@ pub(crate) async fn create_project(new_project: NewProject)
         .values(&new_project)
         .returning(Project::as_returning())
         .get_result(&mut connection)
-        .map_err::<ErrorVec<ProjectError>, _>(
-            |_| vec![ProjectError::Error(Error::ServerInternal)].into()
-        )?;
+        .map_err::<ErrorVec<ProjectError>, _>(|error| vec![error.into()].into())?;
 
     Ok(new_project)
 }
@@ -69,9 +67,7 @@ pub(crate) async fn edit_project(project_id: i32, new_project: NewProject)
         .set(title.eq(new_project.title))
         .returning(Project::as_returning())
         .get_result(&mut connection)
-        .map_err::<ErrorVec<ProjectError>, _>(
-            |_| vec![ProjectError::Error(Error::ServerInternal)].into()
-        )?;
+        .map_err::<ErrorVec<ProjectError>, _>(|error| vec![error.into()].into())?;
 
     Ok(updated_project)
 }

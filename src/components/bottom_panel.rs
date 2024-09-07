@@ -1,9 +1,10 @@
-use dioxus::prelude::*;
 use crate::components::navigation::Navigation;
 use crate::components::project_form::ProjectForm;
 use crate::components::task_form::TaskForm;
 use crate::models::project::Project;
+use crate::models::task::Task;
 use crate::route::Route;
+use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
@@ -12,8 +13,9 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     let mut expanded = use_signal(|| display_form());
     let navigation_expanded = use_signal(|| false);
     let current_route = use_route();
-    
+
     let mut project_being_edited = use_context::<Signal<Option<Project>>>();
+    let mut task_being_edited = use_context::<Signal<Option<Task>>>();
 
     use_effect(use_reactive(&display_form, move |display_form| {
         if display_form() {
@@ -22,7 +24,11 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
             spawn(async move {
                 // Necessary for a smooth – not instant – height transition.
                 async_std::task::sleep(std::time::Duration::from_millis(500)).await;
-                expanded.set(false);
+                /* The check is necessary for the situation when the user expands the panel while
+                   it is being closed. */
+                if !display_form() {
+                    expanded.set(false);
+                }
             });
         }
     }));
@@ -51,8 +57,10 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                     },
                     _ => rsx! {
                         TaskForm {
+                            task: task_being_edited(),
                             on_successful_submit: move |_| {
                                 display_form.set(false);
+                                task_being_edited.set(None);
                             }
                         }
                     }
