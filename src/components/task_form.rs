@@ -2,15 +2,16 @@ use crate::components::category_input::CategoryInput;
 use crate::components::reoccurrence_input::ReoccurrenceIntervalInput;
 use crate::models::category::{CalendarTime, Category, Reoccurrence};
 use crate::models::task::NewTask;
+use crate::models::task::Task;
+use crate::query::{QueryErrors, QueryKey, QueryValue};
+use crate::route::Route;
 use crate::server::projects::get_projects;
-use crate::server::tasks::create_task;
-use chrono::{Duration, NaiveDate};
+use crate::server::tasks::{create_task, edit_task};
+use chrono::{Duration};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
-use crate::query::{QueryErrors, QueryKey, QueryValue};
-use crate::route::Route;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -33,31 +34,54 @@ const REMINDER_OFFSETS: [Option<Duration>; 17] = [
 ];
 
 #[component]
-pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
+pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()>) -> Element {
     let projects = use_server_future(get_projects)?.unwrap().unwrap();
 
     let route = use_route::<Route>();
-    let selected_category = use_signal(|| match route { 
-        Route::CategorySomedayMaybePage => Category::SomedayMaybe,
-        Route::CategoryWaitingForPage => Category::WaitingFor(String::new()),
-        Route::CategoryNextStepsPage => Category::NextSteps,
-        Route::CategoryCalendarPage | Route::CategoryTodayPage => Category::Calendar {
-            date: NaiveDate::default(),
-            reoccurrence: None,
-            time: None,
-        },
-        Route::CategoryLongTermPage => Category::LongTerm,
-        _ => Category::Inbox,
-    });
-    let category_calendar_reoccurrence_interval = use_signal(|| None);
-    let mut category_calendar_has_time = use_signal(|| false);
-    let mut category_calendar_reminder_offset_index = use_signal(|| REMINDER_OFFSETS.len() - 1);
+    let selected_category = use_signal(|| if let Some(task) = &task {
+        task.category().clone()
+    } else {
+        match route {
+            Route::CategorySomedayMaybePage => Category::SomedayMaybe,
+            Route::CategoryWaitingForPage => Category::WaitingFor(String::new()),
+            Route::CategoryNextStepsPage => Category::NextSteps,
+            Route::CategoryCalendarPage | Route::CategoryTodayPage => Category::Calendar {
+                date: chrono::Local::now().date_naive(),
+                reoccurrence: None,
+                time: None,
+            },
+            Route::CategoryLongTermPage => Category::LongTerm,
+            _ => Category::Inbox,
+        }
+    }
+    );
+    let category_calendar_reoccurrence_interval = use_signal(|| task.as_ref().and_then(|task|
+        if let Category::Calendar { reoccurrence: Some(reoccurrence), .. } = task.category() {
+            Some(reoccurrence.interval().clone())
+        } else {
+            None
+        }
+    ));
+    let mut category_calendar_has_time = use_signal(|| task.as_ref().is_some_and(
+        |task| matches!(*task.category(), Category::Calendar { time: Some(_), .. }))
+    );
+    let mut category_calendar_reminder_offset_index = use_signal(|| task.as_ref().and_then(|task|
+        if let Category::Calendar { time: Some(time), .. } = task.category() {
+            REMINDER_OFFSETS.iter().position(|&reminder_offset|
+                reminder_offset == time.reminder_offset()
+            )
+        } else {
+            None
+        }
+    ).unwrap_or(REMINDER_OFFSETS.len() - 1));
 
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
-    
+    let task_for_submit = task.clone();
+
     rsx! {
         form {
             onsubmit: move |event| {
+                let task = task_for_submit.clone();
                 async move {
                     let new_task = NewTask::new(
                         event.values().get("title").unwrap().as_value(),
@@ -96,7 +120,11 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                         event.values().get("project_id").unwrap()
                         .as_value().parse::<i32>().ok().filter(|&id| id > 0),
                     );
-                    let _ = create_task(new_task).await;
+                    if let Some(task) = task {
+                        let _ = edit_task(task.id(), new_task).await;
+                    } else {
+                        let _ = create_task(new_task).await;
+                    }
                     query_client.invalidate_queries(&[
                         QueryKey::Tasks, 
                         QueryKey::TasksInCategory(selected_category())
@@ -115,9 +143,10 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                     },
                 },
                 input {
-                    r#type: "text",
                     name: "title",
                     required: true,
+                    initial_value: task.as_ref().map(|task| task.title().to_owned()),
+                    r#type: "text",
                     class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
                     id: "input_title"
                 },
@@ -142,6 +171,9 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                     for project in projects {
                         option {
                             value: project.id().to_string(),
+                            selected: task.as_ref().is_some_and(
+                                |task| task.project_id() == Some(project.id())
+                            ),
                             {project.title()}
                         }
                     }
@@ -157,8 +189,10 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                     }
                 },
                 input {
-                    r#type: "date",
                     name: "deadline",
+                    initial_value: task.as_ref().and_then(|task| task.deadline())
+                        .map(|deadline| deadline.format("%Y-%m-%d").to_string()),
+                    r#type: "date",
                     class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow basis-0",
                     id: "input_deadline"
                 }
@@ -177,7 +211,7 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                 }
             }
             match selected_category() {
-                Category::WaitingFor(_) => rsx! {
+                Category::WaitingFor(waiting_for) => rsx! {
                     div {
                         class: "flex flex-row items-center gap-3",
                         label {
@@ -188,15 +222,16 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                             }
                         },
                         input {
-                            r#type: "text",
                             name: "category_waiting_for",
                             required: true,
+                            initial_value: waiting_for,
+                            r#type: "text",
                             class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow",
                             id: "input_category_waiting_for"
                         },
                     }
                 },
-                Category::Calendar { .. } => rsx! {
+                Category::Calendar { date, reoccurrence, time } => rsx! {
                     div {
                         class: "flex flex-row items-center gap-3",
                         label {
@@ -212,13 +247,16 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                                 r#type: "date",
                                 name: "category_calendar_date",
                                 required: true,
-                                initial_value: chrono::Local::now().format("%Y-%m-%d").to_string(),
+                                initial_value: date.format("%Y-%m-%d").to_string(),
                                 class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow",
                                 id: "input_category_calendar_date"
                             },
                             input {
                                 r#type: "time",
                                 name: "category_calendar_time",
+                                initial_value: time.map(|calendar_time|
+                                    calendar_time.time().format("%H:%M").to_string()
+                                ),
                                 class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow",
                                 id: "input_category_calendar_time",
                                 oninput: move |event| {
@@ -248,9 +286,9 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                                 disabled: category_calendar_reoccurrence_interval().is_none(),
                                 required: true,
                                 min: 1,
-                                initial_value:
-                                if category_calendar_reoccurrence_interval().is_none() { "" }
-                                else { "1" },
+                                initial_value: category_calendar_reoccurrence_interval()
+                                    .map_or(String::new(), |_| reoccurrence.map_or(1, |reoccurrence|
+                                        reoccurrence.length()).to_string()),
                                 class: "py-2 px-3 bg-zinc-800/50 rounded-lg col-span-2 text-right",
                                 id: "category_calendar_reoccurrence_length"
                             }
@@ -271,7 +309,8 @@ pub(crate) fn TaskForm(on_successful_submit: EventHandler<()>) -> Element {
                                 name: "category_calendar_reminder_offset_index",
                                 min: 0,
                                 max: REMINDER_OFFSETS.len() as i64 - 1,
-                                initial_value: REMINDER_OFFSETS.len() as i64 - 1,
+                                initial_value: category_calendar_reminder_offset_index()
+                                    .to_string(),
                                 class: "grow input-range-reverse",
                                 id: "category_calendar_has_reminder",
                                 oninput: move |event| {

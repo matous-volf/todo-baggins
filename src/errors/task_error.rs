@@ -6,13 +6,13 @@ use std::str::FromStr;
 use validator::{ValidationErrors, ValidationErrorsKind};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub enum TaskCreateError {
+pub enum TaskError {
     TitleLengthInvalid,
     ProjectNotFound,
     Error(Error),
 }
 
-impl From<ValidationErrors> for ErrorVec<TaskCreateError> {
+impl From<ValidationErrors> for ErrorVec<TaskError> {
     fn from(validation_errors: ValidationErrors) -> Self {
         validation_errors.errors()
             .iter()
@@ -22,31 +22,49 @@ impl From<ValidationErrors> for ErrorVec<TaskCreateError> {
                         .iter()
                         .map(|validation_error| validation_error.code.as_ref())
                         .map(|code| match code {
-                            "title_length" => TaskCreateError::TitleLengthInvalid,
+                            "title_length" => TaskError::TitleLengthInvalid,
                             _ => panic!("Unexpected validation error code: `{code}`."),
                         })
-                        .collect::<Vec<TaskCreateError>>(),
+                        .collect::<Vec<TaskError>>(),
                     _ => panic!("Unexpected validation error kind."),
                 },
                 _ => panic!("Unexpected validation field name: `{field}`."),
             })
-            .collect::<Vec<TaskCreateError>>()
+            .collect::<Vec<TaskError>>()
             .into()
     }
 }
 
+impl From<diesel::result::Error> for TaskError {
+    fn from(diesel_error: diesel::result::Error) -> Self {
+        match diesel_error {
+            diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
+            ) => {
+                match info.constraint_name() {
+                    Some("tasks_project_id_fkey") => TaskError::ProjectNotFound,
+                    _ => TaskError::Error(Error::ServerInternal)
+                }
+            }
+            _ => {
+                TaskError::Error(Error::ServerInternal)
+            }
+        }
+    }
+}
+
 // Has to be implemented for Dioxus server functions.
-impl Display for TaskCreateError {
+impl Display for TaskError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
 // Has to be implemented for Dioxus server functions.
-impl FromStr for TaskCreateError {
+impl FromStr for TaskError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(TaskCreateError::Error(Error::ServerInternal))
+        Ok(TaskError::Error(Error::ServerInternal))
     }
 }

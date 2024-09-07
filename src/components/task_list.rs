@@ -6,6 +6,8 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn TaskList(tasks: Vec<Task>, class: Option<&'static str>) -> Element {
+    let mut task_being_edited = use_context::<Signal<Option<Task>>>();
+
     rsx! {
         div {
             class: format!("flex flex-col {}", class.unwrap_or("")),
@@ -13,7 +15,7 @@ pub(crate) fn TaskList(tasks: Vec<Task>, class: Option<&'static str>) -> Element
                 div {
                     key: "{task.id()}",
                     class: format!(
-                        "px-8 pt-5 {} flex flex-row gap-4",
+                        "px-8 pt-5 {} flex flex-row gap-4 select-none {}",
                         if task.deadline().is_some() {
                             "pb-0.5"
                         } else if let Category::Calendar { time, .. } = task.category() {
@@ -24,8 +26,12 @@ pub(crate) fn TaskList(tasks: Vec<Task>, class: Option<&'static str>) -> Element
                             }
                         } else {
                             "pb-5"
-                        }
+                        },
+                        if task_being_edited().is_some_and(|t| t.id() == task.id()) {
+                            "bg-zinc-700"
+                        } else { "" }
                     ),
+                    onclick: move |_| task_being_edited.set(Some(task.clone())),
                     i {
                         class: "fa-regular fa-square text-3xl text-zinc-600",
                     },
