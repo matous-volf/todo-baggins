@@ -102,6 +102,10 @@ impl Reoccurrence {
         Self { start_date, interval, length }
     }
     
+    pub fn start_date(&self) -> NaiveDate {
+        self.start_date
+    }
+    
     pub fn interval(&self) -> &ReoccurrenceInterval {
         &self.interval
     }
