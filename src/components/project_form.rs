@@ -10,24 +10,20 @@ use crate::query::{QueryErrors, QueryKey, QueryValue};
 pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventHandler<()>)
                           -> Element {
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
-    
     let project_for_submit = project.clone();
-    
+
     rsx! {
         form {
             onsubmit: move |event| {
-                let project_clone = project_for_submit.clone();
+                let project = project_for_submit.clone();
                 async move {
                     let new_project = NewProject::new(
                         event.values().get("title").unwrap().as_value()
                     );
-                    match project_clone {
-                        Some(project) => {
-                            let _ = edit_project(project.id(), new_project).await;
-                        }
-                        None => {
-                            let _ = create_project(new_project).await;
-                        }
+                    if let Some(project) = project {
+                        let _ = edit_project(project.id(), new_project).await;
+                    } else {
+                        let _ = create_project(new_project).await;
                     }
                     query_client.invalidate_queries(&[
                         QueryKey::Projects
