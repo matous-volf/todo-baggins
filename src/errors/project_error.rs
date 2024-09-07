@@ -34,6 +34,12 @@ impl From<ValidationErrors> for ErrorVec<ProjectError> {
     }
 }
 
+impl From<diesel::result::Error> for ProjectError {
+    fn from(_: diesel::result::Error) -> Self {
+        ProjectError::Error(Error::ServerInternal)
+    }
+}
+
 // Has to be implemented for Dioxus server functions.
 impl Display for ProjectError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
