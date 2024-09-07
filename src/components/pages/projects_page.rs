@@ -20,13 +20,11 @@ pub(crate) fn ProjectsPage() -> Element {
                             key: "{project.id()}",
                             class: format!(
                                 "px-8 py-4 select-none {}",
-                                if project_being_edited().map(|p| p.id()) == Some(project.id()) {
+                                if project_being_edited().is_some_and(|p| p.id() == project.id()) {
                                     "bg-zinc-700"
                                 } else { "" }
                             ),
-                            onclick: move |_| {
-                                project_being_edited.set(Some(project.clone()));
-                            },
+                            onclick: move |_| project_being_edited.set(Some(project.clone())),
                             {project.title()}
                         }
                     }

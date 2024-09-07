@@ -2,52 +2,37 @@ use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::models::task::{NewTask, Task};
 use crate::server::database_connection::establish_database_connection;
-use diesel::{QueryDsl, RunQueryDsl, SelectableHelper};
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
 use validator::Validate;
-use crate::errors::task_create_error::TaskCreateError;
+use crate::errors::task_error::TaskError;
 use crate::models::category::Category;
 
 #[server]
 pub(crate) async fn create_task(new_task: NewTask)
-                                -> Result<Task, ServerFnError<ErrorVec<TaskCreateError>>> {
+                                -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
     use crate::schema::tasks;
 
     new_task.validate()
-        .map_err::<ErrorVec<TaskCreateError>, _>(|errors| errors.into())?;
+        .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
 
     let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<TaskCreateError>, _>(
-            |_| vec![TaskCreateError::Error(Error::ServerInternal)].into()
+        .map_err::<ErrorVec<TaskError>, _>(
+            |_| vec![TaskError::Error(Error::ServerInternal)].into()
         )?;
 
     let new_task = diesel::insert_into(tasks::table)
         .values(&new_task)
         .returning(Task::as_returning())
         .get_result(&mut connection)
-        .map_err::<ErrorVec<TaskCreateError>, _>(|error| {
-            let error = match error {
-                diesel::result::Error::DatabaseError(
-                    diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
-                ) => {
-                    match info.constraint_name() { 
-                        Some("tasks_project_id_fkey") => TaskCreateError::ProjectNotFound,
-                        _ => TaskCreateError::Error(Error::ServerInternal)
-                    }
-                },
-                _ => {
-                    TaskCreateError::Error(Error::ServerInternal)
-                }
-            };
-            vec![error].into()
-        })?;
+        .map_err::<ErrorVec<TaskError>, _>(|error| vec![error.into()].into())?;
 
     Ok(new_task)
 }
 
 #[server]
 pub(crate) async fn get_tasks_in_category(filtered_category: Category)
-    -> Result<Vec<Task>, ServerFnError<ErrorVec<Error>>> {
+                                          -> Result<Vec<Task>, ServerFnError<ErrorVec<Error>>> {
     use crate::schema::tasks::dsl::*;
 
     let mut connection = establish_database_connection()
@@ -64,4 +49,32 @@ pub(crate) async fn get_tasks_in_category(filtered_category: Category)
         )?;
 
     Ok(results)
+}
+
+#[server]
+pub(crate) async fn edit_task(task_id: i32, new_task: NewTask)
+                              -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
+    use crate::schema::tasks::dsl::*;
+
+    new_task.validate()
+        .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
+
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<TaskError>, _>(
+            |_| vec![TaskError::Error(Error::ServerInternal)].into()
+        )?;
+
+    let updated_task = diesel::update(tasks)
+        .filter(id.eq(task_id))
+        .set((
+            title.eq(new_task.title),
+            deadline.eq(new_task.deadline),
+            category.eq(new_task.category),
+            project_id.eq(new_task.project_id),
+        ))
+        .returning(Task::as_returning())
+        .get_result(&mut connection)
+        .map_err::<ErrorVec<TaskError>, _>(|error| vec![error.into()].into())?;
+
+    Ok(updated_task)
 }
