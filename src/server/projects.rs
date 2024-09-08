@@ -71,3 +71,17 @@ pub(crate) async fn edit_project(project_id: i32, new_project: NewProject)
 
     Ok(updated_project)
 }
+
+#[server]
+pub(crate) async fn delete_project(project_id: i32)
+    -> Result<(), ServerFnError<ErrorVec<Error>>> {
+    use crate::schema::projects::dsl::*;
+
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+
+    diesel::delete(projects.filter(id.eq(project_id))).execute(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+    
+    Ok(())
+}
