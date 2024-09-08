@@ -36,11 +36,11 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     rsx! {
         div {
             class: format!(
-                "pointer-events-auto bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] {}",
+                "pointer-events-auto bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] overflow-y-scroll {}",
                 match (display_form(), current_route, navigation_expanded()) {
-                    (false, _, false) => "h-[64px]",
-                    (false, _, true) => "h-[128px]",
-                    (true, Route::ProjectsPage, _) => "h-[128px]",
+                    (false, _, false) => "h-[66px]",
+                    (false, _, true) => "h-[130px]",
+                    (true, Route::ProjectsPage, _) => "h-[130px]",
                     (true, _, _) => "h-[448px]",
                 }
             ),

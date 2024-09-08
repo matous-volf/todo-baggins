@@ -9,6 +9,7 @@ use time::util::days_in_year_month;
 use validator::Validate;
 use crate::errors::task_error::TaskError;
 use crate::models::category::{Category, ReoccurrenceInterval};
+use crate::server::subtasks::restore_subtasks_of_task;
 
 #[server]
 pub(crate) async fn create_task(new_task: NewTask)
@@ -127,6 +128,8 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
                 ).unwrap()
             }
         }
+        restore_subtasks_of_task(task_id).await
+            .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
     } else {
         new_task.category = Category::Done;
     }
