@@ -12,3 +12,4 @@ pub(crate) mod category_input;
 pub(crate) mod reoccurrence_input;
 pub(crate) mod layout;
 pub(crate) mod navigation_item;
+pub(crate) mod subtasks_form;
