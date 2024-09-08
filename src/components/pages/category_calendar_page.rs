@@ -41,8 +41,8 @@ pub(crate) fn CategoryCalendarPage() -> Element {
                                             .format_localized(
                                                 format!(
                                                     "%A %-d. %B{}", 
-                                                    if date_current.year() != today_date.year() {" %Y"} 
-                                                    else {""}
+                                                    if date_current.year() != today_date.year()
+                                                    {" %Y"} else {""}
                                                 ).as_str(),
                                                 Locale::en_US
                                             )
