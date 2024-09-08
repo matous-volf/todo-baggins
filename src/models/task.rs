@@ -63,8 +63,10 @@ pub struct NewTask {
 
 impl NewTask {
     pub fn new(
-        title: String, deadline: Option<chrono::NaiveDate>,
-        category: Category, project_id: Option<i32>,
+        title: String,
+        deadline: Option<chrono::NaiveDate>,
+        category: Category,
+        project_id: Option<i32>,
     ) -> Self {
         Self { title, deadline, category, project_id }
     }
