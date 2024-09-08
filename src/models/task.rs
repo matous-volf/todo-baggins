@@ -9,7 +9,7 @@ const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, PartialEq, Clone, Debug)]
-#[diesel(table_name = crate::schema::tasks)]
+#[diesel(table_name = tasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Task {
     id: i32,
