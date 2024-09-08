@@ -36,7 +36,7 @@ impl From<ValidationErrors> for ErrorVec<ProjectError> {
 
 impl From<diesel::result::Error> for ProjectError {
     fn from(_: diesel::result::Error) -> Self {
-        ProjectError::Error(Error::ServerInternal)
+        Self::Error(Error::ServerInternal)
     }
 }
 
@@ -52,6 +52,6 @@ impl FromStr for ProjectError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(ProjectError::Error(Error::ServerInternal))
+        Ok(Self::Error(Error::ServerInternal))
     }
 }
