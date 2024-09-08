@@ -6,14 +6,14 @@ use dioxus::prelude::*;
 use dioxus_query::prelude::QueryResult;
 use crate::components::task_list::TaskList;
 use crate::query::QueryValue;
-use crate::query::tasks::use_tasks_in_category_query;
-use crate::models::task::Task;
+use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
+use crate::models::task::{TaskWithSubtasks};
 
 const CALENDAR_LENGTH_DAYS: usize = 366 * 3;
 
 #[component]
 pub(crate) fn CategoryCalendarPage() -> Element {
-    let tasks = use_tasks_in_category_query(Category::Calendar {
+    let tasks = use_tasks_with_subtasks_in_category_query(Category::Calendar {
         date: Local::now().date_naive(),
         reoccurrence: None,
         time: None,
@@ -22,8 +22,8 @@ pub(crate) fn CategoryCalendarPage() -> Element {
 
     rsx! {
         match tasks_query_result.value() {
-            QueryResult::Ok(QueryValue::Tasks(tasks))
-            | QueryResult::Loading(Some(QueryValue::Tasks(tasks))) => {
+            QueryResult::Ok(QueryValue::TasksWithSubtasks(tasks))
+            | QueryResult::Loading(Some(QueryValue::TasksWithSubtasks(tasks))) => {
                 let today_date = Local::now().date_naive();
                 
                 rsx! {
@@ -52,12 +52,13 @@ pub(crate) fn CategoryCalendarPage() -> Element {
                                 }
                                 TaskList {
                                     tasks: tasks.iter().filter(|task| {
-                                        if let Category::Calendar { date, .. } = task.category() {
+                                        if let Category::Calendar { date, .. } 
+                                            = task.task().category() {
                                             *date == date_current
                                         } else {
                                             panic!("Unexpected category.");
                                         }
-                                    }).cloned().collect::<Vec<Task>>()
+                                    }).cloned().collect::<Vec<TaskWithSubtasks>>()
                                 }
                             }
                         }

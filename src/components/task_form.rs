@@ -133,7 +133,8 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                         }
                         query_client.invalidate_queries(&[
                             QueryKey::Tasks,
-                            QueryKey::TasksInCategory(selected_category())
+                            QueryKey::TasksInCategory(selected_category()),
+                            QueryKey::TasksWithSubtasksInCategory(selected_category()),
                         ]);
                         on_successful_submit.call(());
                     }
@@ -151,6 +152,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                         name: "title",
                         required: true,
                         initial_value: task.as_ref().map(|task| task.title().to_owned()),
+                        autofocus: task.is_none(),
                         r#type: "text",
                         class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
                         id: "input_title"
@@ -345,7 +347,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
             },
             if let Some(task) = task.as_ref() {
                 SubtasksForm {
-                    task_id: task.id()
+                    task: task.clone()
                 }
             }
             div {
@@ -371,8 +373,9 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                 }
 
                                 query_client.invalidate_queries(&[
-                                    QueryKey::TasksInCategory(task.category().clone()),
                                     QueryKey::Tasks,
+                                    QueryKey::TasksInCategory(task.category().clone()),
+                                    QueryKey::TasksWithSubtasksInCategory(selected_category()),
                                 ]);
                             }
                             on_successful_submit.call(());
