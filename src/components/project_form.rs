@@ -1,10 +1,10 @@
 use crate::models::project::{NewProject, Project};
-use crate::server::projects::{create_project, edit_project};
+use crate::query::{QueryErrors, QueryKey, QueryValue};
+use crate::server::projects::{create_project, delete_project, edit_project};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
-use crate::query::{QueryErrors, QueryKey, QueryValue};
 
 #[component]
 pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventHandler<()>)
@@ -25,9 +25,7 @@ pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventH
                     } else {
                         let _ = create_project(new_project).await;
                     }
-                    query_client.invalidate_queries(&[
-                        QueryKey::Projects
-                    ]);
+                    query_client.invalidate_queries(&[QueryKey::Projects]);
                     on_successful_submit.call(());
                 }
             },
@@ -44,14 +42,31 @@ pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventH
                 input {
                     name: "title",
                     required: true,
-                    initial_value: project.map(|project| project.title().to_owned()),
+                    initial_value: project.as_ref().map(|project| project.title().to_owned()),
                     r#type: "text",
                     class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
                     id: "input_title"
                 }
             }
             div {
-                class: "flex flex-row justify-end mt-auto",
+                class: "flex flex-row justify-between mt-auto",
+                button {
+                    r#type: "button",
+                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
+                    onclick: move |_| {
+                        let project = project.clone();
+                        async move {
+                            if let Some(project) = project {
+                                let _ = delete_project(project.id()).await;
+                                query_client.invalidate_queries(&[QueryKey::Projects]);
+                            }
+                            on_successful_submit.call(());
+                        }
+                    },
+                    i {
+                        class: "fa-solid fa-trash-can"
+                    }
+                }
                 button {
                     r#type: "submit",
                     class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
