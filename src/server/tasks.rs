@@ -136,3 +136,19 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
 
     Ok(updated_task)
 }
+
+// TODO: Get rid of this suppression.
+//noinspection DuplicatedCode
+#[server]
+pub(crate) async fn delete_task(task_id: i32)
+                                -> Result<(), ServerFnError<ErrorVec<Error>>> {
+    use crate::schema::tasks::dsl::*;
+
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+
+    diesel::delete(tasks.filter(id.eq(task_id))).execute(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+
+    Ok(())
+}
