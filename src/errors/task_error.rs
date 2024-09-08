@@ -42,12 +42,12 @@ impl From<diesel::result::Error> for TaskError {
                 diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
             ) => {
                 match info.constraint_name() {
-                    Some("tasks_project_id_fkey") => TaskError::ProjectNotFound,
-                    _ => TaskError::Error(Error::ServerInternal)
+                    Some("tasks_project_id_fkey") => Self::ProjectNotFound,
+                    _ => Self::Error(Error::ServerInternal)
                 }
             }
             _ => {
-                TaskError::Error(Error::ServerInternal)
+                Self::Error(Error::ServerInternal)
             }
         }
     }
@@ -65,6 +65,6 @@ impl FromStr for TaskError {
     type Err = ();
 
     fn from_str(_: &str) -> Result<Self, Self::Err> {
-        Ok(TaskError::Error(Error::ServerInternal))
+        Ok(Self::Error(Error::ServerInternal))
     }
 }
