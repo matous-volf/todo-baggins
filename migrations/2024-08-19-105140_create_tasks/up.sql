@@ -6,6 +6,6 @@ CREATE TABLE "tasks"(
 	"deadline" DATE,
 	"category" JSONB NOT NULL,
 	"project_id" INT4,
-	FOREIGN KEY ("project_id") REFERENCES "projects"("id")
+	FOREIGN KEY ("project_id") REFERENCES "projects"("id") ON DELETE SET NULL
 );
 
