@@ -6,7 +6,7 @@ use crate::models::task::Task;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
 use crate::server::projects::get_projects;
-use crate::server::tasks::{create_task, edit_task};
+use crate::server::tasks::{create_task, delete_task, edit_task};
 use chrono::{Duration};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
@@ -336,7 +336,39 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 _ => None
             },
             div {
-                class: "flex flex-row justify-end mt-auto",
+                class: "flex flex-row justify-between mt-auto",
+                button {
+                    r#type: "button",
+                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
+                    onclick: move |_| {
+                        let task = task.clone();
+                        async move {
+                            if let Some(task) = task {
+                                if *(task.category()) == Category::Trash {
+                                    let _ = delete_task(task.id()).await;
+                                } else {
+                                    let new_task = NewTask::new(
+                                        task.title().to_owned(),
+                                        task.deadline(),
+                                        Category::Trash,
+                                        task.project_id()
+                                    );
+                                    
+                                    let _ = edit_task(task.id(), new_task).await;
+                                }
+                                
+                                query_client.invalidate_queries(&[
+                                    QueryKey::TasksInCategory(task.category().clone()),
+                                    QueryKey::Tasks,
+                                ]);
+                            }
+                            on_successful_submit.call(());
+                        }
+                    },
+                    i {
+                        class: "fa-solid fa-trash-can"
+                    }
+                }
                 button {
                     r#type: "submit",
                     class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
