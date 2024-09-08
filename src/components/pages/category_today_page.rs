@@ -1,7 +1,7 @@
 use crate::components::task_list::TaskList;
 use crate::models::category::Category;
-use crate::models::task::Task;
-use crate::query::tasks::use_tasks_in_category_query;
+use crate::models::task::TaskWithSubtasks;
+use crate::query::tasks::{use_tasks_with_subtasks_in_category_query};
 use crate::query::QueryValue;
 use chrono::{Local, Locale};
 use dioxus::prelude::*;
@@ -11,22 +11,22 @@ use dioxus_query::prelude::QueryResult;
 pub(crate) fn CategoryTodayPage() -> Element {
     let today_date = Local::now().date_naive();
     
-    let calendar_tasks_query = use_tasks_in_category_query(Category::Calendar {
+    let calendar_tasks_query = use_tasks_with_subtasks_in_category_query(Category::Calendar {
         date: today_date,
         reoccurrence: None,
         time: None,
     });
     let calendar_tasks_query_result = calendar_tasks_query.result();
 
-    let long_term_tasks_query = use_tasks_in_category_query(Category::LongTerm);
+    let long_term_tasks_query = use_tasks_with_subtasks_in_category_query(Category::LongTerm);
     let long_term_tasks_query_result = long_term_tasks_query.result();
 
     rsx! {
         div {
             class: "pt-4 flex flex-col gap-8",
             match long_term_tasks_query_result.value() {
-                QueryResult::Ok(QueryValue::Tasks(tasks))
-                | QueryResult::Loading(Some(QueryValue::Tasks(tasks))) => rsx! {
+                QueryResult::Ok(QueryValue::TasksWithSubtasks(tasks))
+                | QueryResult::Loading(Some(QueryValue::TasksWithSubtasks(tasks))) => rsx! {
                     div {
                         class: "flex flex-col gap-4",
                         div {
@@ -42,10 +42,10 @@ pub(crate) fn CategoryTodayPage() -> Element {
                         div {
                             for task in tasks {
                                 div {
-                                    key: "{task.id()}",
+                                    key: "{task.task().id()}",
                                     class: format!(
                                         "px-8 pt-5 {} flex flex-row gap-4",
-                                        if task.deadline().is_some() {
+                                        if task.task().deadline().is_some() {
                                             "pb-0.5"
                                         } else {
                                             "pb-5"
@@ -55,11 +55,11 @@ pub(crate) fn CategoryTodayPage() -> Element {
                                         class: "flex flex-col",
                                         div {
                                             class: "mt grow font-medium",
-                                            {task.title()}
+                                            {task.task().title()}
                                         },
                                         div {
                                             class: "flex flex-row gap-3",
-                                            if let Some(deadline) = task.deadline() {
+                                            if let Some(deadline) = task.task().deadline() {
                                                 div {
                                                     class: "text-sm text-zinc-400",
                                                     i {
@@ -86,22 +86,22 @@ pub(crate) fn CategoryTodayPage() -> Element {
                 value => panic!("Unexpected query result: {value:?}")
             }
             match calendar_tasks_query_result.value() {
-                QueryResult::Ok(QueryValue::Tasks(tasks))
-                | QueryResult::Loading(Some(QueryValue::Tasks(tasks))) => {
+                QueryResult::Ok(QueryValue::TasksWithSubtasks(tasks))
+                | QueryResult::Loading(Some(QueryValue::TasksWithSubtasks(tasks))) => {
                     let today_tasks = tasks.iter().filter(|task| {
-                        if let Category::Calendar { date, .. } = task.category() {
+                        if let Category::Calendar { date, .. } = task.task().category() {
                             *date == today_date
                         } else {
                             panic!("Unexpected category.");
                         }
-                    }).cloned().collect::<Vec<Task>>();
+                    }).cloned().collect::<Vec<TaskWithSubtasks>>();
                     let overdue_tasks = tasks.iter().filter(|task| {
-                        if let Category::Calendar { date, .. } = task.category() {
+                        if let Category::Calendar { date, .. } = task.task().category() {
                             *date < today_date
                         } else {
                             panic!("Unexpected category.");
                         }
-                    }).cloned().collect::<Vec<Task>>();
+                    }).cloned().collect::<Vec<TaskWithSubtasks>>();
         
                     rsx! {
                         if !overdue_tasks.is_empty() {
