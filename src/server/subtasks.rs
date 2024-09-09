@@ -6,6 +6,7 @@ use crate::server::database_connection::establish_database_connection;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
 use validator::Validate;
+use crate::server::tasks::trigger_task_updated_at;
 
 #[server]
 pub(crate) async fn create_subtask(new_subtask: NewSubtask)
@@ -25,6 +26,9 @@ pub(crate) async fn create_subtask(new_subtask: NewSubtask)
         .returning(Subtask::as_returning())
         .get_result(&mut connection)
         .map_err::<ErrorVec<SubtaskError>, _>(|error| vec![error.into()].into())?;
+    
+    trigger_task_updated_at(new_subtask.task_id).await
+        .map_err::<ErrorVec<SubtaskError>, _>(|error_vec| error_vec.into())?;
 
     Ok(created_subtask)
 }
@@ -35,17 +39,13 @@ pub(crate) async fn get_subtasks_of_task(filtered_task_id: i32)
     use crate::schema::subtasks::dsl::*;
 
     let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(
-            |_| vec![Error::ServerInternal].into()
-        )?;
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
 
     let results = subtasks
         .select(Subtask::as_select())
         .filter(task_id.eq(filtered_task_id))
         .load::<Subtask>(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(
-            |_| vec![Error::ServerInternal].into()
-        )?;
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
 
     Ok(results)
 }
@@ -73,27 +73,28 @@ pub(crate) async fn edit_subtask(subtask_id: i32, new_subtask: NewSubtask)
         .get_result(&mut connection)
         .map_err::<ErrorVec<SubtaskError>, _>(|error| vec![error.into()].into())?;
 
+    trigger_task_updated_at(new_subtask.task_id).await
+        .map_err::<ErrorVec<SubtaskError>, _>(|error_vec| error_vec.into())?;
+    
     Ok(updated_task)
 }
 
 #[server]
 pub(crate) async fn restore_subtasks_of_task(filtered_task_id: i32) -> Result<
     Vec<Subtask>,
-    ServerFnError<ErrorVec<SubtaskError>>
+    ServerFnError<ErrorVec<Error>>
 > {
     use crate::schema::subtasks::dsl::*;
 
     let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<SubtaskError>, _>(
-            |_| vec![SubtaskError::Error(Error::ServerInternal)].into()
-        )?;
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
 
     let updated_subtasks = diesel::update(subtasks)
         .filter(task_id.eq(filtered_task_id))
         .set(is_completed.eq(false))
         .returning(Subtask::as_returning())
         .get_results(&mut connection)
-        .map_err::<ErrorVec<SubtaskError>, _>(|error| vec![error.into()].into())?;
+        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
 
     Ok(updated_subtasks)
 }
@@ -108,8 +109,12 @@ pub(crate) async fn delete_subtask(subtask_id: i32)
     let mut connection = establish_database_connection()
         .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
 
-    diesel::delete(subtasks.filter(id.eq(subtask_id))).execute(&mut connection)
+    let deleted_subtask = diesel::delete(subtasks.filter(id.eq(subtask_id)))
+        .returning(Subtask::as_returning())
+        .get_result(&mut connection)
         .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+
+    trigger_task_updated_at(deleted_subtask.task_id()).await?;
 
     Ok(())
 }
