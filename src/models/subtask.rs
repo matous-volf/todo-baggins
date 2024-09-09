@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use crate::models::task::Task;
 use crate::schema::subtasks;
 use chrono::NaiveDateTime;
@@ -45,6 +46,21 @@ impl Subtask {
 
     pub fn updated_at(&self) -> NaiveDateTime {
         self.updated_at
+    }
+}
+
+impl Eq for Subtask {}
+
+impl PartialOrd<Self> for Subtask {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Subtask {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.is_completed().cmp(&other.is_completed())
+            .then(self.created_at().cmp(&other.created_at()))
     }
 }
 
