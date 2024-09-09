@@ -109,7 +109,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                                 input {
                                     r#type: "text",
                                     class: "grow py-2 px-3 col-span-5 bg-zinc-800/50 rounded-lg",
-                                    id: "input_new_title",
+                                    id: "input_title_{subtask.id()}",
                                     initial_value: subtask.title(),
                                     onchange: {
                                         let subtask = subtask.clone();
@@ -123,10 +123,14 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                                                     event.value(),
                                                     subtask.is_completed()
                                                 );
-                                                let _ = edit_subtask(
-                                                    subtask.id(),
-                                                    new_subtask
-                                                ).await;
+                                                if new_subtask.title.is_empty() {
+                                                    let _ = delete_subtask(subtask.id()).await;
+                                                } else {
+                                                    let _ = edit_subtask(
+                                                        subtask.id(),
+                                                        new_subtask
+                                                    ).await;
+                                                }
                                                 query_client.invalidate_queries(&[
                                                     QueryKey::SubtasksOfTaskId(task.id()),
                                                     QueryKey::TasksWithSubtasksInCategory(
