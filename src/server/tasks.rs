@@ -1,4 +1,4 @@
-use chrono::{Datelike, Days, Months, NaiveDate};
+use chrono::{Datelike, Days, Local, Months, NaiveDate};
 use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::models::task::{NewTask, Task, TaskWithSubtasks};
@@ -80,7 +80,7 @@ pub(crate) async fn get_tasks_with_subtasks_in_category(filtered_category: Categ
     ServerFnError<ErrorVec<Error>>
 > {
     use crate::schema::tasks;
-    
+
     let mut connection = establish_database_connection()
         .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
 
@@ -160,8 +160,7 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
                 ).unwrap()
             }
         }
-        restore_subtasks_of_task(task_id).await
-            .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+        restore_subtasks_of_task(task_id).await?;
     } else {
         new_task.category = Category::Done;
     }
@@ -186,4 +185,22 @@ pub(crate) async fn delete_task(task_id: i32)
         .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
 
     Ok(())
+}
+
+pub(crate) async fn trigger_task_updated_at(task_id: i32) -> Result<Task, ErrorVec<Error>> {
+    use crate::schema::tasks::dsl::*;
+    
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(
+            |_| vec![Error::ServerInternal].into()
+        )?;
+
+    let updated_task = diesel::update(tasks)
+        .filter(id.eq(task_id))
+        .set(updated_at.eq(Local::now().naive_local()))
+        .returning(Task::as_returning())
+        .get_result(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+
+    Ok(updated_task)
 }
