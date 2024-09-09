@@ -41,7 +41,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                     (false, _, false) => "h-[66px]",
                     (false, _, true) => "h-[130px]",
                     (true, Route::ProjectsPage, _) => "h-[130px]",
-                    (true, _, _) => "h-[448px]",
+                    (true, _, _) => "h-[506px]",
                 }
             ),
             if expanded() {
