@@ -12,20 +12,24 @@ pub(crate) fn ProjectsPage() -> Element {
     rsx! {
         match projects_query.result().value() {
             QueryResult::Ok(QueryValue::Projects(projects))
-            | QueryResult::Loading(Some(QueryValue::Projects(projects))) => rsx! {
-                div {
-                    class: "flex flex-col",
-                    for project in projects.clone() {
-                        div {
-                            key: "{project.id()}",
-                            class: format!(
-                                "px-8 py-4 select-none {}",
-                                if project_being_edited().is_some_and(|p| p.id() == project.id()) {
-                                    "bg-zinc-700"
-                                } else { "" }
-                            ),
-                            onclick: move |_| project_being_edited.set(Some(project.clone())),
-                            {project.title()}
+            | QueryResult::Loading(Some(QueryValue::Projects(projects))) => {
+                let mut projects = projects.clone();
+                projects.sort();
+                rsx! {
+                    div {
+                        class: "flex flex-col",
+                        for project in projects {
+                            div {
+                                key: "{project.id()}",
+                                class: format!(
+                                    "px-8 py-4 select-none {}",
+                                    if project_being_edited().is_some_and(|p| p.id() == project.id()) {
+                                        "bg-zinc-700"
+                                    } else { "" }
+                                ),
+                                onclick: move |_| project_being_edited.set(Some(project.clone())),
+                                {project.title()}
+                            }
                         }
                     }
                 }

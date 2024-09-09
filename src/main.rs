@@ -5,6 +5,7 @@ mod route;
 mod schema;
 mod server;
 mod query;
+mod utils;
 
 use components::app::App;
 use dioxus::prelude::*;

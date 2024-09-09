@@ -13,3 +13,4 @@ pub(crate) mod reoccurrence_input;
 pub(crate) mod layout;
 pub(crate) mod navigation_item;
 pub(crate) mod subtasks_form;
+pub(crate) mod task_list_item;
