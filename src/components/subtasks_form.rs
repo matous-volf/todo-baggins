@@ -64,8 +64,10 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
         match subtasks_query.result().value() {
             QueryResult::Ok(QueryValue::Subtasks(subtasks))
             | QueryResult::Loading(Some(QueryValue::Subtasks(subtasks))) => {
+                let mut subtasks = subtasks.clone();
+                subtasks.sort();
                 rsx! {
-                    for subtask in subtasks.clone() {
+                    for subtask in subtasks {
                         div {
                             key: "{subtask.id()}",
                             class: "flex flex-row items-center gap-3",
