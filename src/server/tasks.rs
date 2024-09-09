@@ -1,14 +1,16 @@
 use chrono::{Datelike, Days, Months, NaiveDate};
 use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
-use crate::models::task::{NewTask, Task};
+use crate::models::task::{NewTask, Task, TaskWithSubtasks};
 use crate::server::database_connection::establish_database_connection;
 use diesel::{ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
+use diesel::prelude::*;
 use time::util::days_in_year_month;
 use validator::Validate;
 use crate::errors::task_error::TaskError;
 use crate::models::category::{Category, ReoccurrenceInterval};
+use crate::models::subtask::Subtask;
 use crate::server::subtasks::restore_subtasks_of_task;
 
 #[server]
@@ -70,6 +72,36 @@ pub(crate) async fn get_tasks_in_category(filtered_category: Category)
         )?;
 
     Ok(results)
+}
+
+#[server]
+pub(crate) async fn get_tasks_with_subtasks_in_category(filtered_category: Category) -> Result<
+    Vec<TaskWithSubtasks>,
+    ServerFnError<ErrorVec<Error>>
+> {
+    use crate::schema::tasks;
+    
+    let mut connection = establish_database_connection()
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+
+    let tasks_in_category = tasks::table
+        .filter(filtered_category.eq_sql_predicate())
+        .select(Task::as_select()).load(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+
+    let subtasks = Subtask::belonging_to(&tasks_in_category)
+        .select(Subtask::as_select())
+        .load(&mut connection)
+        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+
+    let tasks_with_subtasks = subtasks
+        .grouped_by(&tasks_in_category)
+        .into_iter()
+        .zip(tasks_in_category)
+        .map(|(pages, book)| TaskWithSubtasks::new(book, pages))
+        .collect();
+
+    Ok(tasks_with_subtasks)
 }
 
 #[server]

@@ -1,5 +1,6 @@
-use chrono::NaiveDateTime;
+use crate::models::task::Task;
 use crate::schema::subtasks;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
@@ -7,7 +8,9 @@ use validator::Validate;
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Serialize, Deserialize, PartialEq,
+    Clone, Debug)]
+#[diesel(belongs_to(Task, foreign_key = task_id))]
 #[diesel(table_name = subtasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Subtask {
