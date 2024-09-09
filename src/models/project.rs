@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use chrono::NaiveDateTime;
 use crate::schema::projects;
 use diesel::prelude::*;
@@ -32,6 +33,20 @@ impl Project {
     
     pub fn updated_at(&self) -> NaiveDateTime {
         self.updated_at
+    }
+}
+
+impl Eq for Project {}
+
+impl PartialOrd<Self> for Project {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Project {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.title().cmp(other.title())
     }
 }
 
