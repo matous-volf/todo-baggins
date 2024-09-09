@@ -6,11 +6,12 @@ use crate::query::QueryValue;
 use chrono::{Local, Locale};
 use dioxus::prelude::*;
 use dioxus_query::prelude::QueryResult;
+use crate::components::task_list_item::TaskListItem;
 
 #[component]
 pub(crate) fn CategoryTodayPage() -> Element {
     let today_date = Local::now().date_naive();
-    
+
     let calendar_tasks_query = use_tasks_with_subtasks_in_category_query(Category::Calendar {
         date: today_date,
         reoccurrence: None,
@@ -26,48 +27,36 @@ pub(crate) fn CategoryTodayPage() -> Element {
             class: "pt-4 flex flex-col gap-8",
             match long_term_tasks_query_result.value() {
                 QueryResult::Ok(QueryValue::TasksWithSubtasks(tasks))
-                | QueryResult::Loading(Some(QueryValue::TasksWithSubtasks(tasks))) => rsx! {
-                    div {
-                        class: "flex flex-col gap-4",
+                | QueryResult::Loading(Some(QueryValue::TasksWithSubtasks(tasks))) => {
+                    let mut tasks = tasks.clone();
+                    tasks.sort();
+                    rsx! {
                         div {
-                            class: "px-8 flex flex-row items-center gap-2 font-bold",
-                            i {
-                                class: "fa-solid fa-water text-xl w-6 text-center"
+                            class: "flex flex-col gap-4",
+                            div {
+                                class: "px-8 flex flex-row items-center gap-2 font-bold",
+                                i {
+                                    class: "fa-solid fa-water text-xl w-6 text-center"
+                                }
+                                div {
+                                    class: "mt-1",
+                                    "Long-term"
+                                }
                             }
                             div {
-                                class: "mt-1",
-                                "Long-term"
-                            }
-                        }
-                        div {
-                            for task in tasks {
-                                div {
-                                    key: "{task.task().id()}",
-                                    class: format!(
-                                        "px-8 pt-5 {} flex flex-row gap-4",
-                                        if task.task().deadline().is_some() {
-                                            "pb-0.5"
-                                        } else {
-                                            "pb-5"
-                                        }
-                                    ),
+                                for task in tasks {
                                     div {
-                                        class: "flex flex-col",
-                                        div {
-                                            class: "mt grow font-medium",
-                                            {task.task().title()}
-                                        },
-                                        div {
-                                            class: "flex flex-row gap-3",
-                                            if let Some(deadline) = task.task().deadline() {
-                                                div {
-                                                    class: "text-sm text-zinc-400",
-                                                    i {
-                                                        class: "fa-solid fa-bomb"
-                                                    },
-                                                    {deadline.format(" %m. %d.").to_string()}
-                                                }
+                                        key: "{task.task().id()}",
+                                        class: format!(
+                                            "px-8 pt-5 {} flex flex-row gap-4",
+                                            if task.task().deadline().is_some() {
+                                                "pb-0.5"
+                                            } else {
+                                                "pb-5"
                                             }
+                                        ),
+                                        TaskListItem {
+                                            task: task.clone()
                                         }
                                     }
                                 }

@@ -4,6 +4,7 @@ use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
+use crate::components::task_list_item::TaskListItem;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::server::tasks::complete_task;
 
@@ -12,6 +13,8 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
     let mut task_being_edited = use_context::<Signal<Option<Task>>>();
 
+    tasks.sort();
+    
     rsx! {
         div {
             class: format!("flex flex-col {}", class.unwrap_or("")),
@@ -74,50 +77,8 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                             }
                         }
                     },
-                    div {
-                        class: "flex flex-col",
-                        div {
-                            class: "mt-1 grow font-medium",
-                            {task.task().title()}
-                        },
-                        div {
-                            class: "flex flex-row gap-4",
-                            if let Some(deadline) = task.task().deadline() {
-                                div {
-                                    class: "text-sm text-zinc-400",
-                                    i {
-                                        class: "fa-solid fa-bomb"
-                                    },
-                                    {deadline.format(" %m. %-d.").to_string()}
-                                }
-                            }
-                            if let Category::Calendar { time, .. } = task.task().category() {
-                                if let Some(calendar_time) = time {
-                                    div {
-                                        class: "text-sm text-zinc-400",
-                                        i {
-                                            class: "fa-solid fa-clock"
-                                        },
-                                        {calendar_time.time().format(" %k:%M").to_string()}
-                                    }
-                                }
-                            }
-                            if !task.subtasks().is_empty() {
-                                div {
-                                    class: "text-sm text-zinc-400",
-                                    i {
-                                        class: "fa-solid fa-list-check"
-                                    },
-                                    {format!(
-                                        " {}/{}",
-                                        task.subtasks().iter()
-                                            .filter(|subtask| subtask.is_completed())
-                                            .count(),
-                                        task.subtasks().len()
-                                    )}
-                                }
-                            }
-                        }
+                    TaskListItem {
+                        task: task.clone()
                     }
                 }
             }
