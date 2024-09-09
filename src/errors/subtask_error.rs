@@ -53,6 +53,13 @@ impl From<diesel::result::Error> for SubtaskError {
     }
 }
 
+impl From<ErrorVec<Error>> for ErrorVec<SubtaskError> {
+    fn from(error_vec: ErrorVec<Error>) -> Self {
+        Vec::from(error_vec).into_iter()
+            .map(SubtaskError::Error).collect::<Vec<SubtaskError>>().into()
+    }
+}
+
 // Has to be implemented for Dioxus server functions.
 impl Display for SubtaskError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
