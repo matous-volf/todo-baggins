@@ -4,11 +4,12 @@ use crate::schema::tasks;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
+use crate::models::subtask::Subtask;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, PartialEq, Clone, Debug)]
 #[diesel(table_name = tasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Task {
@@ -48,6 +49,26 @@ impl Task {
 
     pub fn updated_at(&self) -> NaiveDateTime {
         self.updated_at
+    }
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
+pub struct TaskWithSubtasks {
+    task: Task,
+    subtasks: Vec<Subtask>,
+}
+
+impl TaskWithSubtasks {
+    pub fn new(task: Task, subtasks: Vec<Subtask>) -> Self {
+        Self { task, subtasks }
+    }
+
+    pub fn task(&self) -> &Task {
+        &self.task
+    }
+
+    pub fn subtasks(&self) -> &Vec<Subtask> {
+        &self.subtasks
     }
 }
 
