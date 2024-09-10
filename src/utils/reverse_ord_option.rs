@@ -1,9 +1,17 @@
 use std::cmp::Ordering;
-
+use std::ops::Deref;
 /* The default ordering of `Option`s is `None` being less than `Some`. The purpose of this struct is
    to reverse that. */
 #[derive(PartialEq)]
 pub(crate) struct ReverseOrdOption<'a, T>(&'a Option<T>);
+
+impl<'a, T> Deref for ReverseOrdOption<'a, T> {
+    type Target = Option<T>;
+
+    fn deref(&self) -> &Self::Target {
+        self.0
+    }
+}
 
 impl<'a, T: Ord> Eq for ReverseOrdOption<'a, T> {}
 
@@ -15,7 +23,7 @@ impl<'a, T: Ord> PartialOrd<Self> for ReverseOrdOption<'a, T> {
 
 impl<'a, T: Ord> Ord for ReverseOrdOption<'a, T> {
     fn cmp(&self, other: &Self) -> Ordering {
-        match (self.0.as_ref(), other.0.as_ref()) {
+        match (self.as_ref(), other.as_ref()) {
             (None, None) => Ordering::Equal,
             (None, Some(_)) => Ordering::Greater,
             (Some(_), None) => Ordering::Less,

@@ -1,12 +1,18 @@
-use chrono::{Datelike, Local};
+use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
 use crate::models::task::TaskWithSubtasks;
+use chrono::{Datelike, Local};
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_sdk::i18n::use_i18;
+use dioxus_sdk::translate;
+use voca_rs::Voca;
 
 #[component]
 pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
+    let i18 = use_i18();
+
     rsx! {
         div {
             class: "flex flex-col",
@@ -22,11 +28,47 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                         i {
                             class: "fa-solid fa-bomb"
                         },
-                        {deadline.format(if deadline.year() == Local::now().year() {
-                            " %m. %-d."
-                        } else {
-                            " %m. %-d. %Y"
-                        }).to_string()}
+                        {
+                            let today_date = Local::now().date_naive();
+                            format!(
+                                " {}",
+                                if deadline == today_date - chrono::Days::new(1) {
+                                    translate!(i18, "yesterday")
+                                } else if deadline == today_date {
+                                    translate!(i18, "today")
+                                } else if deadline == today_date + chrono::Days::new(1) {
+                                    translate!(i18, "tomorrow")
+                                } else if deadline > today_date
+                                    && deadline <= today_date + chrono::Days::new(7) {
+                                    let deadline = deadline.format_localized(
+                                        "%A",
+                                        LocaleFromLanguageIdentifier::from(
+                                            &(i18.selected_language)()
+                                        ).into()
+                                    ).to_string();
+                                    if translate!(i18, "formats.weekday_lowercase_first")
+                                        .parse().unwrap() {
+                                        deadline._lower_first()
+                                    } else {
+                                        deadline
+                                    }
+                                } else {
+                                    let format = translate!(i18,
+                                        if deadline.year() == today_date.year() {
+                                            "formats.date_format"
+                                        } else {
+                                            "formats.date_year_format"
+                                        }
+                                    );
+                                    deadline.format_localized(
+                                        format.as_str(),
+                                        LocaleFromLanguageIdentifier::from(
+                                            &(i18.selected_language)()
+                                        ).into()
+                                    ).to_string()
+                                }
+                            )
+                        }
                     }
                 }
                 if let Category::Calendar { time, .. } = task.task().category() {
@@ -36,7 +78,10 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                             i {
                                 class: "fa-solid fa-clock"
                             },
-                            {calendar_time.time().format(" %k:%M").to_string()}
+                            {
+                                let format = translate!(i18, "formats.time_format");
+                                format!(" {}",calendar_time.time().format(format.as_str()))
+                            }
                         }
                     }
                 }

@@ -1,0 +1,19 @@
+{
+  "id": "cs-CZ",
+  "texts": {
+    "none": "žádný",
+    "long_term": "dlouhodobé",
+    "yesterday": "včera",
+    "today": "dnes",
+    "tomorrow": "zítra",
+    "overdue": "zpožděné",
+    "formats": {
+      "date_format": "%-d. %B",
+      "date_year_format": "%-d. %B %Y",
+      "date_weekday_format": "%A %-d. %B",
+      "date_weekday_year_format": "%A %-d. %B %Y",
+      "weekday_lowercase_first": "true",
+      "time_format": "%-H:%M"
+    }
+  }
+}

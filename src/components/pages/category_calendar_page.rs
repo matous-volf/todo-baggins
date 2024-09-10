@@ -1,13 +1,16 @@
+use crate::components::task_list::TaskList;
+use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
-use chrono::{Datelike, Local, Locale};
+use crate::models::task::TaskWithSubtasks;
+use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
+use crate::query::QueryValue;
+use chrono::{Datelike, Local};
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::QueryResult;
-use crate::components::task_list::TaskList;
-use crate::query::QueryValue;
-use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
-use crate::models::task::{TaskWithSubtasks};
+use dioxus_sdk::i18n::use_i18;
+use dioxus_sdk::translate;
 
 const CALENDAR_LENGTH_DAYS: usize = 366 * 3;
 
@@ -19,6 +22,8 @@ pub(crate) fn CategoryCalendarPage() -> Element {
         time: None,
     });
     let tasks_query_result = tasks.result();
+
+    let i18 = use_i18();
 
     rsx! {
         match tasks_query_result.value() {
@@ -37,14 +42,17 @@ pub(crate) fn CategoryCalendarPage() -> Element {
                                     div {
                                         class: "pt-1",
                                         {
-                                            date_current
-                                            .format_localized(
-                                                format!(
-                                                    "%A %-d. %B{}", 
-                                                    if date_current.year() != today_date.year()
-                                                    {" %Y"} else {""}
+                                            date_current.format_localized(translate!(
+                                                    i18,
+                                                    if date_current.year() == Local::now().year() {
+                                                        "formats.date_weekday_format"
+                                                    } else {
+                                                        "formats.date_weekday_year_format"
+                                                    }
                                                 ).as_str(),
-                                                Locale::en_US
+                                                LocaleFromLanguageIdentifier::from(
+                                                    &(i18.selected_language)()
+                                                ).into()
                                             )
                                             .to_string()
                                         }
