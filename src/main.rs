@@ -6,6 +6,7 @@ mod schema;
 mod server;
 mod query;
 mod utils;
+mod internationalization;
 
 use components::app::App;
 use dioxus::prelude::*;

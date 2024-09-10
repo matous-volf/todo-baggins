@@ -1,5 +1,6 @@
 use crate::components::category_input::CategoryInput;
 use crate::components::reoccurrence_input::ReoccurrenceIntervalInput;
+use crate::components::subtasks_form::SubtasksForm;
 use crate::models::category::{CalendarTime, Category, Reoccurrence};
 use crate::models::task::NewTask;
 use crate::models::task::Task;
@@ -7,12 +8,14 @@ use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
 use crate::server::projects::get_projects;
 use crate::server::tasks::{create_task, delete_task, edit_task};
-use chrono::{Duration};
+use chrono::Duration;
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
-use crate::components::subtasks_form::SubtasksForm;
+use dioxus_sdk::i18n::use_i18;
+use dioxus_sdk::translate;
+use voca_rs::Voca;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -78,6 +81,8 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
 
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
     let task_for_submit = task.clone();
+
+    let i18 = use_i18();
 
     rsx! {
         div {
@@ -172,7 +177,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                         id: "input_project",
                         option {
                             value: 0,
-                            "None"
+                            {translate!(i18, "none")}
                         },
                         for project in projects {
                             option {
@@ -330,13 +335,14 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                 label {
                                     r#for: "category_calendar_reminder_offset_index",
                                     class: "pr-3 min-w-16 text-right",
-                                    {REMINDER_OFFSETS[category_calendar_reminder_offset_index()].map(
-                                        |offset| if offset.num_hours() < 1 {
-                                            format!("{} min", offset.num_minutes())
-                                        } else {
-                                            format!("{} h", offset.num_hours())
-                                        }
-                                    ).unwrap_or_else(|| "none".to_string())}
+                                    {REMINDER_OFFSETS[category_calendar_reminder_offset_index()]
+                                        .map(
+                                            |offset| if offset.num_hours() < 1 {
+                                                format!("{} min", offset.num_minutes())
+                                            } else {
+                                                format!("{} h", offset.num_hours())
+                                            }
+                                        ).unwrap_or_else(|| translate!(i18, "none"))}
                                 }
                             }
                         }

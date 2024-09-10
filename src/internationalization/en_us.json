@@ -1,0 +1,19 @@
+{
+  "id": "en-US",
+  "texts": {
+    "none": "none",
+    "long_term": "long-term",
+    "yesterday": "yesterday",
+    "today": "today",
+    "tomorrow": "tomorrow",
+    "overdue": "overdue",
+    "formats": {
+      "date_format": "%B %-d",
+      "date_year_format": "%B %-d, %Y",
+      "date_weekday_format": "%A, %B %-d",
+      "date_weekday_year_format": "%A, %B %-d, %Y",
+      "weekday_lowercase_first": "false",
+      "time_format": "%-I:%M %P"
+    }
+  }
+}

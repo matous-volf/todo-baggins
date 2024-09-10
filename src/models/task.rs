@@ -73,7 +73,7 @@ impl Ord for Task {
                 .then(ReverseOrdOption::from(
                     &self_time.as_ref().map(|calendar_time| calendar_time.time())
                 ).cmp(&ReverseOrdOption::from(
-                        &other_time.as_ref().map(|calendar_time| calendar_time.time())
+                    &other_time.as_ref().map(|calendar_time| calendar_time.time())
                 )))
                 .then(ReverseOrdOption::from(&self.deadline()).cmp(
                     &ReverseOrdOption::from(&other.deadline())
