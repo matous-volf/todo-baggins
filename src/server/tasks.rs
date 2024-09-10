@@ -14,9 +14,13 @@ use crate::models::subtask::Subtask;
 use crate::server::subtasks::restore_subtasks_of_task;
 
 #[server]
+#[middleware(crate::server::middleware::AuthLayer::new())]
 pub(crate) async fn create_task(new_task: NewTask)
                                 -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
     use crate::schema::tasks;
+
+    let headers: http::HeaderMap = extract().await.unwrap();
+    todo!();
 
     new_task.validate()
         .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
