@@ -27,6 +27,7 @@ time = "0.3.36"
 dioxus-sdk = { version = "0.5.0", features = ["i18n"] }
 unic-langid-impl = "0.9.5"
 voca_rs = "1.15.2"
+diesel_migrations = { version = "2.2.0", features = ["postgres"] }
 
 [features]
 default = []
