@@ -11,6 +11,7 @@ services:
       - ./Cargo.toml:/srv/app/Cargo.toml
       - ./diesel.toml:/srv/app/diesel.toml
       - ./Dioxus.toml:/srv/app/Dioxus.toml
+      - ./index.html:/srv/app/index.html
       - ./package.json:/srv/app/package.json
       - ./package-lock.json:/srv/app/package-lock.json
     restart: always

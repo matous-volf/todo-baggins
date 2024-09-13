@@ -7,9 +7,4 @@
 /* noinspection CssInvalidAtRule */
 @tailwind utilities;
 
-html, body, #main {
-    /* noinspection CssInvalidAtRule */
-    @apply min-h-screen;
-}
-
 /* stylelint-enable */
