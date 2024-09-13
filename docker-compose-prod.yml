@@ -3,7 +3,6 @@ services:
     build:
       dockerfile: docker/prod/app/Dockerfile
     restart: always
-    ports: [ "8000:8000" ]
     depends_on: [ "db" ]
     networks:
       - web-server-network
