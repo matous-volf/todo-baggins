@@ -559,6 +559,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "cookie"
+version = "0.18.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ddef33a339a91ea89fb53151bd0a4689cfce27055c291dfa69945475d22c747"
+dependencies = [
+ "percent-encoding",
+ "time",
+ "version_check",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2943,16 +2954,21 @@ version = "0.1.0"
 dependencies = [
  "async-std",
  "chrono",
+ "cookie",
  "diesel",
  "dioxus",
  "dioxus-logger",
  "dioxus-query",
  "dioxus-sdk",
  "dotenvy",
+ "http 1.1.0",
+ "pin-project-lite",
  "serde",
  "serde_json",
  "serde_with",
  "time",
+ "tower-layer",
+ "tower-service",
  "tracing",
  "tracing-wasm",
  "unic-langid-impl",
