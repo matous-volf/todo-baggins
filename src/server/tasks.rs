@@ -18,9 +18,13 @@ use crate::server::subtasks::restore_subtasks_of_task;
 pub(crate) async fn create_task(new_task: NewTask)
                                 -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
     use crate::schema::tasks;
+    
+    println!("test");
 
     let headers: http::HeaderMap = extract().await.unwrap();
-    todo!();
+    
+    dbg!(headers.iter().collect::<Vec<_>>());
+    // println!(headers.values().collect())
 
     new_task.validate()
         .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
