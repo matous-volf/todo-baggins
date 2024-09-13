@@ -10,7 +10,6 @@ services:
   db:
     image: postgres:16.4-bookworm
     volumes: [ "db_data:/var/lib/postgresql/data" ]
-    ports: [ "5432:5432" ]
     environment:
       POSTGRES_DB: todo_baggins
       POSTGRES_USER: app
