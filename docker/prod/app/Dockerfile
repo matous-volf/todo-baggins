@@ -13,7 +13,7 @@ RUN dx build --release
 
 FROM debian:bookworm-slim AS runner
 
-RUN apt-get update && apt-get install -y libpq5
+RUN apt-get update && apt-get install -y libpq5=15.8-0+deb12u1
 
 COPY --from=builder /srv/app/dist /srv/app/dist
 COPY .env /srv/app/.env
