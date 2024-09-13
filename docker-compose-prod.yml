@@ -2,14 +2,17 @@ services:
   app:
     build:
       dockerfile: docker/prod/app/Dockerfile
+    networks:
+      - default
+      - web-server-network
     restart: always
     depends_on: [ "db" ]
-    networks:
-      - web-server-network
 
   db:
     image: postgres:16.4-bookworm
     volumes: [ "db_data:/var/lib/postgresql/data" ]
+    networks:
+      - default
     environment:
       POSTGRES_DB: todo_baggins
       POSTGRES_USER: app
