@@ -7,9 +7,9 @@ RUN rustup target add wasm32-unknown-unknown && \
 COPY . /srv/app
 WORKDIR /srv/app
 
-RUN npm install
-RUN npm run build
-RUN dx build --release
+RUN npm install && \
+    npm run build && \
+    dx build --release
 
 FROM debian:bookworm-slim AS runner
 
