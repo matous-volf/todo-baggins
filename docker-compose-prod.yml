@@ -5,6 +5,8 @@ services:
     restart: always
     ports: [ "8000:8000" ]
     depends_on: [ "db" ]
+    networks:
+      - web-server-network
 
   db:
     image: postgres:16.4-bookworm
@@ -18,3 +20,7 @@ services:
 
 volumes:
   db_data:
+
+networks:
+  web-server-network:
+    external: true
