@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="icon.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="1.1020922"
+     inkscape:cx="188.27826"
+     inkscape:cy="204.15715"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="display:inline;fill:#27272a;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1"
+       width="512"
+       height="512"
+       x="0"
+       y="0"
+       sodipodi:insensitive="true"
+       inkscape:label="background"
+       ry="128.00018"
+       sodipodi:type="rect"
+       rx="129.98714" />
+    <g
+       id="g17"
+       inkscape:label="logo"
+       transform="translate(8)">
+      <g
+         id="g8"
+         inkscape:label="ring">
+        <g
+           id="g7"
+           inkscape:label="back">
+          <circle
+             style="fill:#d97706;fill-opacity:1;stroke:#d97706;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="path1"
+             cx="224"
+             cy="256"
+             r="128"
+             inkscape:label="ring back" />
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:21.8936;stroke-dasharray:none;stroke-opacity:1"
+             id="rect2"
+             width="48"
+             height="288"
+             x="224"
+             y="112"
+             inkscape:label="rect2" />
+        </g>
+        <g
+           id="g1"
+           transform="translate(-4.163147,-0.69235229)"
+           inkscape:label="front">
+          <circle
+             style="fill:#27272a;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="path1-5-2"
+             cx="276.16315"
+             cy="256.69235"
+             r="128" />
+          <circle
+             style="fill:none;fill-opacity:1;stroke:#fbbf24;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="path1-5"
+             cx="276.16315"
+             cy="256.69235"
+             r="128" />
+        </g>
+      </g>
+      <g
+         id="g16"
+         inkscape:label="tick"
+         transform="translate(16.000231,-8.3918418e-5)">
+        <g
+           id="g6"
+           transform="rotate(45,-57.96574,415.4208)"
+           style="fill:#d97706;fill-opacity:1;stroke:none;stroke-opacity:1"
+           inkscape:label="back">
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="rect9"
+             width="32.000458"
+             height="32"
+             x="273.94067"
+             y="210.74516"
+             transform="rotate(-45,-57.96574,415.4208)" />
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="rect8"
+             width="32.000458"
+             height="32"
+             x="206.05841"
+             y="233.37257"
+             transform="rotate(-45,-57.96574,415.4208)" />
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="rect7"
+             height="16"
+             x="228.686"
+             y="285.255"
+             width="32"
+             transform="rotate(-45,-57.96574,415.4208)" />
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="rect5"
+             width="64"
+             height="32"
+             x="0"
+             y="100" />
+          <rect
+             style="fill:#d97706;fill-opacity:1;stroke:none;stroke-width:39.1918;stroke-dasharray:none;stroke-opacity:1"
+             id="rect6"
+             width="32"
+             height="96"
+             x="32"
+             y="36" />
+        </g>
+        <g
+           id="g4"
+           transform="rotate(45,-41.965512,454.04877)"
+           style="fill:#fbbf24;fill-opacity:1;stroke:none;stroke-opacity:1"
+           inkscape:label="front">
+          <rect
+             style="fill:#fbbf24;fill-opacity:1;stroke:none;stroke-width:32;stroke-dasharray:none;stroke-opacity:1"
+             id="rect3"
+             width="64"
+             height="32"
+             x="0"
+             y="100" />
+          <rect
+             style="fill:#fbbf24;fill-opacity:1;stroke:none;stroke-width:39.1918;stroke-dasharray:none;stroke-opacity:1"
+             id="rect4"
+             width="32"
+             height="96"
+             x="32"
+             y="36" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
