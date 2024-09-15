@@ -1,0 +1,15 @@
+{
+  "name": "Todo Baggins",
+  "short_name": "Todo Baggins",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#27272a",
+  "theme_color": "#27272a",
+  "icons": [
+    {
+      "src": "/images/icon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
