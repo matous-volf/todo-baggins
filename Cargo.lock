@@ -388,6 +388,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "bstr"
+version = "1.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40723b8fb387abc38f4f4a37c09073622e41dd12327033091ef8950659e6dc0c"
+dependencies = [
+ "memchr",
+ "regex-automata",
+ "serde",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1257,6 +1268,19 @@ name = "fastrand"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9fc0510504f03c51ada170672ac806f1f105a88aa97a5281117e1ddc3368e51a"
+
+[[package]]
+name = "feruca"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25789ad6dfe8de73de0d96ea93ea8270dd15e2c51c3ee9212241da3701a343ee"
+dependencies = [
+ "bincode",
+ "bstr",
+ "once_cell",
+ "rustc-hash",
+ "unicode-canonical-combining-class",
+]
 
 [[package]]
 name = "fixedbitset"
@@ -2991,6 +3015,7 @@ dependencies = [
  "dioxus-query",
  "dioxus-sdk",
  "dotenvy",
+ "feruca",
  "serde",
  "serde_json",
  "serde_with",
@@ -3294,6 +3319,12 @@ name = "unicode-bidi"
 version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08f95100a766bf4f8f28f90d77e0a5461bbdb219042e7679bebe79004fed8d75"
+
+[[package]]
+name = "unicode-canonical-combining-class"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6925586af9268182c711e47c0853ed84131049efaca41776d0ca97f983865c32"
 
 [[package]]
 name = "unicode-ident"
