@@ -15,7 +15,6 @@ use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
 use dioxus_sdk::i18n::use_i18;
 use dioxus_sdk::translate;
-use voca_rs::Voca;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -182,7 +181,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                         for project in projects {
                             option {
                                 value: project.id().to_string(),
-                                selected: task.as_ref().is_some_and(
+                                initial_selected: task.as_ref().is_some_and(
                                     |task| task.project_id() == Some(project.id())
                                 ),
                                 {project.title()}
