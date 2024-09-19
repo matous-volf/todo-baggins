@@ -13,6 +13,10 @@ pub(crate) async fn create_subtask(new_subtask: NewSubtask)
                                    -> Result<Subtask, ServerFnError<ErrorVec<SubtaskError>>> {
     use crate::schema::subtasks;
 
+    // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
+    let mut new_subtask = new_subtask;
+    new_subtask.title = new_subtask.title.trim().to_owned();
+
     new_subtask.validate()
         .map_err::<ErrorVec<SubtaskError>, _>(|errors| errors.into())?;
 
@@ -54,6 +58,10 @@ pub(crate) async fn get_subtasks_of_task(filtered_task_id: i32)
 pub(crate) async fn edit_subtask(subtask_id: i32, new_subtask: NewSubtask)
                                  -> Result<Subtask, ServerFnError<ErrorVec<SubtaskError>>> {
     use crate::schema::subtasks::dsl::*;
+
+    // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
+    let mut new_subtask = new_subtask;
+    new_subtask.title = new_subtask.title.trim().to_owned();
 
     new_subtask.validate()
         .map_err::<ErrorVec<SubtaskError>, _>(|errors| errors.into())?;
