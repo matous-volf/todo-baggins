@@ -2,6 +2,7 @@ use std::cmp::Ordering;
 use chrono::NaiveDateTime;
 use crate::schema::projects;
 use diesel::prelude::*;
+use feruca::Collator;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -46,7 +47,7 @@ impl PartialOrd<Self> for Project {
 
 impl Ord for Project {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.title().cmp(other.title())
+        Collator::default().collate(self.title(), other.title())
     }
 }
 
