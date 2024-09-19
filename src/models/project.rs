@@ -4,6 +4,7 @@ use crate::schema::projects;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
+use crate::internationalization::COLLATOR;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
@@ -46,7 +47,7 @@ impl PartialOrd<Self> for Project {
 
 impl Ord for Project {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.title().cmp(other.title())
+        COLLATOR.lock().unwrap().collate(self.title(), other.title())
     }
 }
 

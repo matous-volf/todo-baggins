@@ -6,15 +6,15 @@ use crate::models::task::NewTask;
 use crate::models::task::Task;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
-use crate::server::projects::get_projects;
 use crate::server::tasks::{create_task, delete_task, edit_task};
 use chrono::Duration;
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use dioxus_query::prelude::use_query_client;
+use dioxus_query::prelude::{use_query_client, QueryResult};
 use dioxus_sdk::i18n::use_i18;
 use dioxus_sdk::translate;
+use crate::query::projects::use_projects_query;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -38,25 +38,25 @@ const REMINDER_OFFSETS: [Option<Duration>; 17] = [
 
 #[component]
 pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()>) -> Element {
-    let projects = use_server_future(get_projects)?.unwrap().unwrap();
+    let projects_query = use_projects_query();
 
     let route = use_route::<Route>();
     let selected_category = use_signal(|| if let Some(task) = &task {
-        task.category().clone()
-    } else {
-        match route {
-            Route::CategorySomedayMaybePage => Category::SomedayMaybe,
-            Route::CategoryWaitingForPage => Category::WaitingFor(String::new()),
-            Route::CategoryNextStepsPage => Category::NextSteps,
-            Route::CategoryCalendarPage | Route::CategoryTodayPage => Category::Calendar {
-                date: chrono::Local::now().date_naive(),
-                reoccurrence: None,
-                time: None,
-            },
-            Route::CategoryLongTermPage => Category::LongTerm,
-            _ => Category::Inbox,
+            task.category().clone()
+        } else {
+            match route {
+                Route::CategorySomedayMaybePage => Category::SomedayMaybe,
+                Route::CategoryWaitingForPage => Category::WaitingFor(String::new()),
+                Route::CategoryNextStepsPage => Category::NextSteps,
+                Route::CategoryCalendarPage | Route::CategoryTodayPage => Category::Calendar {
+                    date: chrono::Local::now().date_naive(),
+                    reoccurrence: None,
+                    time: None,
+                },
+                Route::CategoryLongTermPage => Category::LongTerm,
+                _ => Category::Inbox,
+            }
         }
-    }
     );
     let category_calendar_reoccurrence_interval = use_signal(|| task.as_ref().and_then(|task|
         if let Category::Calendar { reoccurrence: Some(reoccurrence), .. } = task.category() {
@@ -178,14 +178,32 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                             value: 0,
                             {translate!(i18, "none")}
                         },
-                        for project in projects {
-                            option {
-                                value: project.id().to_string(),
-                                initial_selected: task.as_ref().is_some_and(
-                                    |task| task.project_id() == Some(project.id())
-                                ),
-                                {project.title()}
-                            }
+                        match projects_query.result().value() {
+                            QueryResult::Ok(QueryValue::Projects(projects))
+                            | QueryResult::Loading(Some(QueryValue::Projects(projects))) => {
+                                let mut projects = projects.clone();
+                                projects.sort();
+                                rsx! {
+                                    for project in projects {
+                                        option {
+                                            value: project.id().to_string(),
+                                            initial_selected: task.as_ref().is_some_and(
+                                                |task| task.project_id() == Some(project.id())
+                                            ),
+                                            {project.title()}
+                                        }
+                                    }
+                                }
+                            },
+                            QueryResult::Loading(None) => rsx! {
+                                // TODO: Add a loading indicator.
+                            },
+                            QueryResult::Err(errors) => rsx! {
+                                div {
+                                    "Errors occurred: {errors:?}"
+                                }
+                            },
+                            value => panic!("Unexpected query result: {value:?}")
                         }
                     },
                 },
