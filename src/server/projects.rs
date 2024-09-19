@@ -12,6 +12,10 @@ pub(crate) async fn create_project(new_project: NewProject)
                                    -> Result<Project, ServerFnError<ErrorVec<ProjectError>>> {
     use crate::schema::projects;
 
+    // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
+    let mut new_project = new_project;
+    new_project.title = new_project.title.trim().to_owned();
+
     new_project.validate()
         .map_err::<ErrorVec<ProjectError>, _>(|errors| errors.into())?;
 
@@ -53,6 +57,10 @@ pub(crate) async fn get_projects()
 pub(crate) async fn edit_project(project_id: i32, new_project: NewProject)
                                  -> Result<Project, ServerFnError<ErrorVec<ProjectError>>> {
     use crate::schema::projects::dsl::*;
+
+    // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
+    let mut new_project = new_project;
+    new_project.title = new_project.title.trim().to_owned();
 
     new_project.validate()
         .map_err::<ErrorVec<ProjectError>, _>(|errors| errors.into())?;
