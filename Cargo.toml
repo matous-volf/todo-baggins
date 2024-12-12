@@ -7,30 +7,39 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dioxus = { version = "0.6.0", features = ["fullstack", "router"] }
+dioxus-query = "0.6.0"
+dioxus-i18n = "0.3.0"
+
+async-std = "1.12.0"
 chrono = { version = "0.4.38", features = ["serde", "unstable-locales"] }
 diesel = { version = "2.2.2", features = ["chrono", "postgres", "postgres_backend", "serde_json"] }
-
-dioxus = { version = "0.5", features = ["fullstack", "router"] }
-
-# Debug
-dioxus-logger = "0.5.1"
-dotenvy = "0.15.7"
-serde = "1.0.208"
-validator = { version = "0.18.1", features = ["derive"] }
-serde_json = "1.0.125"
-tracing = "0.1.40"
-tracing-wasm = "0.2.1"
-serde_with = { version = "3.9.0", features = ["chrono_0_4"] }
-async-std = "1.12.0"
-dioxus-query = "0.5.1"
-time = "0.3.36"
-dioxus-sdk = { version = "0.5.0", features = ["i18n"] }
-unic-langid-impl = "0.9.5"
-voca_rs = "1.15.2"
 diesel_migrations = { version = "2.2.0", features = ["postgres"] }
+dotenvy = "0.15.7"
 feruca = "0.10.0"
+serde = "1.0.208"
+serde_json = "1.0.125"
+serde_with = { version = "3.9.0", features = ["chrono_0_4"] }
+time = "0.3.36"
+tracing = "0.1.40"
+unic-langid-impl = { version = "0.9.5", features = ["serde"] }
+validator = { version = "0.19.0", features = ["derive"] }
+voca_rs = "1.15.2"
 
 [features]
-default = []
-server = ["dioxus/axum"]
+default = ["web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
 web = ["dioxus/web"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

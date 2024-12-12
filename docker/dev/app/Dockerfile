@@ -1,4 +1,4 @@
-FROM rust:1.80-bookworm
+FROM rust:1.83-bookworm
 
 RUN rustup target add wasm32-unknown-unknown && \
     cargo install dioxus-cli diesel_cli && \
@@ -16,7 +16,7 @@ RUN chown -R 1000:1000 /srv/app && \
     mkdir -p /.local/share/dioxus && \
     chown -R 1000:1000 /.local/share/dioxus
 
-HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
+HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost:8000 || exit 1
 
 USER 1000:1000
 
