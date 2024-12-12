@@ -7,9 +7,9 @@ use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
 use crate::query::QueryValue;
 use chrono::Local;
 use dioxus::prelude::*;
+use dioxus_i18n::t;
+use dioxus_i18n::use_i18n::i18n;
 use dioxus_query::prelude::QueryResult;
-use dioxus_sdk::i18n::use_i18;
-use dioxus_sdk::translate;
 use voca_rs::Voca;
 
 #[component]
@@ -25,9 +25,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
 
     let long_term_tasks_query = use_tasks_with_subtasks_in_category_query(Category::LongTerm);
     let long_term_tasks_query_result = long_term_tasks_query.result();
-
-    let i18 = use_i18();
-
+    
     rsx! {
         div {
             class: "pt-4 flex flex-col gap-8",
@@ -46,7 +44,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                                 }
                                 div {
                                     class: "mt-1",
-                                    {translate!(i18, "long_term")._upper_first()}
+                                    {t!("long-term")._upper_first()}
                                 }
                             }
                             div {
@@ -97,7 +95,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                             panic!("Unexpected category.");
                         }
                     }).cloned().collect::<Vec<TaskWithSubtasks>>();
-        
+
                     rsx! {
                         if !overdue_tasks.is_empty() {
                             div {
@@ -109,7 +107,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
                                     }
                                     div {
                                         class: "mt-1",
-                                        {translate!(i18, "overdue")._upper_first()}
+                                        {t!("overdue")._upper_first()}
                                     }
                                 }
                                 TaskList {
@@ -128,18 +126,17 @@ pub(crate) fn CategoryTodayPage() -> Element {
                                 div {
                                     class: "mt-1",
                                     {
-                                        let format = translate!(i18, "formats.date_weekday_format");
+                                        let format = t!("date-weekday-format");
                                         let today_date = today_date.format_localized(
                                             format.as_str(),
                                             LocaleFromLanguageIdentifier::from(
-                                                &(i18.selected_language)()
+                                                &i18n().language()
                                             ).into()
                                         ).to_string();
                                         format!(
                                             "{} – {}",
-                                            translate!(i18, "today")._upper_first(),
-                                            if translate!(i18, "formats.weekday_lowercase_first")
-                                                .parse().unwrap() {
+                                            t!("today")._upper_first(),
+                                            if t!("weekday-lowercase-first").parse().unwrap() {
                                                 today_date._lower_first()
                                             } else {
                                                 today_date

@@ -75,7 +75,7 @@ pub(crate) fn Navigation(expanded: Signal<bool>) -> Element {
                         }
                     }
                 }
-            } else { None }}
+            } else { VNode::empty() }}
         }
     }
 }

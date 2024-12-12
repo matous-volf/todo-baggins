@@ -116,7 +116,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                                     onchange: {
                                         let subtask = subtask.clone();
                                         let task = task.clone();
-                                        move |event| {
+                                        move |event: Event<FormData>| {
                                             let subtask = subtask.clone();
                                             let task = task.clone();
                                             async move {

@@ -1,3 +1,4 @@
+use dioxus_i18n::prelude::i18n;
 use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
 use crate::models::task::TaskWithSubtasks;
@@ -5,19 +6,16 @@ use chrono::{Datelike, Local};
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use dioxus_sdk::i18n::use_i18;
-use dioxus_sdk::translate;
+use dioxus_i18n::t;
 use voca_rs::Voca;
 
 #[component]
 pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
-    let i18 = use_i18();
-
     rsx! {
         div {
             class: "flex flex-col",
             div {
-                class: "mt-1 grow font-medium",
+                class: "grow font-medium",
                 {task.task().title()}
             },
             div {
@@ -33,37 +31,37 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                             format!(
                                 " {}",
                                 if deadline == today_date - chrono::Days::new(1) {
-                                    translate!(i18, "yesterday")
+                                    t!("yesterday")
                                 } else if deadline == today_date {
-                                    translate!(i18, "today")
+                                    t!("today")
                                 } else if deadline == today_date + chrono::Days::new(1) {
-                                    translate!(i18, "tomorrow")
+                                    t!("tomorrow")
                                 } else if deadline > today_date
                                     && deadline <= today_date + chrono::Days::new(7) {
                                     let deadline = deadline.format_localized(
                                         "%A",
                                         LocaleFromLanguageIdentifier::from(
-                                            &(i18.selected_language)()
+                                            &i18n().language()
                                         ).into()
                                     ).to_string();
-                                    if translate!(i18, "formats.weekday_lowercase_first")
+                                    if t!("weekday-lowercase-first")
                                         .parse().unwrap() {
                                         deadline._lower_first()
                                     } else {
                                         deadline
                                     }
                                 } else {
-                                    let format = translate!(i18,
+                                    let format = t!(
                                         if deadline.year() == today_date.year() {
-                                            "formats.date_format"
+                                            "date-format"
                                         } else {
-                                            "formats.date_year_format"
+                                            "date-year-format"
                                         }
                                     );
                                     deadline.format_localized(
                                         format.as_str(),
                                         LocaleFromLanguageIdentifier::from(
-                                            &(i18.selected_language)()
+                                            &i18n().language()
                                         ).into()
                                     ).to_string()
                                 }
@@ -79,8 +77,8 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                                 class: "fa-solid fa-clock"
                             },
                             {
-                                let format = translate!(i18, "formats.time_format");
-                                format!(" {}",calendar_time.time().format(format.as_str()))
+                                let format = t!("time-format");
+                                format!(" {}", calendar_time.time().format(format.as_str()))
                             }
                         }
                     }
