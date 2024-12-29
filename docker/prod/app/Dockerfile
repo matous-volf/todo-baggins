@@ -1,4 +1,4 @@
-FROM rust:1.83-bookworm AS builder
+FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b AS builder
 
 RUN rustup target add wasm32-unknown-unknown \
  && cargo install dioxus-cli diesel_cli \
@@ -16,7 +16,7 @@ RUN npm install \
  && npm run build \
  && dx build --release
 
-FROM debian:bookworm-slim AS runner
+FROM debian@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libpq5=15.8-0+deb12u1 \

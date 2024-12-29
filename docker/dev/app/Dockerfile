@@ -1,4 +1,4 @@
-FROM rust:1.83-bookworm
+FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b
 
 RUN cargo install dioxus-cli diesel_cli \
  && apt-get update && apt-get install -y --no-install-recommends \
