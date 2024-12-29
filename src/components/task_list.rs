@@ -23,7 +23,7 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                 div {
                     key: "{task.task().id()}",
                     class: format!(
-                        "px-8 pt-4 {} flex flex-row items-center gap-4 select-none {}",
+                        "px-8 pt-4 {} flex flex-row gap-4 select-none {}",
                         if task.task().deadline().is_some() || !task.subtasks().is_empty() {
                             "pb-0.5"
                         } else if let Category::Calendar { time, .. } = task.task().category() {
