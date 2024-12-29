@@ -30,13 +30,7 @@ watch_path = ["src", "assets"]
 [web.resource]
 
 # CSS style file
-
-style = [
-    "/styles/tailwind_output.css",
-    "/styles/fonts.css",
-    "/styles/input_number_arrows.css",
-    "/styles/input_range.css"
-]
+style = []
 
 # Javascript code file
 script = ["https://kit.fontawesome.com/3c1b409f8f.js"]

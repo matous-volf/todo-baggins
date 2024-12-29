@@ -1,4 +1,4 @@
-FROM rust:1.80-bookworm AS builder
+FROM rust:1.83-bookworm AS builder
 
 RUN rustup target add wasm32-unknown-unknown && \
     cargo install dioxus-cli diesel_cli && \
@@ -15,15 +15,17 @@ FROM debian:bookworm-slim AS runner
 
 RUN apt-get update && apt-get install -y libpq5=15.8-0+deb12u1
 
-COPY --from=builder /srv/app/dist /srv/app/dist
+COPY --from=builder /srv/app/target/dx/todo-baggins/release/web /srv/app
 COPY .env /srv/app/.env
 
 RUN chown -R 1000:1000 /srv/app
 
 WORKDIR /srv/app
 
-HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
+HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost || exit 1
 
 USER 1000:1000
 
-CMD ["./dist/todo-baggins"]
+ENV IP="0.0.0.0"
+ENV PORT="80"
+CMD ["./server"]
