@@ -15,7 +15,7 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
         div {
             class: "flex flex-col",
             div {
-                class: "grow font-medium",
+                class: "mt-2 grow font-medium",
                 {task.task().title()}
             },
             div {
