@@ -1,8 +1,10 @@
 use crate::models::category::Category;
 use crate::models::subtask::Subtask;
+#[cfg(feature = "server")]
 use crate::schema::tasks;
 use crate::utils::reverse_ord_option::ReverseOrdOption;
 use chrono::NaiveDateTime;
+#[cfg(feature = "server")]
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -11,9 +13,9 @@ use validator::Validate;
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, PartialEq, Clone, Debug)]
-#[diesel(table_name = tasks)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
+#[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Queryable, Selectable, Identifiable))]
+#[cfg_attr(feature = "server", diesel(table_name = tasks, check_for_backend(diesel::pg::Pg)))]
 pub struct Task {
     id: i32,
     title: String,
@@ -138,8 +140,9 @@ impl Ord for TaskWithSubtasks {
     }
 }
 
-#[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
-#[diesel(table_name = tasks)]
+#[derive(Serialize, Deserialize, Validate, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Insertable))]
+#[cfg_attr(feature = "server", diesel(table_name = tasks))]
 pub struct NewTask {
     #[validate(length(
         min = "TITLE_LENGTH_MIN",

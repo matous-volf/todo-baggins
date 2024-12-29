@@ -7,7 +7,6 @@ use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
-use tracing::info;
 
 #[component]
 pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>) -> Element {

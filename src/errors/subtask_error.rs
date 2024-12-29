@@ -36,6 +36,7 @@ impl From<ValidationErrors> for ErrorVec<SubtaskError> {
     }
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for SubtaskError {
     fn from(diesel_error: diesel::result::Error) -> Self {
         match diesel_error {

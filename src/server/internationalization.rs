@@ -1,5 +1,6 @@
 use dioxus::prelude::ServerFnError;
 use dioxus::prelude::*;
+#[cfg(feature = "server")]
 use dotenvy::dotenv;
 use std::env;
 use unic_langid_impl::LanguageIdentifier;

@@ -4,6 +4,7 @@ use crate::server::tasks::{get_tasks_in_category, get_tasks_with_subtasks_in_cat
 use dioxus::prelude::ServerFnError;
 use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
 
+#[allow(dead_code)]
 pub(crate) fn use_tasks_in_category_query(
     category: Category,
 ) -> UseQuery<QueryValue, QueryErrors, QueryKey> {

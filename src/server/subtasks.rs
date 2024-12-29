@@ -2,10 +2,14 @@ use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::errors::subtask_error::SubtaskError;
 use crate::models::subtask::{NewSubtask, Subtask};
+#[cfg(feature = "server")]
 use crate::server::database_connection::establish_database_connection;
+#[cfg(feature = "server")]
 use crate::server::tasks::trigger_task_updated_at;
+#[cfg(feature = "server")]
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
+#[cfg(feature = "server")]
 use validator::Validate;
 
 #[server]

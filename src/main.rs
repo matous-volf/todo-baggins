@@ -1,10 +1,12 @@
 mod components;
 mod errors;
 mod internationalization;
+#[cfg(feature = "server")]
 mod migrations;
 mod models;
 mod query;
 mod route;
+#[cfg(feature = "server")]
 mod schema;
 mod server;
 mod utils;

@@ -1,16 +1,26 @@
 use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::errors::task_error::TaskError;
-use crate::models::category::{Category, ReoccurrenceInterval};
+use crate::models::category::Category;
+#[cfg(feature = "server")]
+use crate::models::category::ReoccurrenceInterval;
+#[cfg(feature = "server")]
 use crate::models::subtask::Subtask;
 use crate::models::task::{NewTask, Task, TaskWithSubtasks};
+#[cfg(feature = "server")]
 use crate::server::database_connection::establish_database_connection;
+#[cfg(feature = "server")]
 use crate::server::subtasks::restore_subtasks_of_task;
+#[cfg(feature = "server")]
 use chrono::{Datelike, Days, Local, Months, NaiveDate};
+#[cfg(feature = "server")]
 use diesel::prelude::*;
+#[cfg(feature = "server")]
 use diesel::{ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
+#[cfg(feature = "server")]
 use time::util::days_in_year_month;
+#[cfg(feature = "server")]
 use validator::Validate;
 
 #[server]
@@ -204,6 +214,7 @@ pub(crate) async fn delete_task(task_id: i32) -> Result<(), ServerFnError<ErrorV
     Ok(())
 }
 
+#[cfg(feature = "server")]
 pub(crate) async fn trigger_task_updated_at(task_id: i32) -> Result<Task, ErrorVec<Error>> {
     use crate::schema::tasks::dsl::*;
 

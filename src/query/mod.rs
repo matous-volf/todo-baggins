@@ -9,6 +9,7 @@ pub(crate) mod projects;
 pub(crate) mod subtasks;
 pub(crate) mod tasks;
 
+#[allow(dead_code)]
 #[derive(PartialEq, Debug)]
 pub(crate) enum QueryValue {
     Projects(Vec<Project>),
@@ -17,6 +18,7 @@ pub(crate) enum QueryValue {
     Subtasks(Vec<Subtask>),
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub(crate) enum QueryErrors {
     Error(ErrorVec<Error>),

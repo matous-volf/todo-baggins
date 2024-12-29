@@ -2,9 +2,12 @@ use crate::errors::error::Error;
 use crate::errors::error_vec::ErrorVec;
 use crate::errors::project_error::ProjectError;
 use crate::models::project::{NewProject, Project};
+#[cfg(feature = "server")]
 use crate::server::database_connection::establish_database_connection;
+#[cfg(feature = "server")]
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
+#[cfg(feature = "server")]
 use validator::Validate;
 
 #[server]

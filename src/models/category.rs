@@ -1,19 +1,28 @@
+#[cfg(feature = "server")]
 use crate::schema::tasks;
 use chrono::{Duration, NaiveDate, NaiveTime};
+#[cfg(feature = "server")]
 use diesel::deserialize::FromSql;
+#[cfg(feature = "server")]
 use diesel::pg::{Pg, PgValue};
+#[cfg(feature = "server")]
 use diesel::serialize::{Output, ToSql};
+#[cfg(feature = "server")]
 use diesel::sql_types::{Bool, Jsonb};
+#[cfg(feature = "server")]
 use diesel::{AsExpression, BoxableExpression, FromSqlRow, PgJsonbExpressionMethods};
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "server")]
 use serde_json::json;
 use serde_with::DurationSeconds;
 use std::hash::Hash;
+#[cfg(feature = "server")]
 use std::io::Write;
 
 #[serde_with::serde_as]
-#[derive(AsExpression, FromSqlRow, Serialize, Deserialize, Clone, Debug)]
-#[diesel(sql_type = Jsonb)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(AsExpression, FromSqlRow))]
+#[cfg_attr(feature = "server", diesel(sql_type = Jsonb))]
 pub enum Category {
     Inbox,
     SomedayMaybe,
@@ -29,6 +38,7 @@ pub enum Category {
     Trash,
 }
 
+#[cfg(feature = "server")]
 impl Category {
     pub fn eq_sql_predicate(&self) -> Box<dyn BoxableExpression<tasks::table, Pg, SqlType = Bool>> {
         use crate::schema::tasks::dsl::*;
@@ -60,6 +70,7 @@ impl PartialEq for Category {
 
 impl Eq for Category {}
 
+#[cfg(feature = "server")]
 impl ToSql<Jsonb, Pg> for Category {
     fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Pg>) -> diesel::serialize::Result {
         let json = serde_json::to_string(self)?;
@@ -72,6 +83,7 @@ impl ToSql<Jsonb, Pg> for Category {
     }
 }
 
+#[cfg(feature = "server")]
 impl FromSql<Jsonb, Pg> for Category {
     fn from_sql(bytes: PgValue) -> diesel::deserialize::Result<Self> {
         let bytes = bytes.as_bytes();

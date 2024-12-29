@@ -1,6 +1,9 @@
+#[cfg(feature = "server")]
 use crate::models::task::Task;
+#[cfg(feature = "server")]
 use crate::schema::subtasks;
 use chrono::NaiveDateTime;
+#[cfg(feature = "server")]
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -9,20 +12,19 @@ use validator::Validate;
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(
-    Queryable,
-    Selectable,
-    Identifiable,
-    Associations,
-    Serialize,
-    Deserialize,
-    PartialEq,
-    Clone,
-    Debug,
+#[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[cfg_attr(
+    feature = "server",
+    derive(Queryable, Selectable, Identifiable, Associations)
 )]
-#[diesel(belongs_to(Task, foreign_key = task_id))]
-#[diesel(table_name = subtasks)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
+#[cfg_attr(
+    feature = "server", 
+    diesel(
+        table_name = subtasks,
+        belongs_to(Task, foreign_key = task_id),
+        check_for_backend(diesel::pg::Pg)
+    )
+)]
 pub struct Subtask {
     id: i32,
     task_id: i32,
@@ -74,8 +76,9 @@ impl Ord for Subtask {
     }
 }
 
-#[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
-#[diesel(table_name = subtasks)]
+#[derive(Serialize, Deserialize, Validate, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Insertable))]
+#[cfg_attr(feature = "server", diesel(table_name = subtasks))]
 pub struct NewSubtask {
     pub task_id: i32,
     #[validate(length(

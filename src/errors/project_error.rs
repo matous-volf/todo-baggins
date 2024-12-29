@@ -35,6 +35,7 @@ impl From<ValidationErrors> for ErrorVec<ProjectError> {
     }
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for ProjectError {
     fn from(_: diesel::result::Error) -> Self {
         Self::Error(Error::ServerInternal)
