@@ -1,4 +1,3 @@
-use std::hash::Hash;
 use crate::schema::tasks;
 use chrono::{Duration, NaiveDate, NaiveTime};
 use diesel::deserialize::FromSql;
@@ -9,6 +8,7 @@ use diesel::{AsExpression, BoxableExpression, FromSqlRow, PgJsonbExpressionMetho
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use serde_with::DurationSeconds;
+use std::hash::Hash;
 use std::io::Write;
 
 #[serde_with::serde_as]
@@ -30,7 +30,7 @@ pub enum Category {
 }
 
 impl Category {
-    pub fn eq_sql_predicate(&self) -> Box<dyn BoxableExpression<tasks::table, Pg, SqlType=Bool>> {
+    pub fn eq_sql_predicate(&self) -> Box<dyn BoxableExpression<tasks::table, Pg, SqlType = Bool>> {
         use crate::schema::tasks::dsl::*;
 
         match self {
@@ -99,13 +99,17 @@ pub struct Reoccurrence {
 
 impl Reoccurrence {
     pub fn new(start_date: NaiveDate, interval: ReoccurrenceInterval, length: u32) -> Self {
-        Self { start_date, interval, length }
+        Self {
+            start_date,
+            interval,
+            length,
+        }
     }
-    
+
     pub fn start_date(&self) -> NaiveDate {
         self.start_date
     }
-    
+
     pub fn interval(&self) -> &ReoccurrenceInterval {
         &self.interval
     }
@@ -125,9 +129,12 @@ pub struct CalendarTime {
 
 impl CalendarTime {
     pub fn new(time: NaiveTime, reminder_offset: Option<Duration>) -> Self {
-        Self { time, reminder_offset }
+        Self {
+            time,
+            reminder_offset,
+        }
     }
-    
+
     pub fn time(&self) -> NaiveTime {
         self.time
     }

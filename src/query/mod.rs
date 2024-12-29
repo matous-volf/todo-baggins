@@ -5,9 +5,9 @@ use crate::models::project::Project;
 use crate::models::subtask::Subtask;
 use crate::models::task::{Task, TaskWithSubtasks};
 
-pub(crate) mod tasks;
 pub(crate) mod projects;
 pub(crate) mod subtasks;
+pub(crate) mod tasks;
 
 #[derive(PartialEq, Debug)]
 pub(crate) enum QueryValue {

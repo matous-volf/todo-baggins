@@ -1,10 +1,10 @@
-use std::cmp::Ordering;
-use chrono::NaiveDateTime;
+use crate::internationalization::COLLATOR;
 use crate::schema::projects;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use validator::Validate;
-use crate::internationalization::COLLATOR;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
@@ -27,11 +27,11 @@ impl Project {
     pub fn title(&self) -> &str {
         &self.title
     }
-    
+
     pub fn created_at(&self) -> NaiveDateTime {
         self.created_at
     }
-    
+
     pub fn updated_at(&self) -> NaiveDateTime {
         self.updated_at
     }
@@ -47,14 +47,21 @@ impl PartialOrd<Self> for Project {
 
 impl Ord for Project {
     fn cmp(&self, other: &Self) -> Ordering {
-        COLLATOR.lock().unwrap().collate(self.title(), other.title())
+        COLLATOR
+            .lock()
+            .unwrap()
+            .collate(self.title(), other.title())
     }
 }
 
 #[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
 #[diesel(table_name = projects)]
 pub struct NewProject {
-    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
     pub title: String,
 }
 

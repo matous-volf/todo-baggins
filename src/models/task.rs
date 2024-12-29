@@ -67,23 +67,39 @@ impl Ord for Task {
         match (&self.category, &other.category) {
             (Category::Inbox, Category::Inbox) => self.created_at.cmp(&other.created_at),
             (
-                Category::Calendar { date: self_date, time: self_time, .. },
-                Category::Calendar { date: other_date, time: other_time, .. }
-            ) => self_date.cmp(other_date)
-                .then(ReverseOrdOption::from(
-                    &self_time.as_ref().map(|calendar_time| calendar_time.time())
-                ).cmp(&ReverseOrdOption::from(
-                    &other_time.as_ref().map(|calendar_time| calendar_time.time())
-                )))
-                .then(ReverseOrdOption::from(&self.deadline()).cmp(
-                    &ReverseOrdOption::from(&other.deadline())
-                ))
+                Category::Calendar {
+                    date: self_date,
+                    time: self_time,
+                    ..
+                },
+                Category::Calendar {
+                    date: other_date,
+                    time: other_time,
+                    ..
+                },
+            ) => self_date
+                .cmp(other_date)
+                .then(
+                    ReverseOrdOption::from(
+                        &self_time.as_ref().map(|calendar_time| calendar_time.time()),
+                    )
+                    .cmp(&ReverseOrdOption::from(
+                        &other_time
+                            .as_ref()
+                            .map(|calendar_time| calendar_time.time()),
+                    )),
+                )
+                .then(
+                    ReverseOrdOption::from(&self.deadline())
+                        .cmp(&ReverseOrdOption::from(&other.deadline())),
+                )
                 .then(self.created_at.cmp(&other.created_at)),
-            (Category::Done, Category::Done) | (Category::Trash, Category::Trash)
-            => self.updated_at.cmp(&other.updated_at).reverse(),
-            (_, _) => ReverseOrdOption::from(&self.deadline()).cmp(
-                &ReverseOrdOption::from(&other.deadline())
-            ).then(self.created_at.cmp(&other.created_at)),
+            (Category::Done, Category::Done) | (Category::Trash, Category::Trash) => {
+                self.updated_at.cmp(&other.updated_at).reverse()
+            }
+            (_, _) => ReverseOrdOption::from(&self.deadline())
+                .cmp(&ReverseOrdOption::from(&other.deadline()))
+                .then(self.created_at.cmp(&other.created_at)),
         }
     }
 }
@@ -125,7 +141,11 @@ impl Ord for TaskWithSubtasks {
 #[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
 #[diesel(table_name = tasks)]
 pub struct NewTask {
-    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
     pub title: String,
     pub deadline: Option<chrono::NaiveDate>,
     pub category: Category,
@@ -139,7 +159,12 @@ impl NewTask {
         category: Category,
         project_id: Option<i32>,
     ) -> Self {
-        Self { title, deadline, category, project_id }
+        Self {
+            title,
+            deadline,
+            category,
+            project_id,
+        }
     }
 }
 

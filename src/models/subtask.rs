@@ -1,16 +1,25 @@
-use std::cmp::Ordering;
 use crate::models::task::Task;
 use crate::schema::subtasks;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use validator::Validate;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Identifiable, Associations, Serialize, Deserialize, PartialEq,
-    Clone, Debug)]
+#[derive(
+    Queryable,
+    Selectable,
+    Identifiable,
+    Associations,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Clone,
+    Debug,
+)]
 #[diesel(belongs_to(Task, foreign_key = task_id))]
 #[diesel(table_name = subtasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -59,7 +68,8 @@ impl PartialOrd<Self> for Subtask {
 
 impl Ord for Subtask {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.is_completed().cmp(&other.is_completed())
+        self.is_completed()
+            .cmp(&other.is_completed())
             .then(self.created_at().cmp(&other.created_at()))
     }
 }
@@ -68,14 +78,22 @@ impl Ord for Subtask {
 #[diesel(table_name = subtasks)]
 pub struct NewSubtask {
     pub task_id: i32,
-    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
     pub title: String,
     pub is_completed: bool,
 }
 
 impl NewSubtask {
     pub fn new(task_id: i32, title: String, is_completed: bool) -> Self {
-        Self { task_id, title, is_completed }
+        Self {
+            task_id,
+            title,
+            is_completed,
+        }
     }
 }
 

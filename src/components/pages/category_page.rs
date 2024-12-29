@@ -28,6 +28,6 @@ pub(crate) fn CategoryPage(category: Category) -> Element {
                 "Errors occurred: {errors:?}"
             }
         },
-        value => panic!("Unexpected query result: {value:?}")
+        value => panic!("Unexpected query result: {value:?}"),
     }
 }

@@ -11,17 +11,14 @@ use dioxus::prelude::*;
 #[component]
 pub(crate) fn Layout() -> Element {
     let mut display_form = use_signal(|| false);
-    let project_being_edited = use_context_provider::<Signal<Option<Project>>>(
-        || Signal::new(None)
-    );
-    let task_being_edited = use_context_provider::<Signal<Option<Task>>>(
-        || Signal::new(None)
-    );
-    
+    let project_being_edited =
+        use_context_provider::<Signal<Option<Project>>>(|| Signal::new(None));
+    let task_being_edited = use_context_provider::<Signal<Option<Task>>>(|| Signal::new(None));
+
     use_effect(move || {
         display_form.set(project_being_edited().is_some() || task_being_edited().is_some());
     });
-    
+
     rsx! {
         Outlet::<Route> {}
         StickyBottom {

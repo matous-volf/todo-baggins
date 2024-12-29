@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
 use crate::route::Route;
+use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn NavigationItem(route: Route, children: Element) -> Element {

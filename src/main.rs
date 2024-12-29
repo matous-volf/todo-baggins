@@ -1,13 +1,13 @@
 mod components;
 mod errors;
+mod internationalization;
+mod migrations;
 mod models;
+mod query;
 mod route;
 mod schema;
 mod server;
-mod query;
 mod utils;
-mod internationalization;
-mod migrations;
 
 use components::app::App;
 use dioxus::prelude::*;

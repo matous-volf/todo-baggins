@@ -4,7 +4,10 @@ use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 
 #[component]
-pub(crate) fn CategoryInput(selected_category: Signal<Category>, class: Option<&'static str>) -> Element {
+pub(crate) fn CategoryInput(
+    selected_category: Signal<Category>,
+    class: Option<&'static str>,
+) -> Element {
     rsx! {
         div {
             class: format!("flex flex-row gap-2 {}", class.unwrap_or("")),

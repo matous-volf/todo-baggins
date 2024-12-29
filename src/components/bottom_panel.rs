@@ -25,7 +25,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                 // Necessary for a smooth – not instant – height transition.
                 async_std::task::sleep(std::time::Duration::from_millis(500)).await;
                 /* The check is necessary for the situation when the user expands the panel while
-                   it is being closed. */
+                it is being closed. */
                 if !display_form() {
                     expanded.set(false);
                 }

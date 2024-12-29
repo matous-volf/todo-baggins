@@ -1,8 +1,8 @@
-use std::ops::Deref;
-use std::sync::Mutex;
 use chrono::Locale;
 use dioxus::fullstack::once_cell::sync::Lazy;
 use feruca::Collator;
+use std::ops::Deref;
+use std::sync::Mutex;
 use unic_langid_impl::LanguageIdentifier;
 
 pub(crate) static COLLATOR: Lazy<Mutex<Collator>> = Lazy::new(|| Mutex::new(Collator::default()));
@@ -19,7 +19,11 @@ impl<'a> Deref for LocaleFromLanguageIdentifier<'a> {
 
 impl<'a> From<LocaleFromLanguageIdentifier<'a>> for Locale {
     fn from(language_identifier: LocaleFromLanguageIdentifier) -> Self {
-        language_identifier.to_string().replace("-", "_").parse().unwrap()
+        language_identifier
+            .to_string()
+            .replace("-", "_")
+            .parse()
+            .unwrap()
     }
 }
 

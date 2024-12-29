@@ -4,6 +4,7 @@ use crate::components::subtasks_form::SubtasksForm;
 use crate::models::category::{CalendarTime, Category, Reoccurrence};
 use crate::models::task::NewTask;
 use crate::models::task::Task;
+use crate::query::projects::use_projects_query;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
 use crate::server::tasks::{create_task, delete_task, edit_task};
@@ -13,7 +14,6 @@ use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_i18n::t;
 use dioxus_query::prelude::{use_query_client, QueryResult};
-use crate::query::projects::use_projects_query;
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -40,7 +40,8 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
     let projects_query = use_projects_query();
 
     let route = use_route::<Route>();
-    let selected_category = use_signal(|| if let Some(task) = &task {
+    let selected_category = use_signal(|| {
+        if let Some(task) = &task {
             task.category().clone()
         } else {
             match route {
@@ -56,26 +57,41 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 _ => Category::Inbox,
             }
         }
-    );
-    let category_calendar_reoccurrence_interval = use_signal(|| task.as_ref().and_then(|task|
-        if let Category::Calendar { reoccurrence: Some(reoccurrence), .. } = task.category() {
-            Some(reoccurrence.interval().clone())
-        } else {
-            None
-        }
-    ));
-    let mut category_calendar_has_time = use_signal(|| task.as_ref().is_some_and(
-        |task| matches!(*task.category(), Category::Calendar { time: Some(_), .. }))
-    );
-    let mut category_calendar_reminder_offset_index = use_signal(|| task.as_ref().and_then(|task|
-        if let Category::Calendar { time: Some(time), .. } = task.category() {
-            REMINDER_OFFSETS.iter().position(|&reminder_offset|
-                reminder_offset == time.reminder_offset()
-            )
-        } else {
-            None
-        }
-    ).unwrap_or(REMINDER_OFFSETS.len() - 1));
+    });
+    let category_calendar_reoccurrence_interval = use_signal(|| {
+        task.as_ref().and_then(|task| {
+            if let Category::Calendar {
+                reoccurrence: Some(reoccurrence),
+                ..
+            } = task.category()
+            {
+                Some(reoccurrence.interval().clone())
+            } else {
+                None
+            }
+        })
+    });
+    let mut category_calendar_has_time = use_signal(|| {
+        task.as_ref().is_some_and(|task| {
+            matches!(*task.category(), Category::Calendar { time: Some(_), .. })
+        })
+    });
+    let mut category_calendar_reminder_offset_index = use_signal(|| {
+        task.as_ref()
+            .and_then(|task| {
+                if let Category::Calendar {
+                    time: Some(time), ..
+                } = task.category()
+                {
+                    REMINDER_OFFSETS
+                        .iter()
+                        .position(|&reminder_offset| reminder_offset == time.reminder_offset())
+                } else {
+                    None
+                }
+            })
+            .unwrap_or(REMINDER_OFFSETS.len() - 1)
+    });
 
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
     let task_for_submit = task.clone();

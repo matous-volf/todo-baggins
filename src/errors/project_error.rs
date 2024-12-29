@@ -13,7 +13,8 @@ pub enum ProjectError {
 
 impl From<ValidationErrors> for ErrorVec<ProjectError> {
     fn from(validation_errors: ValidationErrors) -> Self {
-        validation_errors.errors()
+        validation_errors
+            .errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {

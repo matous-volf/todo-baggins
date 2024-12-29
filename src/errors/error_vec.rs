@@ -1,7 +1,7 @@
-use std::fmt::Display;
-use std::str::FromStr;
 use serde::Deserialize;
 use serde_with::serde_derive::Serialize;
+use std::fmt::Display;
+use std::str::FromStr;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ErrorVec<T> {

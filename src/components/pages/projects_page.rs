@@ -1,8 +1,8 @@
-use dioxus::prelude::*;
-use dioxus_query::prelude::QueryResult;
 use crate::models::project::Project;
 use crate::query::projects::use_projects_query;
 use crate::query::QueryValue;
+use dioxus::prelude::*;
+use dioxus_query::prelude::QueryResult;
 
 #[component]
 pub(crate) fn ProjectsPage() -> Element {
