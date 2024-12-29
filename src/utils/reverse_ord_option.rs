@@ -5,7 +5,7 @@ to reverse that. */
 #[derive(PartialEq)]
 pub(crate) struct ReverseOrdOption<'a, T>(&'a Option<T>);
 
-impl<'a, T> Deref for ReverseOrdOption<'a, T> {
+impl<T> Deref for ReverseOrdOption<'_, T> {
     type Target = Option<T>;
 
     fn deref(&self) -> &Self::Target {
@@ -13,15 +13,15 @@ impl<'a, T> Deref for ReverseOrdOption<'a, T> {
     }
 }
 
-impl<'a, T: Ord> Eq for ReverseOrdOption<'a, T> {}
+impl<T: Ord> Eq for ReverseOrdOption<'_, T> {}
 
-impl<'a, T: Ord> PartialOrd<Self> for ReverseOrdOption<'a, T> {
+impl<T: Ord> PartialOrd<Self> for ReverseOrdOption<'_, T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl<'a, T: Ord> Ord for ReverseOrdOption<'a, T> {
+impl<T: Ord> Ord for ReverseOrdOption<'_, T> {
     fn cmp(&self, other: &Self) -> Ordering {
         match (self.as_ref(), other.as_ref()) {
             (None, None) => Ordering::Equal,
