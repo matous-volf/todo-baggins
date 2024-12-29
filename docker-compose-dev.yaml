@@ -1,3 +1,4 @@
+---
 services:
   app:
     build:
@@ -14,13 +15,13 @@ services:
       - ./package.json:/srv/app/package.json
       - ./package-lock.json:/srv/app/package-lock.json
     restart: always
-    ports: [ "8000:8000" ]
-    depends_on: [ "db" ]
+    ports: ["8000:8000"]
+    depends_on: ["db"]
 
   db:
     image: postgres:16.4-bookworm
-    volumes: [ "db_data:/var/lib/postgresql/data" ]
-    ports: [ "5432:5432" ]
+    volumes: ["db_data:/var/lib/postgresql/data"]
+    ports: ["5432:5432"]
     environment:
       POSTGRES_DB: todo_baggins
       POSTGRES_USER: app
