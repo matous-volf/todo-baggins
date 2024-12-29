@@ -1,8 +1,12 @@
 FROM rust:1.83-bookworm
 
-RUN rustup target add wasm32-unknown-unknown && \
-    cargo install dioxus-cli diesel_cli && \
-    apt-get update && apt-get install -y nodejs=18.19.0+dfsg-6~deb12u2 npm=9.2.0~ds1-1 supervisor=4.2.5-1
+RUN cargo install dioxus-cli diesel_cli \
+ && apt-get update && apt-get install -y --no-install-recommends \
+    nodejs=18.19.0+dfsg-6~deb12u2 \
+    npm=9.2.0~ds1-1 \
+    supervisor=4.2.5-1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY . /srv/app
 WORKDIR /srv/app
@@ -11,10 +15,10 @@ RUN npm install
 
 COPY docker/dev/app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chown -R 1000:1000 /srv/app && \
-    chown -R 1000:1000 /usr/local/cargo && \
-    mkdir -p /.local/share/dioxus && \
-    chown -R 1000:1000 /.local/share/dioxus
+RUN chown -R 1000:1000 /srv/app \
+ && chown -R 1000:1000 /usr/local/cargo \
+ && mkdir -p /.local/share/dioxus \
+ && chown -R 1000:1000 /.local/share/dioxus
 
 HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost:8000 || exit 1
 
