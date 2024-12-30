@@ -1,13 +1,12 @@
+use crate::components::task_list_item::TaskListItem;
 use crate::models::category::Category;
 use crate::models::task::{Task, TaskWithSubtasks};
+use crate::query::{QueryErrors, QueryKey, QueryValue};
+use crate::server::tasks::complete_task;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
-use tracing::info;
-use crate::components::task_list_item::TaskListItem;
-use crate::query::{QueryErrors, QueryKey, QueryValue};
-use crate::server::tasks::complete_task;
 
 #[component]
 pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>) -> Element {
@@ -15,7 +14,7 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
     let mut task_being_edited = use_context::<Signal<Option<Task>>>();
 
     tasks.sort();
-    
+
     rsx! {
         div {
             class: format!("flex flex-col {}", class.unwrap_or("")),

@@ -14,7 +14,8 @@ pub enum SubtaskError {
 
 impl From<ValidationErrors> for ErrorVec<SubtaskError> {
     fn from(validation_errors: ValidationErrors) -> Self {
-        validation_errors.errors()
+        validation_errors
+            .errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {
@@ -35,28 +36,29 @@ impl From<ValidationErrors> for ErrorVec<SubtaskError> {
     }
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for SubtaskError {
     fn from(diesel_error: diesel::result::Error) -> Self {
         match diesel_error {
             diesel::result::Error::DatabaseError(
-                diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
-            ) => {
-                match info.constraint_name() {
-                    Some("subtasks_task_id_fkey") => Self::TaskNotFound,
-                    _ => Self::Error(Error::ServerInternal)
-                }
-            }
-            _ => {
-                Self::Error(Error::ServerInternal)
-            }
+                diesel::result::DatabaseErrorKind::ForeignKeyViolation,
+                info,
+            ) => match info.constraint_name() {
+                Some("subtasks_task_id_fkey") => Self::TaskNotFound,
+                _ => Self::Error(Error::ServerInternal),
+            },
+            _ => Self::Error(Error::ServerInternal),
         }
     }
 }
 
 impl From<ErrorVec<Error>> for ErrorVec<SubtaskError> {
     fn from(error_vec: ErrorVec<Error>) -> Self {
-        Vec::from(error_vec).into_iter()
-            .map(SubtaskError::Error).collect::<Vec<SubtaskError>>().into()
+        Vec::from(error_vec)
+            .into_iter()
+            .map(SubtaskError::Error)
+            .collect::<Vec<SubtaskError>>()
+            .into()
     }
 }
 

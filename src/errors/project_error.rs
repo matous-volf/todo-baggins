@@ -13,7 +13,8 @@ pub enum ProjectError {
 
 impl From<ValidationErrors> for ErrorVec<ProjectError> {
     fn from(validation_errors: ValidationErrors) -> Self {
-        validation_errors.errors()
+        validation_errors
+            .errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {
@@ -34,6 +35,7 @@ impl From<ValidationErrors> for ErrorVec<ProjectError> {
     }
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for ProjectError {
     fn from(_: diesel::result::Error) -> Self {
         Self::Error(Error::ServerInternal)

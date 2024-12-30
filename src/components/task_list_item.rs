@@ -1,4 +1,3 @@
-use dioxus_i18n::prelude::i18n;
 use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
 use crate::models::task::TaskWithSubtasks;
@@ -6,6 +5,7 @@ use chrono::{Datelike, Local};
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_i18n::prelude::i18n;
 use dioxus_i18n::t;
 use voca_rs::Voca;
 

@@ -5,10 +5,11 @@ use crate::models::project::Project;
 use crate::models::subtask::Subtask;
 use crate::models::task::{Task, TaskWithSubtasks};
 
-pub(crate) mod tasks;
 pub(crate) mod projects;
 pub(crate) mod subtasks;
+pub(crate) mod tasks;
 
+#[allow(dead_code)]
 #[derive(PartialEq, Debug)]
 pub(crate) enum QueryValue {
     Projects(Vec<Project>),
@@ -17,6 +18,7 @@ pub(crate) enum QueryValue {
     Subtasks(Vec<Subtask>),
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub(crate) enum QueryErrors {
     Error(ErrorVec<Error>),

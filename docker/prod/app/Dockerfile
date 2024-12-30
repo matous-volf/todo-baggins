@@ -1,19 +1,27 @@
-FROM rust:1.83-bookworm AS builder
+FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b AS builder
 
-RUN rustup target add wasm32-unknown-unknown && \
-    cargo install dioxus-cli diesel_cli && \
-    apt-get update && apt-get install -y nodejs=18.19.0+dfsg-6~deb12u2 npm=9.2.0~ds1-1 supervisor=4.2.5-1
+RUN rustup target add wasm32-unknown-unknown \
+ && cargo install dioxus-cli diesel_cli \
+ && apt-get update && apt-get install -y --no-install-recommends \
+    nodejs=18.19.0+dfsg-6~deb12u2 \
+    npm=9.2.0~ds1-1 \
+    supervisor=4.2.5-1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY . /srv/app
 WORKDIR /srv/app
 
-RUN npm install && \
-    npm run build && \
-    dx build --release
+RUN npm install \
+ && npm run build \
+ && dx build --release
 
-FROM debian:bookworm-slim AS runner
+FROM debian@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
-RUN apt-get update && apt-get install -y libpq5=15.8-0+deb12u1
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libpq5=15.8-0+deb12u1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /srv/app/target/dx/todo-baggins/release/web /srv/app
 COPY .env /srv/app/.env

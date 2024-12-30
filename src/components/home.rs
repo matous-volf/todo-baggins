@@ -4,6 +4,5 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn Home() -> Element {
-    rsx! {
-    }
+    rsx! {}
 }

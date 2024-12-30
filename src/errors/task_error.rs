@@ -14,7 +14,8 @@ pub enum TaskError {
 
 impl From<ValidationErrors> for ErrorVec<TaskError> {
     fn from(validation_errors: ValidationErrors) -> Self {
-        validation_errors.errors()
+        validation_errors
+            .errors()
             .iter()
             .flat_map(|(&field, error_kind)| match field {
                 "title" => match error_kind {
@@ -35,20 +36,18 @@ impl From<ValidationErrors> for ErrorVec<TaskError> {
     }
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for TaskError {
     fn from(diesel_error: diesel::result::Error) -> Self {
         match diesel_error {
             diesel::result::Error::DatabaseError(
-                diesel::result::DatabaseErrorKind::ForeignKeyViolation, info
-            ) => {
-                match info.constraint_name() {
-                    Some("tasks_project_id_fkey") => Self::ProjectNotFound,
-                    _ => Self::Error(Error::ServerInternal)
-                }
-            }
-            _ => {
-                Self::Error(Error::ServerInternal)
-            }
+                diesel::result::DatabaseErrorKind::ForeignKeyViolation,
+                info,
+            ) => match info.constraint_name() {
+                Some("tasks_project_id_fkey") => Self::ProjectNotFound,
+                _ => Self::Error(Error::ServerInternal),
+            },
+            _ => Self::Error(Error::ServerInternal),
         }
     }
 }

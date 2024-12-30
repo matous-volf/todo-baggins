@@ -1,17 +1,22 @@
-use std::cmp::Ordering;
-use chrono::NaiveDateTime;
+use crate::internationalization::COLLATOR;
+#[cfg(feature = "server")]
 use crate::schema::projects;
+use chrono::NaiveDateTime;
+#[cfg(feature = "server")]
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use validator::Validate;
-use crate::internationalization::COLLATOR;
 
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, PartialEq, Clone, Debug)]
-#[diesel(table_name = crate::schema::projects)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
+#[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Queryable, Selectable, Identifiable))]
+#[cfg_attr(
+    feature = "server",
+    diesel(table_name = crate::schema::projects, check_for_backend(diesel::pg::Pg))
+)]
 pub struct Project {
     id: i32,
     title: String,
@@ -19,6 +24,7 @@ pub struct Project {
     updated_at: NaiveDateTime,
 }
 
+#[allow(dead_code)]
 impl Project {
     pub fn id(&self) -> i32 {
         self.id
@@ -27,11 +33,11 @@ impl Project {
     pub fn title(&self) -> &str {
         &self.title
     }
-    
+
     pub fn created_at(&self) -> NaiveDateTime {
         self.created_at
     }
-    
+
     pub fn updated_at(&self) -> NaiveDateTime {
         self.updated_at
     }
@@ -47,14 +53,22 @@ impl PartialOrd<Self> for Project {
 
 impl Ord for Project {
     fn cmp(&self, other: &Self) -> Ordering {
-        COLLATOR.lock().unwrap().collate(self.title(), other.title())
+        COLLATOR
+            .lock()
+            .unwrap()
+            .collate(self.title(), other.title())
     }
 }
 
-#[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
-#[diesel(table_name = projects)]
+#[derive(Serialize, Deserialize, Validate, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Insertable))]
+#[cfg_attr(feature = "server", diesel(table_name = projects))]
 pub struct NewProject {
-    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
     pub title: String,
 }
 

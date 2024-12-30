@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 #[component]
 pub(crate) fn ReoccurrenceIntervalInput(
     reoccurrence_interval: Signal<Option<ReoccurrenceInterval>>,
-    class_buttons: Option<&'static str>
+    class_buttons: Option<&'static str>,
 ) -> Element {
     rsx! {
         button {

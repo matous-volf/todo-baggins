@@ -7,9 +7,10 @@ pub enum Error {
     ServerInternal,
 }
 
+#[cfg(feature = "server")]
 impl From<diesel::result::Error> for Error {
-    fn from(_: diesel::result::Error) -> Self { 
-        Self::ServerInternal 
+    fn from(_: diesel::result::Error) -> Self {
+        Self::ServerInternal
     }
 }
 

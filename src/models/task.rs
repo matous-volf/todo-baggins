@@ -1,8 +1,10 @@
 use crate::models::category::Category;
 use crate::models::subtask::Subtask;
+#[cfg(feature = "server")]
 use crate::schema::tasks;
 use crate::utils::reverse_ord_option::ReverseOrdOption;
 use chrono::NaiveDateTime;
+#[cfg(feature = "server")]
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -11,9 +13,9 @@ use validator::Validate;
 const TITLE_LENGTH_MIN: u64 = 1;
 const TITLE_LENGTH_MAX: u64 = 255;
 
-#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, PartialEq, Clone, Debug)]
-#[diesel(table_name = tasks)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
+#[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Queryable, Selectable, Identifiable))]
+#[cfg_attr(feature = "server", diesel(table_name = tasks, check_for_backend(diesel::pg::Pg)))]
 pub struct Task {
     id: i32,
     title: String,
@@ -67,23 +69,39 @@ impl Ord for Task {
         match (&self.category, &other.category) {
             (Category::Inbox, Category::Inbox) => self.created_at.cmp(&other.created_at),
             (
-                Category::Calendar { date: self_date, time: self_time, .. },
-                Category::Calendar { date: other_date, time: other_time, .. }
-            ) => self_date.cmp(other_date)
-                .then(ReverseOrdOption::from(
-                    &self_time.as_ref().map(|calendar_time| calendar_time.time())
-                ).cmp(&ReverseOrdOption::from(
-                    &other_time.as_ref().map(|calendar_time| calendar_time.time())
-                )))
-                .then(ReverseOrdOption::from(&self.deadline()).cmp(
-                    &ReverseOrdOption::from(&other.deadline())
-                ))
+                Category::Calendar {
+                    date: self_date,
+                    time: self_time,
+                    ..
+                },
+                Category::Calendar {
+                    date: other_date,
+                    time: other_time,
+                    ..
+                },
+            ) => self_date
+                .cmp(other_date)
+                .then(
+                    ReverseOrdOption::from(
+                        &self_time.as_ref().map(|calendar_time| calendar_time.time()),
+                    )
+                    .cmp(&ReverseOrdOption::from(
+                        &other_time
+                            .as_ref()
+                            .map(|calendar_time| calendar_time.time()),
+                    )),
+                )
+                .then(
+                    ReverseOrdOption::from(&self.deadline())
+                        .cmp(&ReverseOrdOption::from(&other.deadline())),
+                )
                 .then(self.created_at.cmp(&other.created_at)),
-            (Category::Done, Category::Done) | (Category::Trash, Category::Trash)
-            => self.updated_at.cmp(&other.updated_at).reverse(),
-            (_, _) => ReverseOrdOption::from(&self.deadline()).cmp(
-                &ReverseOrdOption::from(&other.deadline())
-            ).then(self.created_at.cmp(&other.created_at)),
+            (Category::Done, Category::Done) | (Category::Trash, Category::Trash) => {
+                self.updated_at.cmp(&other.updated_at).reverse()
+            }
+            (_, _) => ReverseOrdOption::from(&self.deadline())
+                .cmp(&ReverseOrdOption::from(&other.deadline()))
+                .then(self.created_at.cmp(&other.created_at)),
         }
     }
 }
@@ -122,10 +140,15 @@ impl Ord for TaskWithSubtasks {
     }
 }
 
-#[derive(Insertable, Serialize, Deserialize, Validate, Clone, Debug)]
-#[diesel(table_name = tasks)]
+#[derive(Serialize, Deserialize, Validate, Clone, Debug)]
+#[cfg_attr(feature = "server", derive(Insertable))]
+#[cfg_attr(feature = "server", diesel(table_name = tasks))]
 pub struct NewTask {
-    #[validate(length(min = "TITLE_LENGTH_MIN", max = "TITLE_LENGTH_MAX", code = "title_length"))]
+    #[validate(length(
+        min = "TITLE_LENGTH_MIN",
+        max = "TITLE_LENGTH_MAX",
+        code = "title_length"
+    ))]
     pub title: String,
     pub deadline: Option<chrono::NaiveDate>,
     pub category: Category,
@@ -139,7 +162,12 @@ impl NewTask {
         category: Category,
         project_id: Option<i32>,
     ) -> Self {
-        Self { title, deadline, category, project_id }
+        Self {
+            title,
+            deadline,
+            category,
+            project_id,
+        }
     }
 }
 

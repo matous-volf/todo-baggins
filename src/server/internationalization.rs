@@ -1,8 +1,9 @@
-use std::env;
 use dioxus::prelude::ServerFnError;
-use unic_langid_impl::LanguageIdentifier;
 use dioxus::prelude::*;
+#[cfg(feature = "server")]
 use dotenvy::dotenv;
+use std::env;
+use unic_langid_impl::LanguageIdentifier;
 
 #[server]
 pub(crate) async fn get_language_identifier() -> Result<LanguageIdentifier, ServerFnError> {

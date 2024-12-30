@@ -7,8 +7,10 @@ use dioxus::prelude::*;
 use dioxus_query::prelude::use_query_client;
 
 #[component]
-pub(crate) fn ProjectForm(project: Option<Project>, on_successful_submit: EventHandler<()>)
-                          -> Element {
+pub(crate) fn ProjectForm(
+    project: Option<Project>,
+    on_successful_submit: EventHandler<()>,
+) -> Element {
     let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
     let project_for_submit = project.clone();
 

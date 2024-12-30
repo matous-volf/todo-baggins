@@ -1,3 +1,4 @@
+---
 services:
   app:
     build:
@@ -6,11 +7,11 @@ services:
       - default
       - web-server-network
     restart: always
-    depends_on: [ "db" ]
+    depends_on: ["db"]
 
   db:
     image: postgres:16.4-bookworm
-    volumes: [ "db_data:/var/lib/postgresql/data" ]
+    volumes: ["db_data:/var/lib/postgresql/data"]
     networks:
       - default
     environment:

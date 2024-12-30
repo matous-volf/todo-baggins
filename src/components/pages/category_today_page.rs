@@ -25,7 +25,7 @@ pub(crate) fn CategoryTodayPage() -> Element {
 
     let long_term_tasks_query = use_tasks_with_subtasks_in_category_query(Category::LongTerm);
     let long_term_tasks_query_result = long_term_tasks_query.result();
-    
+
     rsx! {
         div {
             class: "pt-4 flex flex-col gap-8",

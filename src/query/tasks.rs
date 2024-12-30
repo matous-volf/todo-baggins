@@ -1,14 +1,17 @@
-use dioxus::prelude::ServerFnError;
-use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
 use crate::models::category::Category;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::server::tasks::{get_tasks_in_category, get_tasks_with_subtasks_in_category};
+use dioxus::prelude::ServerFnError;
+use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
 
-
-
-pub(crate) fn use_tasks_in_category_query(category: Category)
-                                          -> UseQuery<QueryValue, QueryErrors, QueryKey> {
-    use_get_query([QueryKey::TasksInCategory(category), QueryKey::Tasks], fetch_tasks_in_category)
+#[allow(dead_code)]
+pub(crate) fn use_tasks_in_category_query(
+    category: Category,
+) -> UseQuery<QueryValue, QueryErrors, QueryKey> {
+    use_get_query(
+        [QueryKey::TasksInCategory(category), QueryKey::Tasks],
+        fetch_tasks_in_category,
+    )
 }
 
 async fn fetch_tasks_in_category(keys: Vec<QueryKey>) -> QueryResult<QueryValue, QueryErrors> {
@@ -16,34 +19,37 @@ async fn fetch_tasks_in_category(keys: Vec<QueryKey>) -> QueryResult<QueryValue,
         match get_tasks_in_category(category.clone()).await {
             Ok(tasks) => Ok(QueryValue::Tasks(tasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error)
-        }.into()
+            Err(error) => panic!("Unexpected error: {:?}", error),
+        }
+        .into()
     } else {
         panic!("Unexpected query keys: {:?}", keys);
     }
 }
 
-pub(crate) fn use_tasks_with_subtasks_in_category_query(category: Category)
-                                          -> UseQuery<QueryValue, QueryErrors, QueryKey> {
+pub(crate) fn use_tasks_with_subtasks_in_category_query(
+    category: Category,
+) -> UseQuery<QueryValue, QueryErrors, QueryKey> {
     use_get_query(
         [
-            QueryKey::TasksWithSubtasksInCategory(
-            category.clone()),
+            QueryKey::TasksWithSubtasksInCategory(category.clone()),
             QueryKey::TasksInCategory(category),
-            QueryKey::Tasks
+            QueryKey::Tasks,
         ],
-        fetch_tasks_with_subtasks_in_category
+        fetch_tasks_with_subtasks_in_category,
     )
 }
 
-async fn fetch_tasks_with_subtasks_in_category(keys: Vec<QueryKey>)
-    -> QueryResult<QueryValue, QueryErrors> {
+async fn fetch_tasks_with_subtasks_in_category(
+    keys: Vec<QueryKey>,
+) -> QueryResult<QueryValue, QueryErrors> {
     if let Some(QueryKey::TasksWithSubtasksInCategory(category)) = keys.first() {
         match get_tasks_with_subtasks_in_category(category.clone()).await {
             Ok(tasks) => Ok(QueryValue::TasksWithSubtasks(tasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error)
-        }.into()
+            Err(error) => panic!("Unexpected error: {:?}", error),
+        }
+        .into()
     } else {
         panic!("Unexpected query keys: {:?}", keys);
     }
