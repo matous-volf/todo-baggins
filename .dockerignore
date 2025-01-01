@@ -5,5 +5,8 @@
 /node_modules/
 /static/
 /target/
-/docker-compose-dev.yaml
-/docker-compose-prod.yaml
+.dockerignore
+/docker-compose-dev.yml
+/docker-compose-prod.yml
+/docker/dev/app/Dockerfile
+/docker/prod/app/Dockerfile
