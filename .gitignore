@@ -8,3 +8,5 @@
 
 .env
 .env.prod
+
+docker-compose.yaml
