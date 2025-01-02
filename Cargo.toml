@@ -7,22 +7,22 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = { version = "0.4.38", features = ["serde", "unstable-locales"] }
-dioxus = { version = "0.6.0", features = ["fullstack", "router"] }
-feruca = { version = "0.10.0" }
-serde = { version = "1.0.208" }
-serde_json = { version = "1.0.125" }
-serde_with = { version = "3.9.0", features = ["chrono_0_4"] }
-tracing = "0.1.40"
+chrono = { version = "0.4.39", features = ["serde", "unstable-locales"] }
+dioxus = { version = "0.6.1", features = ["fullstack", "router"] }
+feruca = { version = "0.10.1" }
+serde = { version = "1.0.217" }
+serde_json = { version = "1.0.134" }
+serde_with = { version = "3.12.0", features = ["chrono_0_4"] }
+tracing = "0.1.41"
 unic-langid-impl = { version = "0.9.5", features = ["serde"] }
 validator = { version = "0.19.0", features = ["derive"] }
 
-diesel = { version = "2.2.2", features = ["chrono", "postgres", "postgres_backend", "serde_json"], optional = true }
+diesel = { version = "2.2.6", features = ["chrono", "postgres", "postgres_backend", "serde_json"], optional = true }
 diesel_migrations = { version = "2.2.0", features = ["postgres"], optional = true }
 dotenvy = { version = "0.15.7", optional = true }
-time = { version = "0.3.36", optional = true }
+time = { version = "0.3.37", optional = true }
 
-async-std = { version = "1.12.0", optional = true }
+async-std = { version = "1.13.0", optional = true }
 dioxus-i18n = { version = "0.3.0", optional = true }
 dioxus-query = { version = "0.6.0", optional = true }
 voca_rs = { version = "1.15.2", optional = true }
