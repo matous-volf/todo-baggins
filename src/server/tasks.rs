@@ -19,7 +19,7 @@ use diesel::prelude::*;
 use diesel::{ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper};
 use dioxus::prelude::*;
 #[cfg(feature = "server")]
-use time::util::days_in_year_month;
+use time::Month;
 #[cfg(feature = "server")]
 use validator::Validate;
 
@@ -178,10 +178,11 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
                 *date = NaiveDate::from_ymd_opt(
                     date.year(),
                     date.month(),
-                    reoccurrence.start_date().day().min(days_in_year_month(
-                        date.year(),
-                        (date.month() as u8).try_into().unwrap(),
-                    ) as u32),
+                    reoccurrence.start_date().day().min(
+                        Month::try_from(date.month() as u8)
+                            .unwrap()
+                            .length(date.year()) as u32,
+                    ),
                 )
                 .unwrap()
             }
