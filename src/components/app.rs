@@ -39,6 +39,7 @@ pub(crate) fn App() -> Element {
         document::Link { rel: "stylesheet", href: FONTS_CSS }
         document::Link { rel: "stylesheet", href: INPUT_NUMBER_ARROWS_CSS }
         document::Link { rel: "stylesheet", href: INPUT_RANGE_CSS }
+        document::Script { src: "https://kit.fontawesome.com/3c1b409f8f.js" }
 
         div {
             class: "min-h-screen text-zinc-200 bg-zinc-800 pt-4 pb-36",
