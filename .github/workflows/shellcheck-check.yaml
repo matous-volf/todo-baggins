@@ -25,4 +25,10 @@ jobs:
           fetch-depth: 0
       - name: ShellCheck check
         # https://www.shellcheck.net/wiki/Recursiveness
-        run: find . -type f -name "*.sh" -print0 | xargs -0 shellcheck
+        run: |
+          if find . -type f -name "*.sh" -print0 | grep -qz .; then
+            find . -type f -name "*.sh" -print0 | xargs -0 shellcheck
+            exit 0
+          else
+            echo "No shell scripts found. Skipping ShellCheck."
+          fi
