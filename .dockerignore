@@ -8,5 +8,5 @@
 .dockerignore
 /docker-compose-dev.yml
 /docker-compose-prod.yml
-/docker/dev/app/Dockerfile
-/docker/prod/app/Dockerfile
+/docker/dev/*/Dockerfile
+/docker/prod/*/Dockerfile

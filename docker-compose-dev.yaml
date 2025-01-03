@@ -12,11 +12,22 @@ services:
       - ./Cargo.toml:/srv/app/Cargo.toml
       - ./diesel.toml:/srv/app/diesel.toml
       - ./Dioxus.toml:/srv/app/Dioxus.toml
-      - ./package.json:/srv/app/package.json
-      - ./package-lock.json:/srv/app/package-lock.json
     restart: always
     ports: ["8000:8000"]
-    depends_on: ["db"]
+    depends_on: ["db", "style-builder"]
+
+  style-builder:
+    build:
+      dockerfile: docker/dev/style-builder/Dockerfile
+    volumes:
+      - ./assets:/srv/app/assets
+      - ./src:/srv/app/src
+      - ./package.json:/srv/app/package.json
+      - ./package-lock.json:/srv/app/package-lock.json
+    # To prevent the container from exiting.
+    # See https://github.com/rails/rails/issues/44048.
+    tty: true
+    restart: always
 
   db:
     image: postgres:16.4-bookworm
