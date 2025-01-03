@@ -12,7 +12,7 @@ WORKDIR /srv/app
 
 RUN npm install \
  && npm run build \
- && dx build --release
+ && dx bundle
 
 FROM debian@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
