@@ -10,4 +10,6 @@ RUN npm install
 
 USER 1000:1000
 
+#checkov:skip=CKV_DOCKER_2: No need for (or even a simple way to do) a healthcheck.
+
 CMD ["npm", "run", "watch"]
