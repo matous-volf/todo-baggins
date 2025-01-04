@@ -35,10 +35,10 @@ pub(crate) fn App() -> Element {
 
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
-        document::Link { rel: "stylesheet", href: TAILWIND_CSS }
-        document::Link { rel: "stylesheet", href: FONTS_CSS }
-        document::Link { rel: "stylesheet", href: INPUT_NUMBER_ARROWS_CSS }
-        document::Link { rel: "stylesheet", href: INPUT_RANGE_CSS }
+        document::Stylesheet { href: TAILWIND_CSS }
+        document::Stylesheet { href: FONTS_CSS }
+        document::Stylesheet { href: INPUT_NUMBER_ARROWS_CSS }
+        document::Stylesheet { href: INPUT_RANGE_CSS }
         document::Script { src: "https://kit.fontawesome.com/3c1b409f8f.js" }
 
         div {
