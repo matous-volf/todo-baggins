@@ -1,12 +1,9 @@
-/target/
-/dist/
-/static/
-/.dioxus/
-/node_modules/
+/node_modules
+/target
 
-**/*.rs.bk
+/**/*.rs.bk
+/.DS_Store
+/.env
+/.env.prod
 
-.env
-.env.prod
-
-docker-compose.yaml
+/docker-compose.yaml
