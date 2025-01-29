@@ -1,11 +1,13 @@
+# 1.83.0-bookworm
 FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b AS builder
 
-RUN cargo install dioxus-cli diesel_cli \
- && apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs=18.19.0+dfsg-6~deb12u2 \
     npm=9.2.0~ds1-1 \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && cargo install dioxus-cli --version 0.6.2 \
+ && cargo install diesel_cli --version 2.2.6
 
 COPY . /srv/app
 WORKDIR /srv/app
@@ -14,10 +16,11 @@ RUN npm install \
  && npm run build \
  && dx bundle
 
+# bookworm
 FROM debian@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends libpq5=15.8-0+deb12u1 \
+ && apt-get install -y --no-install-recommends libpq5=15.10-0+deb12u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 

@@ -1,7 +1,8 @@
 # 1.83.0-bookworm
 FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b
 
-RUN cargo install dioxus-cli diesel_cli
+RUN cargo install dioxus-cli --version 0.6.2 \
+ && cargo install diesel_cli --version 2.2.6
 
 COPY . /srv/app
 WORKDIR /srv/app
