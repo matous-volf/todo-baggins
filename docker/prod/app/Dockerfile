@@ -6,8 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm=9.2.0~ds1-1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
- && cargo install dioxus-cli --version 0.6.2 \
- && cargo install diesel_cli --version 2.2.6
+ && cargo install dioxus-cli --version 0.6.3 \
+ && cargo install diesel_cli --version 2.2.7
 
 COPY . /srv/app
 WORKDIR /srv/app
