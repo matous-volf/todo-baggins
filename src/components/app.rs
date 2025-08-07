@@ -13,6 +13,7 @@ const TAILWIND_CSS: Asset = asset!("/assets/styles/tailwind_output.css");
 const FONTS_CSS: Asset = asset!("/assets/styles/fonts.css");
 const INPUT_NUMBER_ARROWS_CSS: Asset = asset!("/assets/styles/input_number_arrows.css");
 const INPUT_RANGE_CSS: Asset = asset!("/assets/styles/input_range.css");
+const MANIFEST: Asset = asset!("/assets/manifest.json");
 
 #[component]
 pub(crate) fn App() -> Element {
@@ -39,6 +40,7 @@ pub(crate) fn App() -> Element {
         document::Stylesheet { href: FONTS_CSS }
         document::Stylesheet { href: INPUT_NUMBER_ARROWS_CSS }
         document::Stylesheet { href: INPUT_RANGE_CSS }
+        document::Link { rel: "manifest", href: MANIFEST }
         document::Script { src: "https://kit.fontawesome.com/3c1b409f8f.js" }
 
         div {
