@@ -1,7 +1,7 @@
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::server::subtasks::get_subtasks_of_task;
 use dioxus::prelude::ServerFnError;
-use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
+use dioxus_query::prelude::{QueryResult, UseQuery, use_get_query};
 
 pub(crate) fn use_subtasks_of_task_query(
     task_id: i32,

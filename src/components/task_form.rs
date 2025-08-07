@@ -13,7 +13,7 @@ use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_i18n::t;
-use dioxus_query::prelude::{use_query_client, QueryResult};
+use dioxus_query::prelude::{QueryResult, use_query_client};
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,

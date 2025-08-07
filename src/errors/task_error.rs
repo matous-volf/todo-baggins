@@ -17,7 +17,7 @@ impl From<ValidationErrors> for ErrorVec<TaskError> {
         validation_errors
             .errors()
             .iter()
-            .flat_map(|(&field, error_kind)| match field {
+            .flat_map(|(field, error_kind)| match field.as_ref() {
                 "title" => match error_kind {
                     ValidationErrorsKind::Field(validation_errors) => validation_errors
                         .iter()

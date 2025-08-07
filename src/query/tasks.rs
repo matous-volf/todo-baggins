@@ -2,7 +2,7 @@ use crate::models::category::Category;
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::server::tasks::{get_tasks_in_category, get_tasks_with_subtasks_in_category};
 use dioxus::prelude::ServerFnError;
-use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
+use dioxus_query::prelude::{QueryResult, UseQuery, use_get_query};
 
 #[allow(dead_code)]
 pub(crate) fn use_tasks_in_category_query(

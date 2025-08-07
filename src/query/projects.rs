@@ -1,7 +1,7 @@
 use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::server::projects::get_projects;
 use dioxus::prelude::ServerFnError;
-use dioxus_query::prelude::{use_get_query, QueryResult, UseQuery};
+use dioxus_query::prelude::{QueryResult, UseQuery, use_get_query};
 
 pub(crate) fn use_projects_query() -> UseQuery<QueryValue, QueryErrors, QueryKey> {
     use_get_query([QueryKey::Projects, QueryKey::Tasks], fetch_projects)

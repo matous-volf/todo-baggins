@@ -1,5 +1,4 @@
-# 1.83.0-bookworm
-FROM rust@sha256:a45bf1f5d9af0a23b26703b3500d70af1abff7f984a7abef5a104b42c02a292b AS builder
+FROM rust:1.88.0-bookworm@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs=18.19.0+dfsg-6~deb12u2 \
@@ -16,8 +15,7 @@ RUN npm install \
  && npm run build \
  && dx bundle
 
-# bookworm
-FROM debian@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
+FROM debian:bookworm@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libpq5=15.10-0+deb12u1 \
