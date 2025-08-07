@@ -19,11 +19,11 @@ async fn fetch_tasks_in_category(keys: Vec<QueryKey>) -> QueryResult<QueryValue,
         match get_tasks_in_category(category.clone()).await {
             Ok(tasks) => Ok(QueryValue::Tasks(tasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error),
+            Err(error) => panic!("Unexpected error: {error:?}"),
         }
         .into()
     } else {
-        panic!("Unexpected query keys: {:?}", keys);
+        panic!("Unexpected query keys: {keys:?}");
     }
 }
 
@@ -47,10 +47,10 @@ async fn fetch_tasks_with_subtasks_in_category(
         match get_tasks_with_subtasks_in_category(category.clone()).await {
             Ok(tasks) => Ok(QueryValue::TasksWithSubtasks(tasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error),
+            Err(error) => panic!("Unexpected error: {error:?}"),
         }
         .into()
     } else {
-        panic!("Unexpected query keys: {:?}", keys);
+        panic!("Unexpected query keys: {keys:?}");
     }
 }
