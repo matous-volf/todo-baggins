@@ -6,7 +6,7 @@ use crate::server::subtasks::{create_subtask, delete_subtask, edit_subtask};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use dioxus_query::prelude::{use_query_client, QueryResult};
+use dioxus_query::prelude::{QueryResult, use_query_client};
 
 #[component]
 pub(crate) fn SubtasksForm(task: Task) -> Element {

@@ -1,4 +1,4 @@
-use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use diesel_migrations::{EmbeddedMigrations, MigrationHarness, embed_migrations};
 use std::error::Error;
 
 const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");

@@ -1,6 +1,6 @@
 use crate::models::project::Project;
-use crate::query::projects::use_projects_query;
 use crate::query::QueryValue;
+use crate::query::projects::use_projects_query;
 use dioxus::prelude::*;
 use dioxus_query::prelude::QueryResult;
 

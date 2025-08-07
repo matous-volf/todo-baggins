@@ -1,7 +1,7 @@
 use crate::components::task_list::TaskList;
 use crate::models::category::Category;
-use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
 use crate::query::QueryValue;
+use crate::query::tasks::use_tasks_with_subtasks_in_category_query;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
