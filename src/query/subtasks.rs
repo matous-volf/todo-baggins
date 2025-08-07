@@ -17,10 +17,10 @@ async fn fetch_subtasks_of_task(keys: Vec<QueryKey>) -> QueryResult<QueryValue, 
         match get_subtasks_of_task(*task_id).await {
             Ok(subtasks) => Ok(QueryValue::Subtasks(subtasks)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error),
+            Err(error) => panic!("Unexpected error: {error:?}"),
         }
         .into()
     } else {
-        panic!("Unexpected query keys: {:?}", keys);
+        panic!("Unexpected query keys: {keys:?}");
     }
 }

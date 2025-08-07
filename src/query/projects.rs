@@ -12,10 +12,10 @@ async fn fetch_projects(keys: Vec<QueryKey>) -> QueryResult<QueryValue, QueryErr
         match get_projects().await {
             Ok(projects) => Ok(QueryValue::Projects(projects)),
             Err(ServerFnError::WrappedServerError(errors)) => Err(QueryErrors::Error(errors)),
-            Err(error) => panic!("Unexpected error: {:?}", error),
+            Err(error) => panic!("Unexpected error: {error:?}"),
         }
         .into()
     } else {
-        panic!("Unexpected query keys: {:?}", keys);
+        panic!("Unexpected query keys: {keys:?}");
     }
 }

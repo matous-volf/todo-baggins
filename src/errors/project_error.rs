@@ -45,7 +45,7 @@ impl From<diesel::result::Error> for ProjectError {
 // Has to be implemented for Dioxus server functions.
 impl Display for ProjectError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
