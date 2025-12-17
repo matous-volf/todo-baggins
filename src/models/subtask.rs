@@ -18,7 +18,7 @@ const TITLE_LENGTH_MAX: u64 = 255;
     derive(Queryable, Selectable, Identifiable, Associations)
 )]
 #[cfg_attr(
-    feature = "server", 
+    feature = "server",
     diesel(
         table_name = subtasks,
         belongs_to(Task, foreign_key = task_id),
@@ -26,38 +26,12 @@ const TITLE_LENGTH_MAX: u64 = 255;
     )
 )]
 pub struct Subtask {
-    id: i32,
-    task_id: i32,
-    title: String,
-    is_completed: bool,
-    created_at: NaiveDateTime,
-    updated_at: NaiveDateTime,
-}
-
-impl Subtask {
-    pub fn id(&self) -> i32 {
-        self.id
-    }
-
-    pub fn task_id(&self) -> i32 {
-        self.task_id
-    }
-
-    pub fn title(&self) -> &str {
-        &self.title
-    }
-
-    pub fn is_completed(&self) -> bool {
-        self.is_completed
-    }
-
-    pub fn created_at(&self) -> NaiveDateTime {
-        self.created_at
-    }
-
-    pub fn updated_at(&self) -> NaiveDateTime {
-        self.updated_at
-    }
+    pub id: i32,
+    pub task_id: i32,
+    pub title: String,
+    pub is_completed: bool,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 impl Eq for Subtask {}
@@ -70,9 +44,9 @@ impl PartialOrd<Self> for Subtask {
 
 impl Ord for Subtask {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.is_completed()
-            .cmp(&other.is_completed())
-            .then(self.created_at().cmp(&other.created_at()))
+        self.is_completed
+            .cmp(&other.is_completed)
+            .then(self.created_at.cmp(&other.created_at))
     }
 }
 
@@ -90,18 +64,12 @@ pub struct NewSubtask {
     pub is_completed: bool,
 }
 
-impl NewSubtask {
-    pub fn new(task_id: i32, title: String, is_completed: bool) -> Self {
-        Self {
-            task_id,
-            title,
-            is_completed,
-        }
-    }
-}
-
 impl From<Subtask> for NewSubtask {
     fn from(subtask: Subtask) -> Self {
-        Self::new(subtask.task_id, subtask.title, subtask.is_completed)
+        Self {
+            task_id: subtask.task_id,
+            title: subtask.title,
+            is_completed: subtask.is_completed,
+        }
     }
 }

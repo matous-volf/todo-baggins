@@ -104,54 +104,15 @@ pub enum ReoccurrenceInterval {
 
 #[derive(Serialize, Deserialize, Hash, Clone, Debug)]
 pub struct Reoccurrence {
-    start_date: NaiveDate,
-    interval: ReoccurrenceInterval,
-    length: u32,
-}
-
-impl Reoccurrence {
-    pub fn new(start_date: NaiveDate, interval: ReoccurrenceInterval, length: u32) -> Self {
-        Self {
-            start_date,
-            interval,
-            length,
-        }
-    }
-
-    pub fn start_date(&self) -> NaiveDate {
-        self.start_date
-    }
-
-    pub fn interval(&self) -> &ReoccurrenceInterval {
-        &self.interval
-    }
-
-    pub fn length(&self) -> u32 {
-        self.length
-    }
+    pub start_date: NaiveDate,
+    pub interval: ReoccurrenceInterval,
+    pub length: u32,
 }
 
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Hash, Clone, Debug)]
 pub struct CalendarTime {
-    time: NaiveTime,
+    pub time: NaiveTime,
     #[serde_as(as = "Option<DurationSeconds<i64>>")]
-    reminder_offset: Option<Duration>,
-}
-
-impl CalendarTime {
-    pub fn new(time: NaiveTime, reminder_offset: Option<Duration>) -> Self {
-        Self {
-            time,
-            reminder_offset,
-        }
-    }
-
-    pub fn time(&self) -> NaiveTime {
-        self.time
-    }
-
-    pub fn reminder_offset(&self) -> Option<Duration> {
-        self.reminder_offset
-    }
+    pub reminder_offset: Option<Duration>,
 }

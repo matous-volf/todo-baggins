@@ -1,5 +1,5 @@
 [package]
-name = "todo-baggins"
+name = "todo_baggins"
 version = "0.1.0"
 authors = ["Matouš Volf <git@matousvolf.cz>"]
 edition = "2024"
@@ -7,43 +7,48 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = { version = "0.4.41", features = ["serde", "unstable-locales"] }
-dioxus = { version = "0.6.3", features = ["fullstack", "router"] }
-feruca = { version = "0.11.4" }
-serde = { version = "1.0.219" }
-serde_json = { version = "1.0.142" }
-serde_with = { version = "3.14.0", features = ["chrono_0_4"] }
-tracing = "0.1.41"
+chrono = { version = "0.4.42", features = ["serde", "unstable-locales"] }
+dioxus = { version = "0.7.2", features = ["fullstack", "router"] }
+# TODO: Remove this once https://github.com/DioxusLabs/dioxus/issues/4765 is resolved.
+dioxus-html = { version = "0.7.2", features = ["serialize"] }
+feruca = { version = "0.11.5" }
+serde = { version = "1.0.228" }
+serde_json = { version = "1.0.145" }
+serde_with = { version = "3.16.1", features = ["chrono_0_4"] }
+tracing = "0.1.43"
 unic-langid-impl = { version = "0.9.6", features = ["serde"] }
 validator = { version = "0.20.0", features = ["derive"] }
 
-diesel = { version = "2.2.12", features = ["chrono", "postgres", "postgres_backend", "serde_json"], optional = true }
-diesel_migrations = { version = "2.2.0", features = ["postgres"], optional = true }
-dotenvy = { version = "0.15.7", optional = true }
-time = { version = "0.3.41", optional = true }
+diesel = { version = "2.3.4", features = [
+    "chrono",
+    "postgres",
+    "postgres_backend",
+    "serde_json",
+], optional = true }
+diesel_migrations = { version = "2.3.1", features = [
+    "postgres",
+], optional = true }
+rand = { version = "0.9.2", optional = true }
+time = { version = "0.3.44", optional = true }
+tokio = { version = "1.48.0", optional = true }
 
-async-std = { version = "1.13.1", optional = true }
-dioxus-i18n = { version = "0.4.3", optional = true }
-dioxus-query = { version = "0.6.1", optional = true }
-voca_rs = { version = "1.15.2", optional = true }
+async-std = { version = "1.13.2", optional = true }
+dioxus-i18n = "0.5.0"
+voca_rs = "1.15.2"
+load-dotenv = "0.1.2"
 
 [features]
 default = ["web"]
+web = ["dioxus/web", "dep:async-std"]
+mobile = ["dioxus/mobile", "dep:async-std"]
 desktop = ["dioxus/desktop"]
-mobile = ["dioxus/mobile"]
-web = [
-    "dioxus/web",
-    "dep:async-std",
-    "dep:dioxus-query",
-    "dep:dioxus-i18n",
-    "dep:voca_rs"
-]
 server = [
     "dioxus/server",
     "dep:diesel",
     "dep:diesel_migrations",
-    "dep:dotenvy",
+    "dep:rand",
     "dep:time",
+    "dep:tokio",
 ]
 
 [profile]

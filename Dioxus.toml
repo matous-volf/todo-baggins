@@ -1,27 +1,6 @@
 [application]
 
-# App (Project) Name
-name = "todo-baggins"
-
-# For font files to get referenced in CSS files by their original names, without the hash Dioxus appends.
-asset_dir = "assets"
-
 [web.app]
 
-# HTML title tag content
+# HTML title tag content.
 title = "Todo Baggins"
-
-# include `assets` in web platform
-[web.resource]
-
-# Additional CSS style files
-style = []
-
-# Additional JavaScript files
-script = []
-
-[web.resource.dev]
-
-# Javascript code file
-# serve: [dev-server] only
-script = []

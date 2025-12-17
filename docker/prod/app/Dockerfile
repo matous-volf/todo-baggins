@@ -1,19 +1,46 @@
-FROM rust:1.88.0-bookworm@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e AS builder
+FROM rust:1.92.0-bookworm@sha256:9676d0547a259997add8f5924eb6b959c589ed39055338e23b99aba7958d6d31 AS builder
+
+ARG ANDROID_NDK_VERSION=26.2.11394342
+ARG ANDROID_COMMAND_LINE_TOOLS_VERSION=13114758
+ARG ANDROID_COMMAND_LINE_TOOLS_SHA256=7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee
+ARG ANDROID_VERSION=34
+ARG ANDROID_BUILD_TOOLS_VERSION=34.0.0
+ARG ANDROID_BUNDLETOOL_VERSION=1.18.3
+ARG ANDROID_BUNDLETOOL_SHA256=a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    nodejs=18.19.0+dfsg-6~deb12u2 \
-    npm=9.2.0~ds1-1 \
+    openjdk-17-jdk-headless=17.0.17+10-1~deb12u1 \
+ && curl -fsSL -o /tmp/cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_COMMAND_LINE_TOOLS_VERSION}_latest.zip" \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
- && cargo install --locked dioxus-cli --version 0.6.3 \
- && cargo install --locked diesel_cli --version 2.2.7
+ && cargo install --git https://github.com/diesel-rs/diesel --rev 2e85ba060d3d70ea605ea58a79b8a435749a7adc diesel_cli \
+ && cargo install --git https://github.com/DioxusLabs/dioxus --rev 8f8b58ea80ba0ec8057807bcd58fb609f7a5f2b1 dioxus-cli --features disable-telemetry \
+ && rustup target add aarch64-linux-android \
+ && mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools" \
+ && curl -fsSL -o /tmp/cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_COMMAND_LINE_TOOLS_VERSION}_latest.zip" \
+ && unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools" \
+ && export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH" \
+ && mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest" \
+ && rm /tmp/cmdline-tools.zip \
+ && yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses > /dev/null \
+ && sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-$ANDROID_VERSION" "build-tools;$ANDROID_BUILD_TOOLS_VERSION" "ndk;$ANDROID_NDK_VERSION" \
+ && curl -fsSL -o /tmp/bundletool-all.jar "https://github.com/google/bundletool/releases/download/$ANDROID_BUNDLETOOL_VERSION/bundletool-all-${ANDROID_BUNDLETOOL_VERSION}.jar" \
+ && echo "$ANDROID_BUNDLETOOL_SHA256 /tmp/bundletool-all.jar" | sha256sum -c - \
+ && keytool -genkeypair -noprompt -keystore /tmp/android_keystore.jks -alias key -keyalg RSA -keysize 2048 -validity 3660 -dname "CN=" -storepass 123456 -keypass 123456
 
 COPY . /srv/app
 WORKDIR /srv/app
 
-RUN npm install \
- && npm run build \
- && dx bundle
+RUN export ANDROID_HOME="$ANDROID_SDK_ROOT" \
+ && export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" \
+ && dx bundle --release \
+ && dx bundle --platform android --target aarch64-linux-android --release \
+ && java -jar /tmp/bundletool-all.jar build-apks --bundle=/srv/app/target/dx/todo_baggins/release/android/app/app/build/outputs/bundle/release/TodoBaggins-aarch64-linux-android.aab --output=/tmp/todo_baggins.apks --mode=universal --ks=/tmp/android_keystore.jks --ks-key-alias=key --ks-pass=pass:123456 \
+ && mkdir -p /srv/app/bundle/android \
+ && unzip -qp /tmp/todo_baggins.apks universal.apk > /srv/app/bundle/android/todo_baggins.apk
 
 FROM debian:bookworm@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner
 
@@ -22,12 +49,12 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /srv/app/target/dx/todo-baggins/release/web /srv/app
-COPY .env /srv/app/.env
+COPY --from=builder /srv/app/target/dx/todo_baggins/release/web /srv/app/web
+COPY --from=builder /srv/app/bundle/android /srv/app/android
 
-RUN chown -R 1000:1000 /srv/app
+RUN chown -R 1000:1000 /srv/app/web
 
-WORKDIR /srv/app
+WORKDIR /srv/app/web
 
 HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost || exit 1
 
@@ -35,4 +62,4 @@ USER 1000:1000
 
 ENV IP="0.0.0.0"
 ENV PORT="80"
-CMD ["./server"]
+CMD ["./todo_baggins"]

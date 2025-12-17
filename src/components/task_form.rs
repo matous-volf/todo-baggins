@@ -1,11 +1,10 @@
 use crate::components::category_input::CategoryInput;
+use crate::components::project_select::ProjectSelect;
 use crate::components::reoccurrence_input::ReoccurrenceIntervalInput;
 use crate::components::subtasks_form::SubtasksForm;
 use crate::models::category::{CalendarTime, Category, Reoccurrence};
 use crate::models::task::NewTask;
 use crate::models::task::Task;
-use crate::query::projects::use_projects_query;
-use crate::query::{QueryErrors, QueryKey, QueryValue};
 use crate::route::Route;
 use crate::server::tasks::{create_task, delete_task, edit_task};
 use chrono::Duration;
@@ -13,7 +12,7 @@ use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_i18n::t;
-use dioxus_query::prelude::{QueryResult, use_query_client};
+use serde::{Deserialize, Serialize};
 
 const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     None,
@@ -35,14 +34,24 @@ const REMINDER_OFFSETS: [Option<Duration>; 17] = [
     Some(Duration::zero()),
 ];
 
+#[derive(Serialize, Deserialize)]
+struct InputData {
+    title: String,
+    deadline: Option<String>,
+    category_waiting_for: Option<String>,
+    category_calendar_date: Option<String>,
+    category_calendar_reoccurrence_length: Option<String>,
+    category_calendar_time: Option<String>,
+    category_calendar_reminder_offset_index: Option<String>,
+    project_id: Option<String>,
+}
+
 #[component]
 pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()>) -> Element {
-    let projects_query = use_projects_query();
-
     let route = use_route::<Route>();
     let selected_category = use_signal(|| {
         if let Some(task) = &task {
-            task.category().clone()
+            task.category.clone()
         } else {
             match route {
                 Route::CategorySomedayMaybePage => Category::SomedayMaybe,
@@ -63,37 +72,34 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
             if let Category::Calendar {
                 reoccurrence: Some(reoccurrence),
                 ..
-            } = task.category()
+            } = &task.category
             {
-                Some(reoccurrence.interval().clone())
+                Some(reoccurrence.interval.clone())
             } else {
                 None
             }
         })
     });
     let mut category_calendar_has_time = use_signal(|| {
-        task.as_ref().is_some_and(|task| {
-            matches!(*task.category(), Category::Calendar { time: Some(_), .. })
-        })
+        task.as_ref()
+            .is_some_and(|task| matches!(task.category, Category::Calendar { time: Some(_), .. }))
     });
     let mut category_calendar_reminder_offset_index = use_signal(|| {
         task.as_ref()
             .and_then(|task| {
                 if let Category::Calendar {
                     time: Some(time), ..
-                } = task.category()
+                } = &task.category
                 {
                     REMINDER_OFFSETS
                         .iter()
-                        .position(|&reminder_offset| reminder_offset == time.reminder_offset())
+                        .position(|&reminder_offset| reminder_offset == time.reminder_offset)
                 } else {
                     None
                 }
             })
             .unwrap_or(REMINDER_OFFSETS.len() - 1)
     });
-
-    let query_client = use_query_client::<QueryValue, QueryErrors, QueryKey>();
     let task_for_submit = task.clone();
 
     rsx! {
@@ -103,56 +109,50 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 class: "flex flex-col gap-4",
                 id: "form_task",
                 onsubmit: move |event| {
+                    event.prevent_default();
                     let task = task_for_submit.clone();
                     async move {
-                        let new_task = NewTask::new(
-                            event.values().get("title").unwrap().as_value(),
-                            event.values().get("deadline").unwrap().as_value().parse().ok(),
-                            match &selected_category() {
+                        let input_data = event.parsed_values::<InputData>().unwrap();
+                        let new_task = NewTask {
+                            title: input_data.title,
+                            deadline: input_data.deadline
+                                .and_then(|deadline| deadline.parse().ok()),
+                            category: match &selected_category() {
                                 Category::WaitingFor(_) => Category::WaitingFor(
-                                    event.values().get("category_waiting_for").unwrap()
-                                    .as_value()
+                                    input_data.category_waiting_for.unwrap()
                                 ),
                                 Category::Calendar { .. } => Category::Calendar {
-                                    date: event.values().get("category_calendar_date").unwrap()
-                                    .as_value().parse().unwrap(),
+                                    date: input_data.category_calendar_date.clone().unwrap().parse()
+                                        .unwrap(),
                                     reoccurrence: category_calendar_reoccurrence_interval().map(
-                                        |reoccurrence_interval| Reoccurrence::new(
-                                            event.values().get("category_calendar_date").unwrap()
-                                            .as_value().parse().unwrap(),
-                                            reoccurrence_interval,
-                                            event.values()
-                                            .get("category_calendar_reoccurrence_length")
-                                            .unwrap().as_value().parse().unwrap()
-                                        )
+                                        |reoccurrence_interval| Reoccurrence {
+                                            start_date: input_data.category_calendar_date.unwrap()
+                                                .parse().unwrap(),
+                                            interval: reoccurrence_interval,
+                                            length: input_data.category_calendar_reoccurrence_length
+                                                .unwrap().parse().unwrap()
+                                        }
                                     ),
-                                    time: event.values().get("category_calendar_time").unwrap()
-                                    .as_value().parse().ok().map(|time|
-                                        CalendarTime::new(
+                                    time: input_data.category_calendar_time.unwrap().parse().ok()
+                                        .map(|time| CalendarTime {
                                             time,
-                                            REMINDER_OFFSETS[
-                                                event.values()
-                                                .get("category_calendar_reminder_offset_index")
-                                                .unwrap().as_value().parse::<usize>().unwrap()
+                                            reminder_offset: REMINDER_OFFSETS[
+                                                input_data.category_calendar_reminder_offset_index
+                                                    .unwrap().parse::<usize>().unwrap()
                                             ]
-                                        )
+                                        }
                                     )
                                 },
                                 category => category.clone()
                             },
-                            event.values().get("project_id").unwrap()
-                            .as_value().parse::<i32>().ok().filter(|&id| id > 0),
-                        );
+                            project_id: input_data.project_id
+                                .and_then(|deadline| deadline.parse().ok()).filter(|&id| id > 0),
+                        };
                         if let Some(task) = task {
-                            let _ = edit_task(task.id(), new_task).await;
+                            let _ = edit_task(task.id, new_task).await;
                         } else {
                             let _ = create_task(new_task).await;
                         }
-                        query_client.invalidate_queries(&[
-                            QueryKey::Tasks,
-                            QueryKey::TasksInCategory(selected_category()),
-                            QueryKey::TasksWithSubtasksInCategory(selected_category()),
-                        ]);
                         on_successful_submit.call(());
                     }
                 },
@@ -168,7 +168,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     input {
                         name: "title",
                         required: true,
-                        initial_value: task.as_ref().map(|task| task.title().to_owned()),
+                        initial_value: task.as_ref().map(|task| task.title.clone()),
                         r#type: "text",
                         class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
                         id: "input_title"
@@ -183,42 +183,22 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                             class: "fa-solid fa-list text-zinc-400/50"
                         }
                     },
-                    select {
-                        name: "project_id",
-                        class: "px-3.5 py-2.5 bg-zinc-800/50 rounded-lg grow",
-                        id: "input_project",
-                        option {
-                            value: 0,
-                            {t!("none")}
+                    SuspenseBoundary {
+                        fallback: |_| {
+                            rsx ! {
+                                select {
+                                    class: "px-3.5 py-2.5 bg-zinc-800/50 rounded-lg grow cursor-pointer",
+                                    option {
+                                        value: 0,
+                                        {t!("none")}
+                                    },
+                                }
+                            }
                         },
-                        match projects_query.result().value() {
-                            QueryResult::Ok(QueryValue::Projects(projects))
-                            | QueryResult::Loading(Some(QueryValue::Projects(projects))) => {
-                                let mut projects = projects.clone();
-                                projects.sort();
-                                rsx! {
-                                    for project in projects {
-                                        option {
-                                            value: project.id().to_string(),
-                                            initial_selected: task.as_ref().is_some_and(
-                                                |task| task.project_id() == Some(project.id())
-                                            ),
-                                            {project.title()}
-                                        }
-                                    }
-                                }
-                            },
-                            QueryResult::Loading(None) => rsx! {
-                                // TODO: Add a loading indicator.
-                            },
-                            QueryResult::Err(errors) => rsx! {
-                                div {
-                                    "Errors occurred: {errors:?}"
-                                }
-                            },
-                            value => panic!("Unexpected query result: {value:?}")
+                        ProjectSelect {
+                            initial_selected_id: task.clone().and_then(|task| task.project_id)
                         }
-                    },
+                    }
                 },
                 div {
                     class: "flex flex-row items-center gap-3",
@@ -231,10 +211,10 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     },
                     input {
                         name: "deadline",
-                        initial_value: task.as_ref().and_then(|task| task.deadline())
+                        initial_value: task.as_ref().and_then(|task| task.deadline)
                             .map(|deadline| deadline.format("%Y-%m-%d").to_string()),
                         r#type: "date",
-                        class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow basis-0",
+                        class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow basis-0 cursor-pointer",
                         id: "input_deadline"
                     }
                 },
@@ -289,16 +269,17 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                     name: "category_calendar_date",
                                     required: true,
                                     initial_value: date.format("%Y-%m-%d").to_string(),
-                                    class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow",
+                                    class:
+                                        "py-2 px-3 bg-zinc-800/50 rounded-lg grow cursor-pointer",
                                     id: "input_category_calendar_date"
                                 },
                                 input {
                                     r#type: "time",
                                     name: "category_calendar_time",
                                     initial_value: time.map(|calendar_time|
-                                        calendar_time.time().format("%H:%M").to_string()
+                                        calendar_time.time.format("%H:%M").to_string()
                                     ),
-                                    class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow",
+                                    class: "py-2 px-3 bg-zinc-800/50 rounded-lg grow cursor-pointer",
                                     id: "input_category_calendar_time",
                                     oninput: move |event| {
                                         category_calendar_has_time.set(!event.value().is_empty());
@@ -330,7 +311,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                     initial_value: category_calendar_reoccurrence_interval().map_or(
                                         String::new(),
                                         |_| reoccurrence.map_or(1, |reoccurrence|
-                                            reoccurrence.length()).to_string()
+                                            reoccurrence.length).to_string()
                                     ),
                                     class: "py-2 px-3 bg-zinc-800/50 rounded-lg col-span-2 text-right",
                                     id: "category_calendar_reoccurrence_length"
@@ -354,7 +335,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                     max: REMINDER_OFFSETS.len() as i64 - 1,
                                     initial_value: category_calendar_reminder_offset_index()
                                         .to_string(),
-                                    class: "grow input-range-reverse",
+                                    class: "grow input-range-reverse cursor-pointer",
                                     id: "category_calendar_has_reminder",
                                     oninput: move |event| {
                                         category_calendar_reminder_offset_index.set(
@@ -381,37 +362,35 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 }
             },
             if let Some(task) = task.as_ref() {
-                SubtasksForm {
-                    task: task.clone()
+                SuspenseBoundary {
+                    fallback: |_| {
+                        VNode::empty()
+                    },
+                    SubtasksForm {
+                        task: task.clone()
+                    }
                 }
             }
             div {
                 class: "flex flex-row justify-between mt-auto",
                 button {
                     r#type: "button",
-                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
+                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
                     onclick: move |_| {
                         let task = task.clone();
                         async move {
                             if let Some(task) = task {
-                                if *(task.category()) == Category::Trash {
-                                    let _ = delete_task(task.id()).await;
+                                if let Category::Trash = task.category {
+                                    let _ = delete_task(task.id).await;
                                 } else {
-                                    let new_task = NewTask::new(
-                                        task.title().to_owned(),
-                                        task.deadline(),
-                                        Category::Trash,
-                                        task.project_id()
-                                    );
-
-                                    let _ = edit_task(task.id(), new_task).await;
+                                    let new_task = NewTask {
+                                        title: task.title.to_owned(),
+                                        deadline: task.deadline,
+                                        category: Category::Trash,
+                                        project_id: task.project_id
+                                    };
+                                    let _ = edit_task(task.id, new_task).await;
                                 }
-
-                                query_client.invalidate_queries(&[
-                                    QueryKey::Tasks,
-                                    QueryKey::TasksInCategory(task.category().clone()),
-                                    QueryKey::TasksWithSubtasksInCategory(selected_category()),
-                                ]);
                             }
                             on_successful_submit.call(());
                         }
@@ -423,7 +402,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 button {
                     form: "form_task",
                     r#type: "submit",
-                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg",
+                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
                     i {
                         class: "fa-solid fa-floppy-disk"
                     }

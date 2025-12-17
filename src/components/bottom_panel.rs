@@ -1,3 +1,4 @@
+use crate::components::error_boundary_message::ErrorBoundaryMessage;
 use crate::components::navigation::Navigation;
 use crate::components::project_form::ProjectForm;
 use crate::components::task_form::TaskForm;
@@ -23,6 +24,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
         } else {
             spawn(async move {
                 // Necessary for a smooth – not instant – height transition.
+                #[cfg(not(feature = "server"))]
                 async_std::task::sleep(std::time::Duration::from_millis(500)).await;
                 /* The check is necessary for the situation when the user expands the panel while
                 it is being closed. */
@@ -36,7 +38,7 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
     rsx! {
         div {
             class: format!(
-                "pointer-events-auto bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] overflow-y-scroll {}",
+                "flex flex-col pointer-events-auto bg-zinc-700/50 rounded-t-xl border-t-zinc-600 border-t backdrop-blur drop-shadow-[0_-5px_10px_rgba(0,0,0,0.2)] transition-[height] duration-[500ms] ease-[cubic-bezier(0.79,0.14,0.15,0.86)] overflow-y-scroll {}",
                 match (display_form(), current_route, navigation_expanded()) {
                     (false, _, false) => "h-[66px]",
                     (false, _, true) => "h-[130px]",
@@ -45,22 +47,24 @@ pub(crate) fn BottomPanel(display_form: Signal<bool>) -> Element {
                 }
             ),
             if expanded() {
-                match current_route {
-                    Route::ProjectsPage => rsx! {
-                        ProjectForm {
-                            project: project_being_edited(),
-                            on_successful_submit: move |_| {
-                                display_form.set(false);
-                                project_being_edited.set(None);
+                ErrorBoundaryMessage {
+                    match current_route {
+                        Route::ProjectsPage => rsx! {
+                            ProjectForm {
+                                project: project_being_edited(),
+                                on_successful_submit: move |_| {
+                                    display_form.set(false);
+                                    project_being_edited.set(None);
+                                }
                             }
-                        }
-                    },
-                    _ => rsx! {
-                        TaskForm {
-                            task: task_being_edited(),
-                            on_successful_submit: move |_| {
-                                display_form.set(false);
-                                task_being_edited.set(None);
+                        },
+                        _ => rsx! {
+                            TaskForm {
+                                task: task_being_edited(),
+                                on_successful_submit: move |_| {
+                                    display_form.set(false);
+                                    task_being_edited.set(None);
+                                }
                             }
                         }
                     }

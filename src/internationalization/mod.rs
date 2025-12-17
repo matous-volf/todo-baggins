@@ -1,11 +1,18 @@
+use crate::dotenv;
 use chrono::Locale;
-use dioxus::fullstack::once_cell::sync::Lazy;
 use feruca::Collator;
 use std::ops::Deref;
-use std::sync::Mutex;
+use std::sync::{LazyLock, Mutex};
 use unic_langid_impl::LanguageIdentifier;
 
-pub(crate) static COLLATOR: Lazy<Mutex<Collator>> = Lazy::new(|| Mutex::new(Collator::default()));
+pub(crate) fn get_language_identifier() -> LanguageIdentifier {
+    dotenv::LANGUAGE_CODE
+        .parse::<LanguageIdentifier>()
+        .expect("The LANGUAGE_CODE environment variable is not a valid language code.")
+}
+
+pub(crate) static COLLATOR: LazyLock<Mutex<Collator>> =
+    LazyLock::new(|| Mutex::new(Collator::default()));
 
 pub(crate) struct LocaleFromLanguageIdentifier<'a>(&'a LanguageIdentifier);
 

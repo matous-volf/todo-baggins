@@ -1,16 +1,16 @@
-FROM rust:1.88.0-bookworm@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+FROM rust:1.92.0-bookworm@sha256:9676d0547a259997add8f5924eb6b959c589ed39055338e23b99aba7958d6d31
 
-RUN cargo install --locked dioxus-cli --version 0.6.3 \
- && cargo install --locked diesel_cli --version 2.2.7
+RUN useradd -m -u 1000 -s /bin/bash app_user \
+ && rustup target add wasm32-unknown-unknown
 
-COPY . /srv/app
+USER app_user
+
+RUN cargo install --git https://github.com/diesel-rs/diesel --rev 2e85ba060d3d70ea605ea58a79b8a435749a7adc diesel_cli \
+ && cargo install --git https://github.com/DioxusLabs/dioxus --rev 8f8b58ea80ba0ec8057807bcd58fb609f7a5f2b1 dioxus-cli
+
+COPY --chown=app_user . /srv/app
 WORKDIR /srv/app
 
-RUN mkdir -p /.local/share/dioxus \
- && chown -R 1000:1000 /srv/app /usr/local/cargo /.local/share/dioxus
-
 HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost:8000 || exit 1
-
-USER 1000:1000
 
 CMD ["sleep", "infinity"]

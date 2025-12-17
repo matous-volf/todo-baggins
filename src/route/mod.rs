@@ -1,15 +1,15 @@
-use crate::components::layout::Layout;
-use crate::components::pages::category_calendar_page::CategoryCalendarPage;
-use crate::components::pages::category_done_page::CategoryDonePage;
-use crate::components::pages::category_inbox_page::CategoryInboxPage;
-use crate::components::pages::category_long_term_page::CategoryLongTermPage;
-use crate::components::pages::category_next_steps_page::CategoryNextStepsPage;
-use crate::components::pages::category_someday_maybe_page::CategorySomedayMaybePage;
-use crate::components::pages::category_today_page::CategoryTodayPage;
-use crate::components::pages::category_trash_page::CategoryTrashPage;
-use crate::components::pages::category_waiting_for_page::CategoryWaitingForPage;
-use crate::components::pages::not_found_page::NotFoundPage;
-use crate::components::pages::projects_page::ProjectsPage;
+use crate::layouts;
+use crate::views::category_calendar_page::CategoryCalendarPage;
+use crate::views::category_done_page::CategoryDonePage;
+use crate::views::category_inbox_page::CategoryInboxPage;
+use crate::views::category_long_term_page::CategoryLongTermPage;
+use crate::views::category_next_steps_page::CategoryNextStepsPage;
+use crate::views::category_someday_maybe_page::CategorySomedayMaybePage;
+use crate::views::category_today_page::CategoryTodayPage;
+use crate::views::category_trash_page::CategoryTrashPage;
+use crate::views::category_waiting_for_page::CategoryWaitingForPage;
+use crate::views::not_found_page::NotFoundPage;
+use crate::views::projects_page::ProjectsPage;
 use dioxus::prelude::*;
 
 // All variants have the same postfix because they have to match the component names.
@@ -17,7 +17,7 @@ use dioxus::prelude::*;
 #[derive(Clone, Routable, Debug, PartialEq)]
 #[rustfmt::skip]
 pub(crate) enum Route {
-    #[layout(Layout)]
+    #[layout(layouts::Main)]
         #[redirect("/", || Route::CategoryTodayPage {})]
         #[route("/today")]
         CategoryTodayPage,

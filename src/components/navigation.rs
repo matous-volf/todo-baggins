@@ -9,7 +9,7 @@ pub(crate) fn Navigation(expanded: Signal<bool>) -> Element {
             class: "grid grid-cols-5 justify-stretch",
             button {
                 class: format!(
-                    "py-4 text-center text-2xl {}",
+                    "py-4 text-center text-2xl {} cursor-pointer",
                     if expanded() { "text-zinc-200" }
                     else { "text-zinc-500" }
                 ),

@@ -34,9 +34,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: .env symlink creation
-        run: ln -s .env.example .env
-      - name: npm build
-        run: npm install && npm run build
+        run: ln -s .env.dev .env
+      - name: Tailwind CSS output creation
+        run: touch assets/tailwind.css
       - name: rustfmt check
         run: cargo fmt --all --check
       - name: Clippy check

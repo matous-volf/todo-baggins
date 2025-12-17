@@ -18,29 +18,10 @@ const TITLE_LENGTH_MAX: u64 = 255;
     diesel(table_name = crate::schema::projects, check_for_backend(diesel::pg::Pg))
 )]
 pub struct Project {
-    id: i32,
-    title: String,
-    created_at: NaiveDateTime,
-    updated_at: NaiveDateTime,
-}
-
-#[allow(dead_code)]
-impl Project {
-    pub fn id(&self) -> i32 {
-        self.id
-    }
-
-    pub fn title(&self) -> &str {
-        &self.title
-    }
-
-    pub fn created_at(&self) -> NaiveDateTime {
-        self.created_at
-    }
-
-    pub fn updated_at(&self) -> NaiveDateTime {
-        self.updated_at
-    }
+    pub id: i32,
+    pub title: String,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 impl Eq for Project {}
@@ -56,7 +37,7 @@ impl Ord for Project {
         COLLATOR
             .lock()
             .unwrap()
-            .collate(self.title(), other.title())
+            .collate(self.title.as_str(), other.title.as_str())
     }
 }
 
@@ -70,10 +51,4 @@ pub struct NewProject {
         code = "title_length"
     ))]
     pub title: String,
-}
-
-impl NewProject {
-    pub fn new(title: String) -> Self {
-        Self { title }
-    }
 }
