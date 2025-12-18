@@ -14,7 +14,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::SomedayMaybe { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -28,7 +28,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::LongTerm { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -42,7 +42,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if let Category::WaitingFor(_) = selected_category() { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -56,7 +56,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::NextSteps { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -70,7 +70,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if let Category::Calendar { .. } = selected_category() { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -88,7 +88,7 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {}",
+                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::Inbox { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),

@@ -1,6 +1,3 @@
-use crate::errors::error::Error;
-use crate::errors::error_vec::ErrorVec;
-use crate::errors::task_error::TaskError;
 use crate::models::category::Category;
 #[cfg(feature = "server")]
 use crate::models::category::ReoccurrenceInterval;
@@ -11,6 +8,8 @@ use crate::models::task::{NewTask, Task, TaskWithSubtasks};
 use crate::server::database_connection::establish_database_connection;
 #[cfg(feature = "server")]
 use crate::server::subtasks::restore_subtasks_of_task;
+#[cfg(feature = "server")]
+use crate::server::updates::publish_update;
 #[cfg(feature = "server")]
 use chrono::{Datelike, Days, Local, Months, NaiveDate};
 #[cfg(feature = "server")]
@@ -24,65 +23,52 @@ use time::Month;
 use validator::Validate;
 
 #[server]
-pub(crate) async fn create_task(
-    new_task: NewTask,
-) -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
+pub(crate) async fn create_task(new_task: NewTask) -> Result<Task> {
     use crate::schema::tasks;
 
     // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
     let mut new_task = new_task;
     new_task.title = new_task.title.trim().to_owned();
 
-    new_task
-        .validate()
-        .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
+    new_task.validate()?;
 
-    let mut connection =
-        establish_database_connection().map_err::<ErrorVec<TaskError>, _>(|_| {
-            vec![TaskError::Error(Error::ServerInternal)].into()
-        })?;
+    let mut connection = establish_database_connection()?;
 
     let new_task = diesel::insert_into(tasks::table)
         .values(&new_task)
         .returning(Task::as_returning())
-        .get_result(&mut connection)
-        .map_err::<ErrorVec<TaskError>, _>(|error| vec![error.into()].into())?;
+        .get_result(&mut connection)?;
 
+    publish_update().await;
     Ok(new_task)
 }
 
 #[server]
-pub(crate) async fn get_task(task_id: i32) -> Result<Task, ServerFnError<ErrorVec<Error>>> {
+pub(crate) async fn get_task(task_id: i32) -> Result<Task> {
     use crate::schema::tasks::dsl::*;
 
-    let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let mut connection = establish_database_connection()?;
 
     let task = tasks
         .find(task_id)
         .select(Task::as_select())
         .first(&mut connection)
-        .optional()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+        .optional()?;
 
     // TODO: Handle not finding the task.
     Ok(task.unwrap())
 }
 
 #[server]
-pub(crate) async fn get_tasks_in_category(
-    filtered_category: Category,
-) -> Result<Vec<Task>, ServerFnError<ErrorVec<Error>>> {
+pub(crate) async fn get_tasks_in_category(filtered_category: Category) -> Result<Vec<Task>> {
     use crate::schema::tasks::dsl::*;
 
-    let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let mut connection = establish_database_connection()?;
 
     let results = tasks
         .select(Task::as_select())
         .filter(filtered_category.eq_sql_predicate())
-        .load::<Task>(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+        .load::<Task>(&mut connection)?;
 
     Ok(results)
 }
@@ -90,52 +76,40 @@ pub(crate) async fn get_tasks_in_category(
 #[server]
 pub(crate) async fn get_tasks_with_subtasks_in_category(
     filtered_category: Category,
-) -> Result<Vec<TaskWithSubtasks>, ServerFnError<ErrorVec<Error>>> {
+) -> Result<Vec<TaskWithSubtasks>> {
     use crate::schema::tasks;
 
-    let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let mut connection = establish_database_connection()?;
 
     let tasks_in_category = tasks::table
         .filter(filtered_category.eq_sql_predicate())
         .select(Task::as_select())
-        .load(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+        .load(&mut connection)?;
 
     let subtasks = Subtask::belonging_to(&tasks_in_category)
         .select(Subtask::as_select())
-        .load(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+        .load(&mut connection)?;
 
     let tasks_with_subtasks = subtasks
         .grouped_by(&tasks_in_category)
         .into_iter()
         .zip(tasks_in_category)
-        .map(|(pages, book)| TaskWithSubtasks::new(book, pages))
+        .map(|(subtasks, task)| TaskWithSubtasks { task, subtasks })
         .collect();
 
     Ok(tasks_with_subtasks)
 }
 
 #[server]
-pub(crate) async fn edit_task(
-    task_id: i32,
-    mut new_task: NewTask,
-) -> Result<Task, ServerFnError<ErrorVec<TaskError>>> {
+pub(crate) async fn edit_task(task_id: i32, mut new_task: NewTask) -> Result<Task> {
     use crate::schema::tasks::dsl::*;
 
     // TODO: replace with model sanitization (https://github.com/matous-volf/todo-baggins/issues/13)
-    let mut new_task = new_task;
     new_task.title = new_task.title.trim().to_owned();
 
-    new_task
-        .validate()
-        .map_err::<ErrorVec<TaskError>, _>(|errors| errors.into())?;
+    new_task.validate()?;
 
-    let mut connection =
-        establish_database_connection().map_err::<ErrorVec<TaskError>, _>(|_| {
-            vec![TaskError::Error(Error::ServerInternal)].into()
-        })?;
+    let mut connection = establish_database_connection()?;
 
     let updated_task = diesel::update(tasks)
         .filter(id.eq(task_id))
@@ -146,14 +120,14 @@ pub(crate) async fn edit_task(
             project_id.eq(new_task.project_id),
         ))
         .returning(Task::as_returning())
-        .get_result(&mut connection)
-        .map_err::<ErrorVec<TaskError>, _>(|error| vec![error.into()].into())?;
+        .get_result(&mut connection)?;
 
+    publish_update().await;
     Ok(updated_task)
 }
 
 #[server]
-pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<ErrorVec<Error>>> {
+pub(crate) async fn complete_task(task_id: i32) -> Result<Task> {
     let task = get_task(task_id).await?;
     let mut new_task = NewTask::from(task);
 
@@ -163,13 +137,13 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
         ..
     } = &mut new_task.category
     {
-        match reoccurrence.interval() {
-            ReoccurrenceInterval::Day => *date = *date + Days::new(reoccurrence.length() as u64),
+        match reoccurrence.interval {
+            ReoccurrenceInterval::Day => *date = *date + Days::new(reoccurrence.length as u64),
             ReoccurrenceInterval::Month | ReoccurrenceInterval::Year => {
                 *date = *date
                     + Months::new(
-                        reoccurrence.length()
-                            * if *(reoccurrence.interval()) == ReoccurrenceInterval::Year {
+                        reoccurrence.length
+                            * if reoccurrence.interval == ReoccurrenceInterval::Year {
                                 12
                             } else {
                                 1
@@ -178,7 +152,7 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
                 *date = NaiveDate::from_ymd_opt(
                     date.year(),
                     date.month(),
-                    reoccurrence.start_date().day().min(
+                    reoccurrence.start_date.day().min(
                         Month::try_from(date.month() as u8)
                             .unwrap()
                             .length(date.year()) as u32,
@@ -192,42 +166,35 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task, ServerFnError<Er
         new_task.category = Category::Done;
     }
 
-    let updated_task = edit_task(task_id, new_task)
-        .await
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let updated_task = edit_task(task_id, new_task).await?;
 
+    publish_update().await;
     Ok(updated_task)
 }
 
-// TODO: Get rid of this suppression.
-//noinspection DuplicatedCode
 #[server]
-pub(crate) async fn delete_task(task_id: i32) -> Result<(), ServerFnError<ErrorVec<Error>>> {
+pub(crate) async fn delete_task(task_id: i32) -> Result<()> {
     use crate::schema::tasks::dsl::*;
 
-    let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let mut connection = establish_database_connection()?;
 
-    diesel::delete(tasks.filter(id.eq(task_id)))
-        .execute(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+    diesel::delete(tasks.filter(id.eq(task_id))).execute(&mut connection)?;
 
+    publish_update().await;
     Ok(())
 }
 
 #[cfg(feature = "server")]
-pub(crate) async fn trigger_task_updated_at(task_id: i32) -> Result<Task, ErrorVec<Error>> {
+pub(crate) async fn trigger_task_updated_at(task_id: i32) -> Result<Task> {
     use crate::schema::tasks::dsl::*;
 
-    let mut connection = establish_database_connection()
-        .map_err::<ErrorVec<Error>, _>(|_| vec![Error::ServerInternal].into())?;
+    let mut connection = establish_database_connection()?;
 
     let updated_task = diesel::update(tasks)
         .filter(id.eq(task_id))
         .set(updated_at.eq(Local::now().naive_local()))
         .returning(Task::as_returning())
-        .get_result(&mut connection)
-        .map_err::<ErrorVec<Error>, _>(|error| vec![error.into()].into())?;
+        .get_result(&mut connection)?;
 
     Ok(updated_task)
 }

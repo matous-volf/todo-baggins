@@ -1,9 +1,11 @@
 /.git
+/.gitea
 /.github
+/bundle
 /node_modules
 /target
 
-.dockerignore
+/.dockerignore
 /docker-compose-dev.yaml
 /docker-compose-prod.yaml
 /docker-compose.yaml

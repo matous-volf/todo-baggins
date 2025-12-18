@@ -17,43 +17,13 @@ const TITLE_LENGTH_MAX: u64 = 255;
 #[cfg_attr(feature = "server", derive(Queryable, Selectable, Identifiable))]
 #[cfg_attr(feature = "server", diesel(table_name = tasks, check_for_backend(diesel::pg::Pg)))]
 pub struct Task {
-    id: i32,
-    title: String,
-    deadline: Option<chrono::NaiveDate>,
-    category: Category,
-    project_id: Option<i32>,
-    created_at: NaiveDateTime,
-    updated_at: NaiveDateTime,
-}
-
-impl Task {
-    pub fn id(&self) -> i32 {
-        self.id
-    }
-
-    pub fn title(&self) -> &str {
-        &self.title
-    }
-
-    pub fn deadline(&self) -> Option<chrono::NaiveDate> {
-        self.deadline
-    }
-
-    pub fn category(&self) -> &Category {
-        &self.category
-    }
-
-    pub fn project_id(&self) -> Option<i32> {
-        self.project_id
-    }
-
-    pub fn created_at(&self) -> NaiveDateTime {
-        self.created_at
-    }
-
-    pub fn updated_at(&self) -> NaiveDateTime {
-        self.updated_at
-    }
+    pub id: i32,
+    pub title: String,
+    pub deadline: Option<chrono::NaiveDate>,
+    pub category: Category,
+    pub project_id: Option<i32>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 impl Eq for Task {}
@@ -83,24 +53,22 @@ impl Ord for Task {
                 .cmp(other_date)
                 .then(
                     ReverseOrdOption::from(
-                        &self_time.as_ref().map(|calendar_time| calendar_time.time()),
+                        &self_time.as_ref().map(|calendar_time| calendar_time.time),
                     )
                     .cmp(&ReverseOrdOption::from(
-                        &other_time
-                            .as_ref()
-                            .map(|calendar_time| calendar_time.time()),
+                        &other_time.as_ref().map(|calendar_time| calendar_time.time),
                     )),
                 )
                 .then(
-                    ReverseOrdOption::from(&self.deadline())
-                        .cmp(&ReverseOrdOption::from(&other.deadline())),
+                    ReverseOrdOption::from(&self.deadline)
+                        .cmp(&ReverseOrdOption::from(&other.deadline)),
                 )
                 .then(self.created_at.cmp(&other.created_at)),
             (Category::Done, Category::Done) | (Category::Trash, Category::Trash) => {
                 self.updated_at.cmp(&other.updated_at).reverse()
             }
-            (_, _) => ReverseOrdOption::from(&self.deadline())
-                .cmp(&ReverseOrdOption::from(&other.deadline()))
+            (_, _) => ReverseOrdOption::from(&self.deadline)
+                .cmp(&ReverseOrdOption::from(&other.deadline))
                 .then(self.created_at.cmp(&other.created_at)),
         }
     }
@@ -108,22 +76,8 @@ impl Ord for Task {
 
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
 pub struct TaskWithSubtasks {
-    task: Task,
-    subtasks: Vec<Subtask>,
-}
-
-impl TaskWithSubtasks {
-    pub fn new(task: Task, subtasks: Vec<Subtask>) -> Self {
-        Self { task, subtasks }
-    }
-
-    pub fn task(&self) -> &Task {
-        &self.task
-    }
-
-    pub fn subtasks(&self) -> &Vec<Subtask> {
-        &self.subtasks
-    }
+    pub task: Task,
+    pub subtasks: Vec<Subtask>,
 }
 
 impl Eq for TaskWithSubtasks {}
@@ -136,7 +90,7 @@ impl PartialOrd<Self> for TaskWithSubtasks {
 
 impl Ord for TaskWithSubtasks {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.task().cmp(other.task())
+        self.task.cmp(&other.task)
     }
 }
 
@@ -155,24 +109,13 @@ pub struct NewTask {
     pub project_id: Option<i32>,
 }
 
-impl NewTask {
-    pub fn new(
-        title: String,
-        deadline: Option<chrono::NaiveDate>,
-        category: Category,
-        project_id: Option<i32>,
-    ) -> Self {
-        Self {
-            title,
-            deadline,
-            category,
-            project_id,
-        }
-    }
-}
-
 impl From<Task> for NewTask {
     fn from(task: Task) -> Self {
-        Self::new(task.title, task.deadline, task.category, task.project_id)
+        Self {
+            title: task.title,
+            deadline: task.deadline,
+            category: task.category,
+            project_id: task.project_id,
+        }
     }
 }

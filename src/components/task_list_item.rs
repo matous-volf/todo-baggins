@@ -11,23 +11,23 @@ use voca_rs::Voca;
 
 #[component]
 pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
+    let today_date = Local::now().date_naive();
     rsx! {
         div {
             class: "flex flex-col",
             div {
                 class: "mt-1 grow font-medium",
-                {task.task().title()}
+                {task.task.title}
             },
             div {
                 class: "flex flex-row gap-4",
-                if let Some(deadline) = task.task().deadline() {
+                if let Some(deadline) = task.task.deadline {
                     div {
                         class: "text-sm text-zinc-400",
                         i {
                             class: "fa-solid fa-bomb"
                         },
                         {
-                            let today_date = Local::now().date_naive();
                             format!(
                                 " {}",
                                 if deadline == today_date - chrono::Days::new(1) {
@@ -69,7 +69,7 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                         }
                     }
                 }
-                if let Category::Calendar { time, .. } = task.task().category() {
+                if let Category::Calendar { time, .. } = task.task.category {
                     if let Some(calendar_time) = time {
                         div {
                             class: "text-sm text-zinc-400",
@@ -78,12 +78,12 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                             },
                             {
                                 let format = t!("time-format");
-                                format!(" {}", calendar_time.time().format(format.as_str()))
+                                format!(" {}", calendar_time.time.format(format.as_str()))
                             }
                         }
                     }
                 }
-                if !task.subtasks().is_empty() {
+                if !task.subtasks.is_empty() {
                     div {
                         class: "text-sm text-zinc-400",
                         i {
@@ -91,10 +91,10 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                         },
                         {format!(
                             " {}/{}",
-                            task.subtasks().iter()
-                                .filter(|subtask| subtask.is_completed())
+                            task.subtasks.iter()
+                                .filter(|subtask| subtask.is_completed)
                                 .count(),
-                            task.subtasks().len()
+                            task.subtasks.len()
                         )}
                     }
                 }

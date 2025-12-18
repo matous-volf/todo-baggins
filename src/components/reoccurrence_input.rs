@@ -12,7 +12,7 @@ pub(crate) fn ReoccurrenceIntervalInput(
         button {
             r#type: "button",
             class: format!(
-                "py-2 rounded-lg {} {}",
+                "py-2 rounded-lg {} {} cursor-pointer",
                 class_buttons.unwrap_or(""),
                 if reoccurrence_interval().is_none() { "bg-zinc-500/50" }
                 else { "bg-zinc-800/50" }
@@ -27,7 +27,7 @@ pub(crate) fn ReoccurrenceIntervalInput(
         button {
             r#type: "button",
             class: format!(
-                "py-2 rounded-lg {} {}",
+                "py-2 rounded-lg {} {} cursor-pointer",
                 class_buttons.unwrap_or(""),
                 if let Some(ReoccurrenceInterval::Day) = reoccurrence_interval()
                 { "bg-zinc-500/50" }
@@ -43,7 +43,7 @@ pub(crate) fn ReoccurrenceIntervalInput(
         button {
             r#type: "button",
             class: format!(
-                "py-2 rounded-lg {} {}",
+                "py-2 rounded-lg {} {} cursor-pointer",
                 class_buttons.unwrap_or(""),
                 if let Some(ReoccurrenceInterval::Month) = reoccurrence_interval()
                 { "bg-zinc-500/50" }
@@ -59,7 +59,7 @@ pub(crate) fn ReoccurrenceIntervalInput(
         button {
             r#type: "button",
             class: format!(
-                "py-2 rounded-lg {} {}",
+                "py-2 rounded-lg {} {} cursor-pointer",
                 class_buttons.unwrap_or(""),
                 if let Some(ReoccurrenceInterval::Year) = reoccurrence_interval()
                 { "bg-zinc-500/50" }

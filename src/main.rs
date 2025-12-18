@@ -1,15 +1,17 @@
 mod components;
-mod errors;
+mod dotenv;
+mod hooks;
 mod internationalization;
+mod layouts;
 #[cfg(feature = "server")]
 mod migrations;
 mod models;
-mod query;
 mod route;
 #[cfg(feature = "server")]
 mod schema;
 mod server;
 mod utils;
+mod views;
 
 use components::app::App;
 use dioxus::prelude::*;
@@ -21,6 +23,9 @@ fn main() {
         migrations::run_migrations().expect("Failed to run migrations.");
     );
 
-    info!("Starting app.");
+    #[cfg(feature = "mobile")]
+    dioxus::fullstack::set_server_url(crate::dotenv::MOBILE_SERVER_URL);
+
+    info!("Starting the app.");
     launch(App);
 }
