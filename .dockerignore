@@ -3,6 +3,7 @@
 /.github
 /bundle
 /node_modules
+/scripts
 /target
 
 /.dockerignore
