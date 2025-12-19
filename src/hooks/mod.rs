@@ -14,6 +14,17 @@ use crate::{
 };
 
 #[allow(clippy::result_large_err)]
+fn sort_loader_result<T: Ord + Clone>(
+    result: Result<Loader<Vec<T>>, Loading>,
+) -> Result<Vec<T>, Loading> {
+    result.map(|loader| {
+        let mut items_sorted = loader();
+        items_sorted.sort();
+        items_sorted
+    })
+}
+
+#[allow(clippy::result_large_err)]
 fn use_loader_with_update_subscription<F, T, E>(
     mut future: impl FnMut() -> F + 'static,
 ) -> Result<Loader<T>, Loading>
@@ -40,22 +51,23 @@ where
 }
 
 #[allow(clippy::result_large_err)]
-pub(crate) fn use_projects() -> Result<Loader<Vec<Project>>, Loading> {
-    use_loader_with_update_subscription(get_projects).inspect(|projects| projects().sort())
+pub(crate) fn use_projects() -> Result<Vec<Project>, Loading> {
+    let result = use_loader_with_update_subscription(get_projects);
+    sort_loader_result(result)
 }
 
 #[allow(clippy::result_large_err)]
 pub(crate) fn use_tasks_with_subtasks_in_category(
     filtered_category: Category,
-) -> Result<Loader<Vec<TaskWithSubtasks>>, Loading> {
-    use_loader_with_update_subscription(move || {
+) -> Result<Vec<TaskWithSubtasks>, Loading> {
+    let result = use_loader_with_update_subscription(move || {
         get_tasks_with_subtasks_in_category(filtered_category.clone())
-    })
-    .inspect(|tasks| tasks().sort())
+    });
+    sort_loader_result(result)
 }
 
 #[allow(clippy::result_large_err)]
-pub(crate) fn use_subtasks_of_task(task_id: i32) -> Result<Loader<Vec<Subtask>>, Loading> {
-    use_loader_with_update_subscription(move || get_subtasks_of_task(task_id))
-        .inspect(|subtasks| subtasks().sort())
+pub(crate) fn use_subtasks_of_task(task_id: i32) -> Result<Vec<Subtask>, Loading> {
+    let result = use_loader_with_update_subscription(move || get_subtasks_of_task(task_id));
+    sort_loader_result(result)
 }

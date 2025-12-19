@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn SubtasksForm(task: Task) -> Element {
-    let subtasks = use_subtasks_of_task(task.id)?();
+    let subtasks = use_subtasks_of_task(task.id)?;
     let mut new_title = use_signal(String::new);
     rsx! {
         form {

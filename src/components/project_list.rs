@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn ProjectList() -> Element {
-    let projects = use_projects()?();
+    let projects = use_projects()?;
     let mut project_being_edited = use_context::<Signal<Option<Project>>>();
 
     rsx! {

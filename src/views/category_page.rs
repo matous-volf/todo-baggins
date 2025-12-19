@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn CategoryPage(category: Category) -> Element {
-    let tasks = use_tasks_with_subtasks_in_category(category)?();
+    let tasks = use_tasks_with_subtasks_in_category(category)?;
 
     rsx! {
         TaskList {
