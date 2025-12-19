@@ -17,7 +17,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
         date: today_date,
         reoccurrence: None,
         time: None,
-    })?();
+    })?;
     let today_tasks = calendar_tasks
         .iter()
         .filter(|task| {
@@ -40,7 +40,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
         })
         .cloned()
         .collect::<Vec<TaskWithSubtasks>>();
-    let long_term_tasks = use_tasks_with_subtasks_in_category(Category::LongTerm)?();
+    let long_term_tasks = use_tasks_with_subtasks_in_category(Category::LongTerm)?;
 
     rsx! {
         div {

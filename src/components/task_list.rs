@@ -1,6 +1,7 @@
 use crate::components::task_list_item::TaskListItem;
 use crate::models::category::Category;
 use crate::models::task::{Task, TaskWithSubtasks};
+use crate::server::tasks::complete_task;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
@@ -48,6 +49,9 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                             move |event: Event<MouseData>| {
                                 // To prevent editing the task.
                                 event.stop_propagation();
+                                async move {
+                                    let _ = complete_task(task.task.id).await;
+                                }
                             }
                         }
                     },

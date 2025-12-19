@@ -19,7 +19,7 @@ pub(crate) fn CategoryCalendarTaskList() -> Element {
         date: today_date,
         reoccurrence: None,
         time: None,
-    })?();
+    })?;
 
     rsx! {
         div {

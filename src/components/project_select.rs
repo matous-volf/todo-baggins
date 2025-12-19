@@ -6,7 +6,7 @@ use dioxus_i18n::t;
 
 #[component]
 pub(crate) fn ProjectSelect(initial_selected_id: Option<i32>) -> Element {
-    let projects = use_projects()?();
+    let projects = use_projects()?;
     rsx! {
         select {
             name: "project_id",
