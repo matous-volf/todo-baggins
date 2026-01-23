@@ -7,19 +7,19 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = { version = "0.4.42", features = ["serde", "unstable-locales"] }
-dioxus = { version = "0.7.2", features = ["fullstack", "router"] }
+chrono = { version = "0.4.43", features = ["serde", "unstable-locales"] }
+dioxus = { version = "0.7.3", features = ["fullstack", "router"] }
 # TODO: Remove this once https://github.com/DioxusLabs/dioxus/issues/4765 is resolved.
-dioxus-html = { version = "0.7.2", features = ["serialize"] }
+dioxus-html = { version = "0.7.3", features = ["serialize"] }
 feruca = { version = "0.11.5" }
 serde = { version = "1.0.228" }
-serde_json = { version = "1.0.145" }
+serde_json = { version = "1.0.149" }
 serde_with = { version = "3.16.1", features = ["chrono_0_4"] }
-tracing = "0.1.43"
+tracing = "0.1.44"
 unic-langid-impl = { version = "0.9.6", features = ["serde"] }
 validator = { version = "0.20.0", features = ["derive"] }
 
-diesel = { version = "2.3.4", features = [
+diesel = { version = "2.3.6", features = [
     "chrono",
     "postgres",
     "postgres_backend",
@@ -29,11 +29,11 @@ diesel_migrations = { version = "2.3.1", features = [
     "postgres",
 ], optional = true }
 rand = { version = "0.9.2", optional = true }
-time = { version = "0.3.44", optional = true }
-tokio = { version = "1.48.0", optional = true }
+time = { version = "0.3.45", optional = true }
+tokio = { version = "1.49.0", optional = true }
 
 async-std = { version = "1.13.2", optional = true }
-dioxus-i18n = "0.5.0"
+dioxus-i18n = "0.5.1"
 voca_rs = "1.15.2"
 load-dotenv = "0.1.2"
 
