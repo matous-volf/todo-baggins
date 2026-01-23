@@ -2,4 +2,5 @@
 services:
   app:
     build:
+      dockerfile: docker/prod/app/Dockerfile
       target: builder_android
