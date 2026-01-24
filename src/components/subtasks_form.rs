@@ -55,7 +55,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                 }
                 button {
                     r#type: "submit",
-                    class: "py-2 col-span-1 flex flex-row justify-center items-center bg-zinc-800/50 rounded-lg",
+                    class: "py-2 col-span-1 flex flex-row justify-center items-center bg-zinc-800/50 rounded-lg cursor-pointer",
                     Icon {
                         icon: FaPlus,
                         height: 16,
@@ -69,7 +69,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                 key: "{subtask.id}",
                 class: "flex flex-row items-center gap-3",
                 button {
-                    class: "min-w-6 flex flex-row justify-center items-center text-zinc-400/50",
+                    class: "min-w-6 flex flex-row justify-center items-center text-zinc-400/50 cursor-pointer",
                     onclick: {
                         let subtask = subtask.clone();
                         move |_| {
@@ -132,7 +132,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                     }
                     button {
                         r#type: "button",
-                        class: "py-2 flex flex-row justify-center items-center col-span-1 bg-zinc-800/50 rounded-lg",
+                        class: "py-2 flex flex-row justify-center items-center col-span-1 bg-zinc-800/50 rounded-lg cursor-pointer",
                         onclick: {
                             let subtask = subtask.clone();
                             move |_| {
