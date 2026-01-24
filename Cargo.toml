@@ -8,6 +8,7 @@ edition = "2024"
 
 [dependencies]
 chrono = { version = "0.4.43", features = ["serde", "unstable-locales"] }
+# Remember to update the CLI as well.
 dioxus = { version = "0.7.3", features = ["fullstack", "router"] }
 # TODO: Remove this once https://github.com/DioxusLabs/dioxus/issues/4765 is resolved.
 dioxus-html = { version = "0.7.3", features = ["serialize"] }
@@ -19,6 +20,7 @@ tracing = "0.1.44"
 unic-langid-impl = { version = "0.9.6", features = ["serde"] }
 validator = { version = "0.20.0", features = ["derive"] }
 
+# Remember to update the CLI as well.
 diesel = { version = "2.3.6", features = [
     "chrono",
     "postgres",

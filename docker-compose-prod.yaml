@@ -6,6 +6,7 @@ services:
     networks:
       - default
       - web-server-network
+    ports: ["8000:80"]
     restart: always
     depends_on: ["db"]
 
