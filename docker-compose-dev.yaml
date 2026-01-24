@@ -12,6 +12,7 @@ services:
       - ./Cargo.toml:/srv/app/Cargo.toml
       - ./diesel.toml:/srv/app/diesel.toml
       - ./Dioxus.toml:/srv/app/Dioxus.toml
+      - ./tailwind.css:/srv/app/tailwind.css
     restart: always
     ports: ["8000:8000"]
     depends_on: ["db"]

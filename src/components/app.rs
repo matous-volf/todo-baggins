@@ -7,13 +7,12 @@ use dioxus_i18n::prelude::*;
 use dioxus_i18n::unic_langid::langid;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
-const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 #[used]
 static FONTS_DIRECTORY: Asset = asset!(
     "/assets/fonts",
     AssetOptions::builder().with_hash_suffix(false)
 );
-const FONTS_CSS: Asset = asset!("/assets/styles/fonts.css");
+const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 const INPUT_NUMBER_ARROWS_CSS: Asset = asset!("/assets/styles/input_number_arrows.css");
 const INPUT_RANGE_CSS: Asset = asset!("/assets/styles/input_range.css");
 const MANIFEST: Asset = asset!("/assets/manifest.json");
@@ -35,7 +34,6 @@ pub(crate) fn App() -> Element {
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
         document::Stylesheet { href: TAILWIND_CSS }
-        document::Stylesheet { href: FONTS_CSS }
         document::Stylesheet { href: INPUT_NUMBER_ARROWS_CSS }
         document::Stylesheet { href: INPUT_RANGE_CSS }
         document::Link { rel: "manifest", href: MANIFEST, crossorigin: "use-credentials" }
