@@ -7,6 +7,8 @@ use crate::route::Route;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::FaCog;
 
 #[component]
 pub(crate) fn Main() -> Element {
@@ -25,10 +27,11 @@ pub(crate) fn Main() -> Element {
                 rsx! {
                     div {
                         class: "grow flex flex-col justify-center items-center",
-                        div {
-                            i {
-                                class: "text-3xl fa-solid fa-cog fa-spin"
-                            }
+                        Icon {
+                            class: "animate-[spin_2000ms_linear_infinite]",
+                            icon: FaCog,
+                            height: 32,
+                            width: 32
                         }
                     }
                 }

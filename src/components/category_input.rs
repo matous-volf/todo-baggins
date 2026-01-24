@@ -2,6 +2,10 @@ use crate::models::category::Category;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::{
+    FaCalendarDays, FaForward, FaHourglassHalf, FaInbox, FaQuestion, FaWater,
+};
 
 #[component]
 pub(crate) fn CategoryInput(
@@ -14,63 +18,71 @@ pub(crate) fn CategoryInput(
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::SomedayMaybe { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::SomedayMaybe);
                 },
-                i {
-                    class: "fa-solid fa-question"
+                Icon {
+                    icon: FaQuestion,
+                    height: 16,
+                    width: 16
                 }
             },
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::LongTerm { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::LongTerm);
                 },
-                i {
-                    class: "fa-solid fa-water"
+                Icon {
+                    icon: FaWater,
+                    height: 16,
+                    width: 16
                 }
             },
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if let Category::WaitingFor(_) = selected_category() { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::WaitingFor(String::new()));
                 },
-                i {
-                    class: "fa-solid fa-hourglass-half"
+                Icon {
+                    icon: FaHourglassHalf,
+                    height: 16,
+                    width: 16
                 }
             },
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::NextSteps { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::NextSteps);
                 },
-                i {
-                    class: "fa-solid fa-forward"
+                Icon {
+                    icon: FaForward,
+                    height: 16,
+                    width: 16
                 }
             },
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if let Category::Calendar { .. } = selected_category() { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
@@ -81,22 +93,26 @@ pub(crate) fn CategoryInput(
                         time: None,
                     });
                 },
-                i {
-                    class: "fa-solid fa-calendar-days"
+                Icon {
+                    icon: FaCalendarDays,
+                    height: 16,
+                    width: 16
                 }
             },
             button {
                 r#type: "button",
                 class: format!(
-                    "py-2 rounded-lg grow basis-0 {} cursor-pointer",
+                    "py-3 flex flex-row justify-center items-center rounded-lg grow basis-0 {} cursor-pointer",
                     if selected_category() == Category::Inbox { "bg-zinc-500/50" }
                     else { "bg-zinc-800/50" }
                 ),
                 onclick: move |_| {
                     selected_category.set(Category::Inbox);
                 },
-                i {
-                    class: "fa-solid fa-inbox"
+                Icon {
+                    icon: FaInbox,
+                    height: 16,
+                    width: 16
                 }
             }
         }
