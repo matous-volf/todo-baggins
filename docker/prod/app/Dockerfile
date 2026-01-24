@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && keytool -genkeypair -noprompt -keystore /tmp/android_keystore.jks -alias key -keyalg RSA -keysize 2048 -validity 3660 -dname "CN=" -storepass 123456 -keypass 123456 \
  && export ANDROID_HOME="$ANDROID_SDK_ROOT" \
  && export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" \
- && dx bundle --platform android --target aarch64-linux-android --release \
+ && dx bundle --locked --platform android --target aarch64-linux-android --release \
  && java -jar /tmp/bundletool-all.jar build-apks --bundle=/srv/app/target/dx/todo_baggins/release/android/app/app/build/outputs/bundle/release/TodoBaggins-aarch64-linux-android.aab --output=/tmp/todo_baggins.apks --mode=universal --ks=/tmp/android_keystore.jks --ks-key-alias=key --ks-pass=pass:123456 \
  && mkdir -p /srv/app/bundle \
  && unzip -qp /tmp/todo_baggins.apks universal.apk > /srv/app/bundle/todo_baggins.apk
@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 FROM builder_base AS builder_web
  
-RUN dx bundle --release
+RUN dx bundle --locked --release
 
 
 FROM debian:bookworm@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner_web
