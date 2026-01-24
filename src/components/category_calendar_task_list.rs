@@ -28,7 +28,7 @@ pub(crate) fn CategoryCalendarTaskList() -> Element {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-8 flex flex-row items-center gap-2 font-bold",
+                        class: "px-7 flex flex-row items-center gap-2 font-bold",
                         div {
                             class: "pt-1",
                             {

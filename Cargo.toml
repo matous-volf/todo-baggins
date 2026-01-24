@@ -38,6 +38,11 @@ async-std = { version = "1.13.2", optional = true }
 dioxus-i18n = "0.5.1"
 voca_rs = "1.15.2"
 load-dotenv = "0.1.2"
+# TODO: Switch to upstream once it merges the changes.
+dioxus-free-icons = { git = "https://github.com/matous-volf/dioxus-free-icons", rev = "6488400003a3d6829e771a84a565c5c5f08a9aa0", features = [
+    "font-awesome-regular",
+    "font-awesome-solid",
+] }
 
 [features]
 default = ["web"]

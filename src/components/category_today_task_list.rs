@@ -6,6 +6,8 @@ use crate::models::category::Category;
 use crate::models::task::TaskWithSubtasks;
 use chrono::Local;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::{FaCalendarCheck, FaCalendarXmark, FaWater};
 use dioxus_i18n::t;
 use dioxus_i18n::use_i18n::i18n;
 use voca_rs::Voca;
@@ -48,12 +50,12 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
             div {
                 class: "flex flex-col gap-4",
                 div {
-                    class: "px-8 flex flex-row items-center gap-2 font-bold",
-                    i {
-                        class: "fa-solid fa-water text-xl w-6 text-center"
+                    class: "px-7 flex flex-row items-center gap-2 font-bold",
+                    Icon {
+                        class: "mx-1",
+                        icon: FaWater
                     }
                     div {
-                        class: "mt-1",
                         {t!("long-term")._upper_first()}
                     }
                 }
@@ -62,7 +64,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                         div {
                             key: "{task.task.id}",
                             class: format!(
-                                "px-8 pt-5 {} flex flex-row gap-4",
+                                "px-7 pt-5 {} flex flex-row gap-4",
                                 if task.task.deadline.is_some() {
                                     "pb-0.5"
                                 } else {
@@ -80,12 +82,14 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-8 flex flex-row items-center gap-2 font-bold",
-                        i {
-                            class: "fa-solid fa-calendar-xmark text-xl w-6 text-center"
+                        class: "px-7 flex flex-row items-center gap-2 font-bold",
+                        Icon {
+                            class: "mx-1",
+                            height: 22,
+                            width: 22,
+                            icon: FaCalendarXmark
                         }
                         div {
-                            class: "mt-1",
                             {t!("overdue")._upper_first()}
                         }
                     }
@@ -98,12 +102,14 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
             div {
                 class: "flex flex-col gap-4",
                 div {
-                    class: "px-8 flex flex-row items-center gap-2 font-bold",
-                    i {
-                        class: "fa-solid fa-calendar-check text-xl w-6 text-center"
+                    class: "px-7 flex flex-row items-center gap-2 font-bold",
+                    Icon {
+                        class: "mx-1",
+                        height: 22,
+                        width: 22,
+                        icon: FaCalendarCheck
                     }
                     div {
-                        class: "mt-1",
                         {
                             let format = t!("date-weekday-format");
                             let today_date = today_date.format_localized(

@@ -5,6 +5,9 @@ use crate::server::tasks::complete_task;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_regular_icons::FaSquare;
+use dioxus_free_icons::icons::fa_solid_icons::FaSquareCheck;
 
 #[component]
 pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>) -> Element {
@@ -16,17 +19,17 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                 div {
                     key: "{task.task.id}",
                     class: format!(
-                        "px-8 pt-4 {} flex flex-row gap-4 select-none {}",
+                        "px-7 pt-4.25 {} flex flex-row items-start gap-4 select-none {}",
                         if task.task.deadline.is_some() || !task.subtasks.is_empty() {
-                            "pb-0.5"
+                            "pb-0.25"
                         } else if let Category::Calendar { time, .. } = &task.task.category {
                             if time.is_some() {
-                                "pb-0.5"
+                                "pb-0.25"
                             } else {
-                                "pb-4"
+                                "pb-4.25"
                             }
                         } else {
-                            "pb-4"
+                            "pb-4.25"
                         },
                         if task_being_edited().is_some_and(|t| t.id == task.task.id) {
                             "bg-zinc-700"
@@ -36,15 +39,8 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                         let task = task.clone();
                         move |_| task_being_edited.set(Some(task.task.clone()))
                     },
-                    i {
-                        class: format!(
-                            "{} text-3xl align-middle h-9 text-zinc-500",
-                            if let Category::Done = task.task.category {
-                                "fa solid fa-square-check"
-                            } else {
-                                "fa-regular fa-square cursor-pointer"
-                            }
-                        ),
+                    button {
+                        class: "text-zinc-500",
                         onclick: {
                             move |event: Event<MouseData>| {
                                 // To prevent editing the task.
@@ -52,6 +48,20 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                                 async move {
                                     let _ = complete_task(task.task.id).await;
                                 }
+                            }
+                        },
+                        if let Category::Done = task.task.category {
+                            Icon {
+                                icon: FaSquareCheck,
+                                height: 30,
+                                width: 30
+                            }
+                        } else {
+                            Icon {
+                                class: "cursor-pointer",
+                                icon: FaSquare,
+                                height: 30,
+                                width: 30
                             }
                         }
                     },

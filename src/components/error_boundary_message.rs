@@ -1,6 +1,8 @@
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::FaTriangleExclamation;
 
 #[component]
 pub(crate) fn ErrorBoundaryMessage(children: Element, class: Option<String>) -> Element {
@@ -11,8 +13,10 @@ pub(crate) fn ErrorBoundaryMessage(children: Element, class: Option<String>) -> 
                     div {
                         class: "grow flex flex-col justify-center items-center",
                         div {
-                            i {
-                                class: "text-3xl fa-solid fa-triangle-exclamation"
+                            Icon {
+                                icon: FaTriangleExclamation,
+                                height: 32,
+                                width: 32
                             }
                         }
                     }

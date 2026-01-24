@@ -13,7 +13,7 @@ pub(crate) fn ProjectList() -> Element {
                 div {
                     key: "{project.id}",
                     class: format!(
-                        "px-8 py-4 select-none {}",
+                        "px-7 py-4 select-none {}",
                         if project_being_edited().is_some_and(|p| p.id == project.id) {
                             "bg-zinc-700"
                         } else { "" }

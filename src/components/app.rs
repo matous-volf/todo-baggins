@@ -37,7 +37,6 @@ pub(crate) fn App() -> Element {
         document::Stylesheet { href: INPUT_NUMBER_ARROWS_CSS }
         document::Stylesheet { href: INPUT_RANGE_CSS }
         document::Link { rel: "manifest", href: MANIFEST, crossorigin: "use-credentials" }
-        document::Script { src: "https://kit.fontawesome.com/3c1b409f8f.js" }
 
         div {
             class: "min-h-screen pt-4 pb-36 flex flex-col text-zinc-200 bg-zinc-800",

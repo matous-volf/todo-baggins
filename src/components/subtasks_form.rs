@@ -5,6 +5,9 @@ use crate::server::subtasks::{create_subtask, delete_subtask, edit_subtask};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_regular_icons::FaSquare;
+use dioxus_free_icons::icons::fa_solid_icons::{FaListCheck, FaPlus, FaSquareCheck, FaTrashCan};
 
 #[component]
 pub(crate) fn SubtasksForm(task: Task) -> Element {
@@ -31,9 +34,12 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
             },
             label {
                 r#for: "input_new_title",
-                class: "min-w-6 text-center",
-                i {
-                    class: "fa-solid fa-list-check text-zinc-400/50"
+                class: "min-w-6 flex flex-row justify-center items-center",
+                Icon {
+                    class: "text-zinc-400/50",
+                    icon: FaListCheck,
+                    height: 16,
+                    width: 16
                 }
             }
             div {
@@ -49,9 +55,11 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                 }
                 button {
                     r#type: "submit",
-                    class: "py-2 col-span-1 bg-zinc-800/50 rounded-lg",
-                    i {
-                        class: "fa-solid fa-plus"
+                    class: "py-2 col-span-1 flex flex-row justify-center items-center bg-zinc-800/50 rounded-lg",
+                    Icon {
+                        icon: FaPlus,
+                        height: 16,
+                        width: 16
                     }
                 }
             }
@@ -60,15 +68,8 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
             div {
                 key: "{subtask.id}",
                 class: "flex flex-row items-center gap-3",
-                i {
-                    class: format!(
-                        "{} min-w-6 text-center text-2xl text-zinc-400/50",
-                        if subtask.is_completed {
-                            "fa solid fa-square-check"
-                        } else {
-                            "fa-regular fa-square"
-                        }
-                    ),
+                button {
+                    class: "min-w-6 flex flex-row justify-center items-center text-zinc-400/50",
                     onclick: {
                         let subtask = subtask.clone();
                         move |_| {
@@ -84,6 +85,19 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                                     new_subtask
                                 ).await;
                             }
+                        }
+                    },
+                    if subtask.is_completed {
+                        Icon {
+                            icon: FaSquareCheck,
+                            height: 24,
+                            width: 24
+                        }
+                    } else {
+                        Icon {
+                            icon: FaSquare,
+                            height: 24,
+                            width: 24
                         }
                     }
                 }
@@ -118,7 +132,7 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                     }
                     button {
                         r#type: "button",
-                        class: "py-2 col-span-1 bg-zinc-800/50 rounded-lg",
+                        class: "py-2 flex flex-row justify-center items-center col-span-1 bg-zinc-800/50 rounded-lg",
                         onclick: {
                             let subtask = subtask.clone();
                             move |_| {
@@ -128,8 +142,10 @@ pub(crate) fn SubtasksForm(task: Task) -> Element {
                                 }
                             }
                         },
-                        i {
-                            class: "fa-solid fa-trash-can"
+                        Icon {
+                            icon: FaTrashCan,
+                            height: 16,
+                            width: 16
                         }
                     }
                 }

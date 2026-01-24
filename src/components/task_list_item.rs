@@ -5,6 +5,8 @@ use chrono::{Datelike, Local};
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::{FaBomb, FaClock, FaListCheck};
 use dioxus_i18n::prelude::i18n;
 use dioxus_i18n::t;
 use voca_rs::Voca;
@@ -14,19 +16,21 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
     let today_date = Local::now().date_naive();
     rsx! {
         div {
-            class: "flex flex-col",
+            class: "pt-0.75 flex flex-col",
             div {
-                class: "mt-1 grow font-medium",
+                class: "grow font-medium",
                 {task.task.title}
             },
             div {
                 class: "flex flex-row gap-4",
                 if let Some(deadline) = task.task.deadline {
                     div {
-                        class: "text-sm text-zinc-400",
-                        i {
-                            class: "fa-solid fa-bomb"
-                        },
+                        class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                        Icon {
+                            icon: FaBomb,
+                            height: 14,
+                            width: 14
+                        }
                         {
                             format!(
                                 " {}",
@@ -72,10 +76,12 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                 if let Category::Calendar { time, .. } = task.task.category {
                     if let Some(calendar_time) = time {
                         div {
-                            class: "text-sm text-zinc-400",
-                            i {
-                                class: "fa-solid fa-clock"
-                            },
+                            class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                            Icon {
+                                icon: FaClock,
+                                height: 14,
+                                width: 14
+                            }
                             {
                                 let format = t!("time-format");
                                 format!(" {}", calendar_time.time.format(format.as_str()))
@@ -85,10 +91,12 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                 }
                 if !task.subtasks.is_empty() {
                     div {
-                        class: "text-sm text-zinc-400",
-                        i {
-                            class: "fa-solid fa-list-check"
-                        },
+                        class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                        Icon {
+                            icon: FaListCheck,
+                            height: 14,
+                            width: 14
+                        }
                         {format!(
                             " {}/{}",
                             task.subtasks.iter()

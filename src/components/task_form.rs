@@ -11,6 +11,11 @@ use chrono::Duration;
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
+use dioxus_free_icons::Icon;
+use dioxus_free_icons::icons::fa_solid_icons::{
+    FaBell, FaBomb, FaClock, FaFloppyDisk, FaHourglassEnd, FaLayerGroup, FaList, FaPenClip,
+    FaRepeat, FaTrashCan,
+};
 use dioxus_i18n::t;
 use serde::{Deserialize, Serialize};
 
@@ -160,10 +165,13 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     class: "flex flex-row items-center gap-3",
                     label {
                         r#for: "input_title",
-                        class: "min-w-6 text-center",
-                        i {
-                            class: "fa-solid fa-pen-clip text-zinc-400/50"
-                        },
+                        class: "min-w-6 flex flex-row justify-center items-center",
+                        Icon {
+                            class: "text-zinc-400/50",
+                            icon: FaPenClip,
+                            height: 16,
+                            width: 16
+                        }
                     },
                     input {
                         name: "title",
@@ -178,9 +186,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     class: "flex flex-row items-center gap-3",
                     label {
                         r#for: "input_project",
-                        class: "min-w-6 text-center",
-                        i {
-                            class: "fa-solid fa-list text-zinc-400/50"
+                        class: "min-w-6 flex flex-row justify-center items-center",
+                        Icon {
+                            class: "text-zinc-400/50",
+                            icon: FaList,
+                            height: 16,
+                            width: 16
                         }
                     },
                     SuspenseBoundary {
@@ -204,9 +215,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     class: "flex flex-row items-center gap-3",
                     label {
                         r#for: "input_deadline",
-                        class: "min-w-6 text-center",
-                        i {
-                            class: "fa-solid fa-bomb text-zinc-400/50"
+                        class: "min-w-6 flex flex-row justify-center items-center",
+                        Icon {
+                            class: "text-zinc-400/50",
+                            icon: FaBomb,
+                            height: 16,
+                            width: 16
                         }
                     },
                     input {
@@ -221,9 +235,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 div {
                     class: "flex flex-row items-center gap-3",
                     label {
-                        class: "min-w-6 text-center",
-                        i {
-                            class: "fa-solid fa-layer-group text-zinc-400/50"
+                        class: "min-w-6 flex flex-row justify-center items-center",
+                        Icon {
+                            class: "text-zinc-400/50",
+                            icon: FaLayerGroup,
+                            height: 16,
+                            width: 16
                         }
                     },
                     CategoryInput {
@@ -236,10 +253,13 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                         div {
                             class: "flex flex-row items-center gap-3",
                             label {
-                                r#for: "input_deadline",
-                                class: "min-w-6 text-center",
-                                i {
-                                    class: "fa-solid fa-hourglass-end text-zinc-400/50"
+                                r#for: "input_waiting_for",
+                                class: "min-w-6 flex flex-row justify-center items-center",
+                                Icon {
+                                    class: "text-zinc-400/50",
+                                    icon: FaHourglassEnd,
+                                    height: 16,
+                                    width: 16
                                 }
                             },
                             input {
@@ -257,9 +277,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                             class: "flex flex-row items-center gap-3",
                             label {
                                 r#for: "input_category_calendar_date",
-                                class: "min-w-6 text-center",
-                                i {
-                                    class: "fa-solid fa-clock text-zinc-400/50"
+                                class: "min-w-6 flex flex-row justify-center items-center",
+                                Icon {
+                                    class: "text-zinc-400/50",
+                                    icon: FaClock,
+                                    height: 16,
+                                    width: 16
                                 }
                             },
                             div {
@@ -291,9 +314,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                             class: "flex flex-row items-center gap-3",
                             label {
                                 r#for: "category_calendar_reoccurrence_length",
-                                class: "min-w-6 text-center",
-                                i {
-                                    class: "fa-solid fa-repeat text-zinc-400/50"
+                                class: "min-w-6 flex flex-row justify-center items-center",
+                                Icon {
+                                    class: "text-zinc-400/50",
+                                    icon: FaRepeat,
+                                    height: 16,
+                                    width: 16
                                 }
                             },
                             div {
@@ -323,9 +349,12 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                                 class: "flex flex-row items-center gap-3",
                                 label {
                                     r#for: "category_calendar_reminder_offset_index",
-                                    class: "min-w-6 text-center",
-                                    i {
-                                        class: "fa-solid fa-bell text-zinc-400/50"
+                                    class: "min-w-6 flex flex-row justify-center items-center",
+                                    Icon {
+                                        class: "text-zinc-400/50",
+                                        icon: FaBell,
+                                        height: 16,
+                                        width: 16
                                     }
                                 },
                                 input {
@@ -375,7 +404,7 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                 class: "flex flex-row justify-between mt-auto",
                 button {
                     r#type: "button",
-                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
+                    class: "py-3 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
                     onclick: move |_| {
                         let task = task.clone();
                         async move {
@@ -395,16 +424,20 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                             on_successful_submit.call(());
                         }
                     },
-                    i {
-                        class: "fa-solid fa-trash-can"
+                    Icon {
+                        icon: FaTrashCan,
+                        height: 16,
+                        width: 16
                     }
                 }
                 button {
                     form: "form_task",
                     r#type: "submit",
-                    class: "py-2 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
-                    i {
-                        class: "fa-solid fa-floppy-disk"
+                    class: "py-3 px-4 flex flex-row justify-center items-center bg-zinc-300/50 rounded-lg cursor-pointer",
+                    Icon {
+                        icon: FaFloppyDisk,
+                        height: 16,
+                        width: 16
                     }
                 }
             }
