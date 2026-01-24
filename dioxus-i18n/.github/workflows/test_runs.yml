@@ -1,0 +1,40 @@
+name: Test Runs
+
+on:
+    push:
+        branches:
+            - main
+
+    pull_request:
+        types: [opened, reopened, synchronize]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Updates
+              run: |
+                  sudo apt update
+                  sudo apt install libwebkit2gtk-4.1-dev \
+                    build-essential \
+                    libxdo-dev \
+                    libssl-dev \
+                    libayatana-appindicator3-dev \
+                    librsvg2-dev \
+                    libglib2.0-dev
+
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Lint
+              run: cargo clippy -- -D warnings
+
+            - name: Test
+              run: cargo test
+
+            - name: Compile
+              run: |
+                  rustup target add wasm32-unknown-unknown
+                  cargo build --target wasm32-unknown-unknown
+                  cargo build --release
