@@ -1,5 +1,4 @@
 use crate::components::task_list::TaskList;
-use crate::components::task_list_item::TaskListItem;
 use crate::hooks::use_tasks_with_subtasks_in_category;
 use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
@@ -59,23 +58,8 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                         {t!("long-term")._upper_first()}
                     }
                 }
-                div {
-                    for task in long_term_tasks {
-                        div {
-                            key: "{task.task.id}",
-                            class: format!(
-                                "px-7 pt-5 {} flex flex-row gap-4",
-                                if task.task.deadline.is_some() {
-                                    "pb-0.5"
-                                } else {
-                                    "pb-5"
-                                }
-                            ),
-                            TaskListItem {
-                                task: task.clone()
-                            }
-                        }
-                    }
+                TaskList {
+                    tasks: long_term_tasks
                 }
             }
             if !overdue_tasks.is_empty() {

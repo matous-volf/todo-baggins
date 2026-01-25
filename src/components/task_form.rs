@@ -67,7 +67,6 @@ pub(crate) fn TaskForm(task: Option<Task>, on_successful_submit: EventHandler<()
                     reoccurrence: None,
                     time: None,
                 },
-                Route::CategoryLongTermPage => Category::LongTerm,
                 _ => Category::Inbox,
             }
         }
