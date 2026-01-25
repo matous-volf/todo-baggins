@@ -2,7 +2,6 @@ use crate::layouts;
 use crate::views::category_calendar_page::CategoryCalendarPage;
 use crate::views::category_done_page::CategoryDonePage;
 use crate::views::category_inbox_page::CategoryInboxPage;
-use crate::views::category_long_term_page::CategoryLongTermPage;
 use crate::views::category_next_steps_page::CategoryNextStepsPage;
 use crate::views::category_someday_maybe_page::CategorySomedayMaybePage;
 use crate::views::category_today_page::CategoryTodayPage;
@@ -31,8 +30,6 @@ pub(crate) enum Route {
         CategoryNextStepsPage,
         #[route("/calendar")]
         CategoryCalendarPage,
-        #[route("/long-term")]
-        CategoryLongTermPage,
         #[route("/done")]
         CategoryDonePage,
         #[route("/trash")]

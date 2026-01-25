@@ -4,7 +4,7 @@ use dioxus::prelude::*;
 use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fa_solid_icons::{
     FaBars, FaCalendarDay, FaCalendarDays, FaCheck, FaForward, FaHourglassHalf, FaInbox, FaList,
-    FaTrashCan, FaWater,
+    FaQuestion, FaTrashCan,
 };
 
 #[component]
@@ -56,8 +56,8 @@ pub(crate) fn Navigation(expanded: Signal<bool>) -> Element {
                         icon: FaCheck
                     },
                     NavigationItem {
-                        route: Route::CategoryLongTermPage,
-                        icon: FaWater
+                        route: Route::CategorySomedayMaybePage,
+                        icon: FaQuestion
                     },
                     NavigationItem {
                         route: Route::CategoryWaitingForPage,
