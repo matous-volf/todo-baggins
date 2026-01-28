@@ -3,8 +3,8 @@
   "short_name": "Todo Baggins",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#27272a",
-  "theme_color": "#27272a",
+  "background_color": "#101828",
+  "theme_color": "#b89a2e",
   "icons": [
     {
       "src": "/assets/images/icon.png",

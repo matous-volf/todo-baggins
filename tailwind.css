@@ -20,4 +20,8 @@
 /* stylelint-disable-next-line */
 @theme {
   --font-sans: "Inter", "sans";
+  --color-amber-300-muted: #b89a2e;
+  --color-amber-700-muted: #80390b;
+  --color-gray-800-muted: #141d2d;
+  --color-gray-900-muted: #0b111f;
 }

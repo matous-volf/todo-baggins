@@ -8,4 +8,6 @@ pub(crate) mod category_today_page;
 pub(crate) mod category_trash_page;
 pub(crate) mod category_waiting_for_page;
 pub(crate) mod not_found_page;
+pub(crate) mod project_form_page;
 pub(crate) mod projects_page;
+pub(crate) mod task_form_page;

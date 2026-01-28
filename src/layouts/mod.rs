@@ -1,2 +1,2 @@
-mod main;
-pub(crate) use main::Main;
+pub(crate) mod navigation;
+pub(crate) mod suspense;
