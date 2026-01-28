@@ -10,8 +10,8 @@ pub(crate) fn ProjectSelect(initial_selected_id: Option<i32>) -> Element {
     rsx! {
         select {
             name: "project_id",
-            class: "px-3.5 py-2.5 bg-zinc-800/50 rounded-lg grow cursor-pointer",
-            id: "input_project",
+            class: "px-4 pt-3 pb-2.25 bg-gray-800-muted enabled:hover:bg-gray-800 enabled:active:bg-gray-800 drop-shadow-[0_calc(0px_-_var(--spacing))_0_var(--color-gray-900-muted)] rounded-xl grow cursor-pointer",
+            id: "input_project_id",
             option {
                 value: 0,
                 {t!("none")}

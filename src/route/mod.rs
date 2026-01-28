@@ -8,7 +8,9 @@ use crate::views::category_today_page::CategoryTodayPage;
 use crate::views::category_trash_page::CategoryTrashPage;
 use crate::views::category_waiting_for_page::CategoryWaitingForPage;
 use crate::views::not_found_page::NotFoundPage;
+use crate::views::project_form_page::ProjectFormPage;
 use crate::views::projects_page::ProjectsPage;
+use crate::views::task_form_page::TaskFormPage;
 use dioxus::prelude::*;
 
 // All variants have the same postfix because they have to match the component names.
@@ -16,26 +18,33 @@ use dioxus::prelude::*;
 #[derive(Clone, Routable, Debug, PartialEq)]
 #[rustfmt::skip]
 pub(crate) enum Route {
-    #[layout(layouts::Main)]
-        #[redirect("/", || Route::CategoryTodayPage {})]
-        #[route("/today")]
-        CategoryTodayPage,
-        #[route("/inbox")]
-        CategoryInboxPage,
-        #[route("/someday-maybe")]
-        CategorySomedayMaybePage,
-        #[route("/waiting-for")]
-        CategoryWaitingForPage,
-        #[route("/next-steps")]
-        CategoryNextStepsPage,
-        #[route("/calendar")]
-        CategoryCalendarPage,
-        #[route("/done")]
-        CategoryDonePage,
-        #[route("/trash")]
-        CategoryTrashPage,
-        #[route("/projects")]
-        ProjectsPage,
+    #[layout(layouts::navigation::Navigation)]
+        #[layout(layouts::suspense::Suspense)]
+            #[route("/today")]
+            CategoryTodayPage,
+            #[route("/inbox")]
+            CategoryInboxPage,
+            #[route("/someday-maybe")]
+            CategorySomedayMaybePage,
+            #[route("/waiting-for")]
+            CategoryWaitingForPage,
+            #[route("/next-steps")]
+            CategoryNextStepsPage,
+            #[route("/calendar")]
+            CategoryCalendarPage,
+            #[route("/done")]
+            CategoryDonePage,
+            #[route("/trash")]
+            CategoryTrashPage,
+            #[route("/projects")]
+            ProjectsPage,
+        #[end_layout]
+    #[end_layout]
+    #[layout(layouts::suspense::Suspense)]
+        #[route("/task")]
+        TaskFormPage,
+        #[route("/project")]
+        ProjectFormPage,
     #[end_layout]
     #[redirect("/", || Route::CategoryTodayPage)]
     #[route("/:..route")]

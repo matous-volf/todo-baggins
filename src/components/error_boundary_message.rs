@@ -14,6 +14,7 @@ pub(crate) fn ErrorBoundaryMessage(children: Element, class: Option<String>) -> 
                         class: "grow flex flex-col justify-center items-center",
                         div {
                             Icon {
+                                class: "text-gray-500",
                                 icon: FaTriangleExclamation,
                                 height: 32,
                                 width: 32

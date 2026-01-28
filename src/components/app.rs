@@ -1,4 +1,5 @@
 use crate::internationalization::get_language_identifier;
+
 use crate::route::Route;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
@@ -15,6 +16,7 @@ static FONTS_DIRECTORY: Asset = asset!(
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 const INPUT_NUMBER_ARROWS_CSS: Asset = asset!("/assets/styles/input_number_arrows.css");
 const INPUT_RANGE_CSS: Asset = asset!("/assets/styles/input_range.css");
+const SELECT_ARROW_CSS: Asset = asset!("/assets/styles/select_arrow.css");
 const MANIFEST: Asset = asset!("/assets/manifest.json");
 
 #[component]
@@ -36,10 +38,11 @@ pub(crate) fn App() -> Element {
         document::Stylesheet { href: TAILWIND_CSS }
         document::Stylesheet { href: INPUT_NUMBER_ARROWS_CSS }
         document::Stylesheet { href: INPUT_RANGE_CSS }
+        document::Stylesheet { href: SELECT_ARROW_CSS }
         document::Link { rel: "manifest", href: MANIFEST, crossorigin: "use-credentials" }
 
         div {
-            class: "min-h-screen pt-4 pb-36 flex flex-col text-zinc-200 bg-zinc-800",
+            class: "min-h-screen py-4 flex flex-col text-gray-300 bg-gray-900",
             Router::<Route> {}
         }
     }

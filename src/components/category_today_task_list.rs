@@ -46,29 +46,31 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
     rsx! {
         div {
             class: "pt-4 flex flex-col gap-8",
-            div {
-                class: "flex flex-col gap-4",
+            if !long_term_tasks.is_empty() {
                 div {
-                    class: "px-7 flex flex-row items-center gap-2 font-bold",
-                    Icon {
-                        class: "mx-1",
-                        icon: FaWater
-                    }
+                    class: "flex flex-col gap-4",
                     div {
-                        {t!("long-term")._upper_first()}
+                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
+                        Icon {
+                            class: "mx-1.5",
+                            icon: FaWater
+                        }
+                        div {
+                            {t!("long-term")._upper_first()}
+                        }
                     }
-                }
-                TaskList {
-                    tasks: long_term_tasks
+                    TaskList {
+                        tasks: long_term_tasks
+                    }
                 }
             }
             if !overdue_tasks.is_empty() {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-7 flex flex-row items-center gap-2 font-bold",
+                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
                         Icon {
-                            class: "mx-1",
+                            class: "mx-1.25",
                             height: 22,
                             width: 22,
                             icon: FaCalendarXmark
@@ -86,9 +88,9 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
             div {
                 class: "flex flex-col gap-4",
                 div {
-                    class: "px-7 flex flex-row items-center gap-2 font-bold",
+                    class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
                     Icon {
-                        class: "mx-1",
+                        class: "mx-1.25",
                         height: 22,
                         width: 22,
                         icon: FaCalendarCheck

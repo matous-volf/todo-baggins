@@ -28,11 +28,12 @@ pub(crate) fn CategoryCalendarTaskList() -> Element {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-7 flex flex-row items-center gap-2 font-bold",
+                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
                         div {
                             class: "pt-1",
                             {
-                                date_current.format_localized(t!(
+                                date_current.format_localized(
+                                    t!(
                                         if date_current.year() == Local::now().year() {
                                             "date-weekday-format"
                                         } else {

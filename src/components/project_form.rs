@@ -1,82 +1,113 @@
+use crate::components::button_primary::ButtonPrimary;
+use crate::components::button_secondary::ButtonSecondary;
+use crate::components::input::Input;
+use crate::components::input_label::InputLabel;
 use crate::models::project::Project;
 use crate::server::projects::{create_project, delete_project, edit_project};
 use dioxus::core_macro::{component, rsx};
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 use dioxus_free_icons::Icon;
-use dioxus_free_icons::icons::fa_solid_icons::{FaFloppyDisk, FaPenClip, FaTrashCan};
+use dioxus_free_icons::icons::fa_solid_icons::{FaFeatherPointed, FaStamp, FaTrashCan, FaXmark};
+
+pub(crate) static PROJECT_BEING_EDITED: GlobalSignal<Option<Project>> = Signal::global(|| None);
 
 #[component]
-pub(crate) fn ProjectForm(
-    project: Option<Project>,
-    on_successful_submit: EventHandler<()>,
-) -> Element {
+pub(crate) fn ProjectForm() -> Element {
+    let navigator = use_navigator();
+    let project = PROJECT_BEING_EDITED();
     let project_for_submit = project.clone();
     rsx! {
         form {
+            class: "px-4 flex flex-col gap-4",
             onsubmit: move |event| {
                 event.prevent_default();
                 let project = project_for_submit.clone();
                 async move {
                     let new_project = event.parsed_values().unwrap();
-                    if let Some(project) = project {
-                        let _ = edit_project(project.id, new_project).await;
+                    let result = if let Some(project) = project {
+                        edit_project(project.id, new_project).await
                     } else {
-                        let _ = create_project(new_project).await;
+                        create_project(new_project).await
+                    };
+                    if result.is_ok() {
+                        navigator.go_back();
                     }
-                    on_successful_submit.call(());
                 }
             },
-            class: "p-4 flex flex-col gap-4",
+            id: "form_project",
             div {
                 class: "flex flex-row items-center gap-3",
-                label {
-                    r#for: "input_title",
-                    class: "flex flex-row justify-center items-center min-w-6",
-                    Icon {
-                        class: "text-zinc-400/50",
-                        icon: FaPenClip,
-                        height: 16,
-                        width: 16
-                    }
+                InputLabel {
+                    icon: FaFeatherPointed,
+                    r#for: "input_title"
                 }
-                input {
+                Input {
+                    class: "grow",
                     name: "title",
                     required: true,
-                    initial_value: project.as_ref().map(|project| project.title.to_owned()),
                     r#type: "text",
-                    class: "py-2 px-3 grow bg-zinc-800/50 rounded-lg",
-                    id: "input_title"
+                    initial_value: project.as_ref().map(|project| project.title.to_owned()),
                 }
             }
-            div {
-                class: "flex flex-row justify-between mt-auto",
-                button {
-                    r#type: "button",
-                    class: "py-3 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
-                    onclick: move |_| {
+        }
+        div {
+            class: "px-4 grid grid-cols-3 gap-3 mt-auto",
+            ButtonSecondary {
+                r#type: "button",
+                class: "grow",
+                onclick: {
+                    let project = project.clone();
+                    move |_| {
                         let project = project.clone();
                         async move {
                             if let Some(project) = project {
-                                let _ = delete_project(project.id).await;
+                                let result = delete_project(project.id).await;
+                                if result.is_ok() {
+                                    /* TODO: Might not work on mobile due to
+                                    https://dioxuslabs.com/learn/0.7/essentials/router/navigation#history-buttons.
+                                    */
+                                    navigator.go_back();
+                                }
+                            } else {
+                                navigator.go_back();
                             }
-                            on_successful_submit.call(());
                         }
-                    },
-                    Icon {
-                        icon: FaTrashCan,
-                        height: 16,
-                        width: 16
+                    }
+                },
+                Icon {
+                    icon: FaTrashCan,
+                    height: 16,
+                    width: 16
+                }
+            }
+            if project.is_some() {
+                div {
+                    class: "grow flex flex-col items-stretch",
+                    GoBackButton {
+                        ButtonSecondary {
+                            /* TODO: Replace w-full` with proper flexbox styling once
+                            https://github.com/DioxusLabs/dioxus/issues/5269 is solved. */
+                            class: "w-full",
+                            r#type: "button",
+                            Icon {
+                                icon: FaXmark,
+                                height: 16,
+                                width: 16
+                            }
+                        }
                     }
                 }
-                button {
-                    r#type: "submit",
-                    class: "py-3 px-4 bg-zinc-300/50 rounded-lg cursor-pointer",
-                    Icon {
-                        icon: FaFloppyDisk,
-                        height: 16,
-                        width: 16
-                    }
+            } else {
+                div {}
+            }
+            ButtonPrimary {
+                form: "form_project",
+                r#type: "submit",
+                Icon {
+                    icon: FaStamp,
+                    height: 16,
+                    width: 16
                 }
             }
         }

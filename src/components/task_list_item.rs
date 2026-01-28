@@ -25,7 +25,7 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                 class: "flex flex-row gap-4",
                 if let Some(deadline) = task.task.deadline {
                     div {
-                        class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                        class: "flex flex-row items-center gap-1 text-sm text-gray-500",
                         Icon {
                             icon: FaBomb,
                             height: 14,
@@ -76,7 +76,7 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                 if let Category::Calendar { time, .. } = task.task.category {
                     if let Some(calendar_time) = time {
                         div {
-                            class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                            class: "flex flex-row items-center gap-1 text-sm text-gray-500",
                             Icon {
                                 icon: FaClock,
                                 height: 14,
@@ -91,7 +91,7 @@ pub(crate) fn TaskListItem(task: TaskWithSubtasks) -> Element {
                 }
                 if !task.subtasks.is_empty() {
                     div {
-                        class: "flex flex-row items-center gap-1 text-sm text-zinc-400",
+                        class: "flex flex-row items-center gap-1 text-sm text-gray-500",
                         Icon {
                             icon: FaListCheck,
                             height: 14,

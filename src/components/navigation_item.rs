@@ -13,14 +13,18 @@ pub(crate) fn NavigationItem<I: IconShape + Clone + PartialEq + 'static>(
         Link {
             to: route.clone(),
             class: format!(
-                "py-5 flex flex-row justify-center items-center {}",
-                if current_route == route { "text-zinc-200" }
-                else { "text-zinc-500" }
+                "py-2.5 flex flex-row justify-center items-center hover:*:bg-gray-900 active:*:text-gray-400",
             ),
-            Icon {
-                icon,
-                height: 24,
-                width: 24
+            div {
+                class: format!("pt-2.5 px-4 {} transition-all duration-150",
+                    if current_route == route { "pb-2 mt-1 bg-gray-900 text-gray-400 rounded-xl drop-shadow-[0_calc(0px_-_var(--spacing))_0_var(--color-gray-950)]" }
+                    else { "pb-3 bg-gray-800 rounded-xl drop-shadow-[0_0_0_var(--color-gray-950)] text-gray-600" }
+                ),
+                Icon {
+                    icon,
+                    height: 24,
+                    width: 24
+                }
             }
         }
     }
