@@ -1288,7 +1288,6 @@ dependencies = [
 [[package]]
 name = "dioxus-free-icons"
 version = "0.10.0"
-source = "git+https://github.com/matous-volf/dioxus-free-icons?rev=6488400003a3d6829e771a84a565c5c5f08a9aa0#6488400003a3d6829e771a84a565c5c5f08a9aa0"
 dependencies = [
  "dioxus",
 ]

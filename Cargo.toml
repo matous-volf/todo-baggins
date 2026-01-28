@@ -39,7 +39,7 @@ dioxus-i18n = { path = "dioxus-i18n" }
 voca_rs = "1.15.2"
 load-dotenv = "0.1.2"
 # TODO: Switch to upstream once it merges the changes.
-dioxus-free-icons = { git = "https://github.com/matous-volf/dioxus-free-icons", rev = "6488400003a3d6829e771a84a565c5c5f08a9aa0", features = [
+dioxus-free-icons = { path = "dioxus-free-icons/packages/lib", features = [
     "font-awesome-regular",
     "font-awesome-solid",
 ] }

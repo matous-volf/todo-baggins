@@ -21,7 +21,7 @@ ENV ANDROID_SDK_ROOT=/opt/android-sdk
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    openjdk-17-jdk-headless=17.0.17+10-1~deb12u1 \
+    openjdk-17-jdk-headless=17.0.18+8-1~deb12u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && rustup target add aarch64-linux-android \

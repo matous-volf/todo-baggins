@@ -1,0 +1,24 @@
+# monorepo only work when using virtual manifest
+# see: https://github.com/rust-lang/cargo/issues/7467#issuecomment-867632379
+[workspace]
+resolver = "2"
+members = ["packages/codegen", "packages/example", "packages/lib"]
+
+[workspace.dependencies]
+dioxus = { git = "https://github.com/matous-volf/dioxus", rev = "627d5ca5b80aeed57c23e253024665f103117f5e", default-features = false, features = [
+    "html",
+    "macro",
+    "signals",
+] }
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
