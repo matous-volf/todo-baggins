@@ -1,24 +1,22 @@
-use crate::{hooks::use_projects, models::project::Project};
+use crate::route::Route;
+use crate::{components::project_form::PROJECT_BEING_EDITED, hooks::use_projects};
 use dioxus::prelude::*;
 
 #[component]
 pub(crate) fn ProjectList() -> Element {
+    let navigator = use_navigator();
     let projects = use_projects()?;
-    let mut project_being_edited = use_context::<Signal<Option<Project>>>();
-
     rsx! {
         div {
             class: "flex flex-col",
             for project in projects {
                 div {
+                    class: "px-7 py-4 hover:bg-gray-800 font-medium text-pretty wrap-anywhere select-none transition-all duration-150 cursor-pointer",
                     key: "{project.id}",
-                    class: format!(
-                        "px-7 py-4 select-none {} text-pretty wrap-anywhere",
-                        if project_being_edited().is_some_and(|p| p.id == project.id) {
-                            "bg-zinc-700"
-                        } else { "" }
-                    ),
-                    onclick: move |_| project_being_edited.set(Some(project.clone())),
+                    onclick: move |_| {
+                        *PROJECT_BEING_EDITED.write() = Some(project.clone());
+                        navigator.push(Route::ProjectFormPage);
+                    },
                     {project.title.clone()}
                 }
             }

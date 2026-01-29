@@ -11,8 +11,7 @@ pub(crate) fn CategoryPage(category: Category) -> Element {
 
     rsx! {
         TaskList {
-            tasks: tasks.clone(),
-            class: "pb-36"
+            tasks: tasks.clone()
         }
     }
 }

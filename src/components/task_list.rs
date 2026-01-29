@@ -1,17 +1,16 @@
+use crate::components::task_form::TASK_BEING_EDITED;
 use crate::components::task_list_item::TaskListItem;
 use crate::models::category::Category;
-use crate::models::task::{Task, TaskWithSubtasks};
+use crate::models::task::TaskWithSubtasks;
+use crate::route::Route;
 use crate::server::tasks::complete_task;
 use dioxus::core_macro::rsx;
 use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
-use dioxus_free_icons::Icon;
-use dioxus_free_icons::icons::fa_regular_icons::FaSquare;
-use dioxus_free_icons::icons::fa_solid_icons::FaSquareCheck;
 
 #[component]
 pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>) -> Element {
-    let mut task_being_edited = use_context::<Signal<Option<Task>>>();
+    let navigator = use_navigator();
     rsx! {
         div {
             class: format!("flex flex-col {}", class.unwrap_or("")),
@@ -19,28 +18,32 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                 div {
                     key: "{task.task.id}",
                     class: format!(
-                        "px-7 pt-4.25 {} flex flex-row items-start gap-4 select-none {}",
+                        "px-7 pt-3.75 {} flex flex-row items-start gap-4 hover:bg-gray-800 cursor-pointer select-none transition-all duration-150",
                         if task.task.deadline.is_some() || !task.subtasks.is_empty() {
                             "pb-0.25"
                         } else if let Category::Calendar { time, .. } = &task.task.category {
                             if time.is_some() {
                                 "pb-0.25"
                             } else {
-                                "pb-4.25"
+                                "pb-3.75"
                             }
                         } else {
-                            "pb-4.25"
+                            "pb-3.75"
                         },
-                        if task_being_edited().is_some_and(|t| t.id == task.task.id) {
-                            "bg-zinc-700"
-                        } else { "" }
                     ),
                     onclick: {
                         let task = task.clone();
-                        move |_| task_being_edited.set(Some(task.task.clone()))
+                        move |_| {
+                            *TASK_BEING_EDITED.write() = Some(task.task.clone());
+                            navigator.push(Route::TaskFormPage);
+                        }
                     },
                     button {
-                        class: "text-zinc-500",
+                        class: format!(
+                            "mt-0.5 hover:mt-0 hover:pb-0.5 transition-all duration-150 cursor-pointer {}",
+                            if let Category::Done = task.task.category { "pointer-events-none" }
+                            else { "" }
+                        ),
                         onclick: {
                             move |event: Event<MouseData>| {
                                 // To prevent editing the task.
@@ -50,23 +53,21 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                                 }
                             }
                         },
-                        if let Category::Done = task.task.category {
-                            Icon {
-                                icon: FaSquareCheck,
-                                height: 30,
-                                width: 30
-                            }
-                        } else {
-                            Icon {
-                                class: "cursor-pointer",
-                                icon: FaSquare,
-                                height: 30,
-                                width: 30
-                            }
+                        div {
+                            class: format!("h-8 w-8 rounded-full {}",
+                                if let Category::Done = task.task.category {
+                                    "mt-[3px] mb-[2px] bg-amber-300-muted"
+                                } else {
+                                    "mb-[5px] border-3 border-amber-300-muted drop-shadow-[0_1px_0_var(--color-amber-700-muted),0_1px_0_var(--color-amber-700-muted),0_1px_0_var(--color-amber-700-muted),0_1px_0_var(--color-amber-700-muted),0_1px_0_var(--color-amber-700-muted)]"
+                                }
+                            )
                         }
                     },
-                    TaskListItem {
-                        task: task.clone()
+                    div {
+                        class: "mt-1.5",
+                        TaskListItem {
+                            task: task.clone()
+                        }
                     }
                 }
             }
