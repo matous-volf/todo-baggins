@@ -1,3 +1,8 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::unused_async)]
+// TODO: Enable once false positives are fixed.
+#![allow(clippy::assigning_clones)]
+
 mod components;
 mod dotenv;
 mod hooks;

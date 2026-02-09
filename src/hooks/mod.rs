@@ -14,7 +14,7 @@ use crate::{
 };
 
 fn use_on_document_become_visible(mut callback: impl FnMut() + 'static) {
-    let callback = use_callback(move |_| callback());
+    let callback = use_callback(move |()| callback());
     use_effect(move || {
         spawn(async move {
             let mut eval = document::eval(

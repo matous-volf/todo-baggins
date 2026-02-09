@@ -27,11 +27,11 @@ pub(crate) fn Input(
                     "text" | "number" => "",
                     _ => "enabled:cursor-pointer"
                 },
-                class.unwrap_or("".to_owned())
+                class.unwrap_or(String::new())
             ),
             name: name.clone(),
             r#type,
-            id: id.unwrap_or(format!("input_{}", name)),
+            id: id.unwrap_or(format!("input_{name}")),
             oninput: move |event| {
                 if let Some(oninput) = oninput {
                     oninput.call(event);

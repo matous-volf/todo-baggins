@@ -14,28 +14,28 @@ pub(crate) fn ReoccurrenceIntervalInput(
         SelectButton {
             icon: FaBan,
             is_selected: reoccurrence_interval().is_none(),
-            on_select: move |_| {
+            on_select: move |()| {
                 reoccurrence_interval.set(None);
             }
         }
         SelectButton {
             icon: FaSun,
             is_selected: matches!(reoccurrence_interval(), Some(ReoccurrenceInterval::Day)),
-            on_select: move |_| {
-                reoccurrence_interval.set(Some(ReoccurrenceInterval::Day))
+            on_select: move |()| {
+                reoccurrence_interval.set(Some(ReoccurrenceInterval::Day));
             }
         }
         SelectButton {
             icon: FaMoon,
             is_selected: matches!(reoccurrence_interval(), Some(ReoccurrenceInterval::Month)),
-            on_select: move |_| {
+            on_select: move |()| {
                 reoccurrence_interval.set(Some(ReoccurrenceInterval::Month));
             }
         }
         SelectButton {
             icon: FaEarthEurope,
             is_selected: matches!(reoccurrence_interval(), Some(ReoccurrenceInterval::Year)),
-            on_select: move |_| {
+            on_select: move |()| {
                 reoccurrence_interval.set(Some(ReoccurrenceInterval::Year));
             }
         }

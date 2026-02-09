@@ -47,7 +47,7 @@ pub(crate) fn ProjectForm() -> Element {
                     name: "title",
                     required: true,
                     r#type: "text",
-                    initial_value: project.as_ref().map(|project| project.title.to_owned()),
+                    initial_value: project.as_ref().map(|project| project.title.clone()),
                 }
             }
         }

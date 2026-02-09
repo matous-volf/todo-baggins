@@ -28,7 +28,7 @@ impl From<LocaleFromLanguageIdentifier<'_>> for Locale {
     fn from(language_identifier: LocaleFromLanguageIdentifier) -> Self {
         language_identifier
             .to_string()
-            .replace("-", "_")
+            .replace('-', "_")
             .parse()
             .unwrap()
     }
