@@ -4,6 +4,7 @@ yesterday = yesterday
 today = today
 tomorrow = tomorrow
 overdue = overdue
+empty-inbox = empty the inbox
 
 ## Date and time formats
 date-format = %B %-d
