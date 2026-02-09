@@ -12,7 +12,7 @@ pub(crate) fn ButtonSecondary(
         button {
             class: format!(
                 "cursor-pointer pb-[6px] hover:pb-[7px] active:pb-[2px] mt-[1px] hover:mt-0 active:mt-[5px] hover:*:drop-shadow-[0_7px_0_var(--color-gray-800)] active:*:drop-shadow-[0_2px_0_var(--color-gray-800)] transition-all duration-150 {}",
-                class.unwrap_or("".to_owned())
+                class.unwrap_or(String::new())
             ),
             onclick: move |event| {
                 if let Some(onclick) = onclick {

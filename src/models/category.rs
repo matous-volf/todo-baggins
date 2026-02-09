@@ -41,6 +41,7 @@ pub enum Category {
 #[cfg(feature = "server")]
 impl Category {
     pub fn eq_sql_predicate(&self) -> Box<dyn BoxableExpression<tasks::table, Pg, SqlType = Bool>> {
+        #![allow(clippy::wildcard_imports)]
         use crate::schema::tasks::dsl::*;
 
         match self {

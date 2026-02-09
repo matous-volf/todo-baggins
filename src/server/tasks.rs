@@ -138,7 +138,7 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task> {
     } = &mut new_task.category
     {
         match reoccurrence.interval {
-            ReoccurrenceInterval::Day => *date = *date + Days::new(reoccurrence.length as u64),
+            ReoccurrenceInterval::Day => *date = *date + Days::new(u64::from(reoccurrence.length)),
             ReoccurrenceInterval::Month | ReoccurrenceInterval::Year => {
                 *date = *date
                     + Months::new(
@@ -152,13 +152,13 @@ pub(crate) async fn complete_task(task_id: i32) -> Result<Task> {
                 *date = NaiveDate::from_ymd_opt(
                     date.year(),
                     date.month(),
-                    reoccurrence.start_date.day().min(
-                        Month::try_from(date.month() as u8)
+                    reoccurrence.start_date.day().min(u32::from(
+                        Month::try_from(u8::try_from(date.month()).unwrap())
                             .unwrap()
-                            .length(date.year()) as u32,
-                    ),
+                            .length(date.year()),
+                    )),
                 )
-                .unwrap()
+                .unwrap();
             }
         }
         restore_subtasks_of_task(task_id).await?;

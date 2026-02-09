@@ -306,7 +306,7 @@ pub(crate) fn TaskForm() -> Element {
                                     name: "category_calendar_reminder_offset_index",
                                     r#type: "range",
                                     min: 0,
-                                    max: REMINDER_OFFSETS.len() as i64 - 1,
+                                    max: REMINDER_OFFSETS.len() as i128 - 1,
                                     initial_value: category_calendar_reminder_offset_index()
                                         .to_string(),
                                     oninput: move |event| {
@@ -319,13 +319,14 @@ pub(crate) fn TaskForm() -> Element {
                                     class: "pr-3 min-w-16 text-right",
                                     r#for: "category_calendar_reminder_offset_index",
                                     {REMINDER_OFFSETS[category_calendar_reminder_offset_index()]
-                                        .map(
+                                        .map_or(
+                                            t!("none"),
                                             |offset| if offset.num_hours() < 1 {
                                                 format!("{} min", offset.num_minutes())
                                             } else {
                                                 format!("{} h", offset.num_hours())
                                             }
-                                        ).unwrap_or_else(|| t!("none"))}
+                                        )}
                                 }
                             }
                         }
@@ -359,7 +360,7 @@ pub(crate) fn TaskForm() -> Element {
                                     delete_task(task.id).await
                                 } else {
                                     let new_task = NewTask {
-                                        title: task.title.to_owned(),
+                                        title: task.title.clone(),
                                         deadline: task.deadline,
                                         category: Category::Trash,
                                         project_id: task.project_id
