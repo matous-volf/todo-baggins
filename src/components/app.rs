@@ -48,7 +48,7 @@ pub(crate) fn App() -> Element {
         document::Link { rel: "manifest", href: MANIFEST, crossorigin: "use-credentials" }
 
         div {
-            class: "min-h-screen py-4 flex flex-col text-gray-300 bg-gray-900",
+            class: "min-h-screen flex flex-col text-gray-300 bg-gray-900",
             Router::<Route> {}
         }
     }

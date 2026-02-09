@@ -10,7 +10,6 @@ pub(crate) mod error_boundary_message;
 pub(crate) mod input;
 pub(crate) mod input_label;
 pub(crate) mod navigation;
-pub(crate) mod navigation_item;
 pub(crate) mod project_form;
 pub(crate) mod project_list;
 pub(crate) mod project_select;
