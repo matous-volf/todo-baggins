@@ -26,7 +26,16 @@ jobs:
           ACTIONLINT_VERSION="1.7.5"
 
           INSTALL_SCRIPT_CHECKSUM="99ab9f1d97c31c9a051e6902305f7ea9f48e7e7e1b0ee41f64aa831c86655168  download-actionlint.bash"
-          ACTIONLINT_CHECKSUM="3d74253aa0cf645e6224fd53f2d56776998c7c05a0d3c12307463285515898f8  actionlint"
+
+          ARCH="$(uname -m)"
+          if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
+            ACTIONLINT_CHECKSUM="76e1b008a05f55effccb39355d76c74e5312fefa6c98253032a499b227d01149  actionlint"
+          elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+            ACTIONLINT_CHECKSUM="3d74253aa0cf645e6224fd53f2d56776998c7c05a0d3c12307463285515898f8  actionlint"
+          else
+            echo "Unsupported architecture: $ARCH" >&2
+            exit 1
+          fi
 
           wget -O download-actionlint.bash "$INSTALL_SCRIPT_URL"
           echo "$INSTALL_SCRIPT_CHECKSUM" | sha256sum --check
