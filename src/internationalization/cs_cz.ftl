@@ -4,6 +4,7 @@ yesterday = včera
 today = dnes
 tomorrow = zítra
 overdue = zpožděné
+empty-inbox = vyprázdnit schránku
 
 ## Date and time formats
 date-format = %-d. %B

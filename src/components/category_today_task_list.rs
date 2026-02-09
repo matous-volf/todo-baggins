@@ -2,8 +2,9 @@ use crate::components::task_list::TaskList;
 use crate::hooks::use_tasks_with_subtasks_in_category;
 use crate::internationalization::LocaleFromLanguageIdentifier;
 use crate::models::category::Category;
-use crate::models::task::TaskWithSubtasks;
-use chrono::Local;
+use crate::models::task::{Task, TaskWithSubtasks};
+use crate::route::Route;
+use chrono::{Local, NaiveDateTime};
 use dioxus::prelude::*;
 use dioxus_free_icons::Icon;
 use dioxus_free_icons::icons::fa_solid_icons::{FaCalendarCheck, FaCalendarXmark, FaWater};
@@ -42,6 +43,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
         .cloned()
         .collect::<Vec<TaskWithSubtasks>>();
     let long_term_tasks = use_tasks_with_subtasks_in_category(Category::LongTerm)?;
+    let inbox_tasks = use_tasks_with_subtasks_in_category(Category::Inbox)?;
 
     rsx! {
         div {
@@ -116,8 +118,32 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                         }
                     }
                 }
-                TaskList {
-                    tasks: today_tasks
+                div {
+                    TaskList {
+                        tasks: today_tasks
+                    }
+                    if !inbox_tasks.is_empty() {
+                        Link {
+                            to: Route::CategoryInboxPage {},
+                            TaskList {
+                                is_interactive: false,
+                                tasks: vec![
+                                    TaskWithSubtasks {
+                                        task: Task {
+                                            id: 0,
+                                            title: t!("empty-inbox")._upper_first(),
+                                            deadline: None,
+                                            category: Category::Inbox,
+                                            project_id: None,
+                                            created_at: NaiveDateTime::default(),
+                                            updated_at: NaiveDateTime::default()
+                                        },
+                                        subtasks: Vec::new()
+                                    }
+                                ]
+                            }
+                        }
+                    }
                 }
             }
         }

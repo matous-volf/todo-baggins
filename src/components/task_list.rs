@@ -9,7 +9,12 @@ use dioxus::dioxus_core::Element;
 use dioxus::prelude::*;
 
 #[component]
-pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>) -> Element {
+pub(crate) fn TaskList(
+    tasks: Vec<TaskWithSubtasks>,
+    /// Whether to open and complete tasks on clicks.
+    is_interactive: Option<bool>,
+    class: Option<&'static str>,
+) -> Element {
     let navigator = use_navigator();
     rsx! {
         div {
@@ -34,6 +39,9 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                     onclick: {
                         let task = task.clone();
                         move |_| {
+                            if let Some(false) = is_interactive {
+                                return;
+                            }
                             *TASK_BEING_EDITED.write() = Some(task.task.clone());
                             navigator.push(Route::TaskFormPage);
                         }
@@ -49,6 +57,9 @@ pub(crate) fn TaskList(tasks: Vec<TaskWithSubtasks>, class: Option<&'static str>
                                 // To prevent editing the task.
                                 event.stop_propagation();
                                 async move {
+                                    if let Some(false) = is_interactive {
+                                        return;
+                                    }
                                     let _ = complete_task(task.task.id).await;
                                 }
                             }
