@@ -1,3 +1,4 @@
+use crate::components;
 use crate::components::bottom_panel::BottomPanel;
 use crate::components::create_button::CreateButton;
 use crate::components::sticky_bottom::StickyBottom;
@@ -27,11 +28,24 @@ pub(crate) fn Navigation() -> Element {
 
     rsx! {
         div {
-            class: "grow flex flex-col pb-36",
-            Outlet::<Route> {}
+            class: "grow flex flex-col sm:flex-row pb-36 sm:pb-0",
+            div {
+                class: "hidden sm:flex sm:flex-col gap-4 py-3.25 items-center bg-gray-800",
+                components::navigation::Side {},
+                div {
+                    CreateButton {}
+                }
+            }
+            div {
+                class: "grow flex flex-col py-4",
+                Outlet::<Route> {}
+            }
         }
         StickyBottom {
-            CreateButton {},
+            div {
+                class: "m-4 self-end",
+                CreateButton {},
+            }
             BottomPanel {}
         }
     }

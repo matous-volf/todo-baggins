@@ -23,12 +23,12 @@ pub(crate) fn CategoryCalendarTaskList() -> Element {
 
     rsx! {
         div {
-            class: "pt-4 flex flex-col gap-8",
+            class: "pt-3 flex flex-col gap-8",
             for date_current in today_date.iter_days().take(CALENDAR_LENGTH_DAYS) {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
+                        class: "px-7 sm:px-8 flex flex-row items-center gap-2 text-gray-500 font-bold",
                         div {
                             class: "pt-1",
                             {

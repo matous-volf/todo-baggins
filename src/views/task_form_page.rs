@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 pub(crate) fn TaskFormPage() -> Element {
     rsx! {
         ErrorBoundaryMessage {
-            class: "grow py-4 flex flex-col gap-12",
+            class: "grow py-8 max-w-xl w-full mx-auto flex flex-col gap-12",
             TaskForm {}
         }
     }

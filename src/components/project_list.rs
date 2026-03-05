@@ -11,7 +11,7 @@ pub(crate) fn ProjectList() -> Element {
             class: "flex flex-col",
             for project in projects {
                 div {
-                    class: "px-7 py-4 hover:bg-gray-800 font-medium text-pretty wrap-anywhere select-none transition-all duration-150 cursor-pointer",
+                    class: "px-7 sm:px-8 py-4 hover:bg-gray-800 font-medium text-pretty wrap-anywhere select-none transition-all duration-150 cursor-pointer",
                     key: "{project.id}",
                     onclick: move |_| {
                         *PROJECT_BEING_EDITED.write() = Some(project.clone());

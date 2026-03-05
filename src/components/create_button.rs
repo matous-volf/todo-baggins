@@ -10,7 +10,7 @@ pub(crate) fn CreateButton() -> Element {
     let current_route = use_route();
     rsx! {
         ButtonPrimary {
-            class: "pointer-events-auto m-4 self-end *:rounded-full! *:p-4",
+            class: "pointer-events-auto sm:self-auto *:rounded-full! *:p-4",
             onclick: move |_| {
                 *TASK_BEING_EDITED.write() = None;
                 *PROJECT_BEING_EDITED.write() = None;

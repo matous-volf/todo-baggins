@@ -52,7 +52,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
+                        class: "px-7 sm:px-8 flex flex-row items-center gap-2 text-gray-500 font-bold",
                         Icon {
                             class: "mx-1.5",
                             icon: FaWater
@@ -70,7 +70,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
                 div {
                     class: "flex flex-col gap-4",
                     div {
-                        class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
+                        class: "px-7 sm:px-8 flex flex-row items-center gap-2 text-gray-500 font-bold",
                         Icon {
                             class: "mx-1.25",
                             height: 22,
@@ -90,7 +90,7 @@ pub(crate) fn CategoryTodayTaskList() -> Element {
             div {
                 class: "flex flex-col gap-4",
                 div {
-                    class: "px-7 flex flex-row items-center gap-2 text-gray-500 font-bold",
+                    class: "px-7 sm:px-8 flex flex-row items-center gap-2 text-gray-500 font-bold",
                     Icon {
                         class: "mx-1.25",
                         height: 22,

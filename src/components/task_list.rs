@@ -23,7 +23,7 @@ pub(crate) fn TaskList(
                 div {
                     key: "{task.task.id}",
                     class: format!(
-                        "px-7 pt-3.75 {} flex flex-row items-start gap-4 hover:bg-gray-800 cursor-pointer select-none transition-all duration-150",
+                        "px-7 sm:px-8 pt-3.75 {} flex flex-row items-start gap-4 hover:bg-gray-800 cursor-pointer select-none transition-all duration-150",
                         if task.task.deadline.is_some() || !task.subtasks.is_empty() {
                             "pb-0.25"
                         } else if let Category::Calendar { time, .. } = &task.task.category {

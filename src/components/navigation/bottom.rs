@@ -1,4 +1,3 @@
-use crate::components::navigation_item::NavigationItem;
 use crate::route::Route;
 use dioxus::prelude::*;
 use dioxus_free_icons::Icon;
@@ -9,13 +8,13 @@ use dioxus_free_icons::icons::fa_solid_icons::{
 };
 
 #[component]
-pub(crate) fn Navigation(is_expanded: Signal<bool>) -> Element {
+pub(crate) fn Bottom(is_expanded: Signal<bool>) -> Element {
     rsx! {
         div {
             class: "grid grid-cols-5 justify-stretch",
             button {
                 class: format!(
-                    "py-2 flex flex-row justify-center items-center cursor-pointer",
+                    "py-2 flex flex-row justify-center items-center sm:hidden cursor-pointer",
                 ),
                 onclick: move |_| is_expanded.set(!is_expanded()),
                 div {
@@ -30,41 +29,41 @@ pub(crate) fn Navigation(is_expanded: Signal<bool>) -> Element {
                     }
                 }
             },
-            NavigationItem {
+            super::Item {
                 route: Route::CategoryNextStepsPage,
                 icon: FaSignsPost
             },
-            NavigationItem {
+            super::Item {
                 route: Route::CategoryCalendarPage,
                 icon: FaCalendarDays
             },
-            NavigationItem {
+            super::Item {
                 route: Route::CategoryTodayPage,
                 icon: FaCalendarDay
             },
-            NavigationItem {
+            super::Item {
                 route: Route::CategoryInboxPage,
                 icon: FaInbox
             },
             {if is_expanded() {
                 rsx! {
-                    NavigationItem {
+                    super::Item {
                         route: Route::ProjectsPage,
                         icon: FaList
                     },
-                    NavigationItem {
+                    super::Item {
                         route: Route::CategoryTrashPage,
                         icon: FaTrashCan
                     },
-                    NavigationItem {
+                    super::Item {
                         route: Route::CategoryDonePage,
                         icon: FaVolcano
                     },
-                    NavigationItem {
+                    super::Item {
                         route: Route::CategorySomedayMaybePage,
                         icon: FaLightbulb
                     },
-                    NavigationItem {
+                    super::Item {
                         route: Route::CategoryWaitingForPage,
                         icon: FaHourglassHalf
                     }
