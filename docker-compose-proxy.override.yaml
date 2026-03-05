@@ -1,0 +1,10 @@
+---
+services:
+  app:
+    networks:
+      - default
+      - web-server-network
+
+networks:
+  web-server-network:
+    external: true
