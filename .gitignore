@@ -1,6 +1,7 @@
 /.env
 
 /docker-compose.yaml
+/docker-compose.override.yaml
 
 /node_modules
 /target
