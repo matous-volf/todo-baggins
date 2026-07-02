@@ -1,0 +1,20 @@
+---
+name: Actionlint check
+on: # yamllint disable-line rule:truthy
+  pull_request:
+    types: [opened, reopened, synchronize]
+permissions: {}
+jobs:
+  check:
+    name: Actionlint check
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Code checkout
+        uses: https://github.com/actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Check
+        uses: https://codeberg.org/matous-volf/action-actionlint-check@b58e80f3900e7d711007332d05c592f8ba4b0ef2 # v1.0.1
