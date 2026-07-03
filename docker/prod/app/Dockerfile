@@ -21,6 +21,7 @@ ENV ANDROID_SDK_ROOT=/opt/android-sdk
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    # renovate: repology=debian_12/openjdk-17-jdk-headless
     openjdk-17-jdk-headless=17.0.18+8-1~deb12u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
@@ -53,7 +54,9 @@ RUN dx bundle --locked --release
 FROM debian:bookworm@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner_web
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends libpq5=15.16-0+deb12u1 \
+ && apt-get install -y --no-install-recommends \
+ # renovate: repology=debian_12/libpq5
+ libpq5=15.18-0+deb12u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 

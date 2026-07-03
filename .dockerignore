@@ -1,14 +1,14 @@
-/.git
-/.gitea
-/.github
-/bundle
-/node_modules
-/scripts
-/target
+/**
 
-/.dockerignore
-/docker-compose-dev.yaml
-/docker-compose-prod.yaml
-/docker-compose.yaml
-/docker/dev/*/Dockerfile
-/docker/prod/*/Dockerfile
+!/src/**
+!/migrations/**
+!/assets/**
+!/.env
+!/.env.example
+!/tailwind.css
+
+!/.cargo/**
+!/Cargo.toml
+!/Cargo.lock
+!/diesel.toml
+!/Dioxus.toml

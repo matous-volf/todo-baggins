@@ -1,0 +1,34 @@
+---
+name: Docker build check
+on: # yamllint disable-line rule:truthy
+  pull_request:
+    types: [opened, reopened, synchronize]
+permissions: {}
+jobs:
+  check:
+    name: Docker build check
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        compose_file:
+          - docker-compose-dev.yaml
+          - docker-compose-prod.yaml
+    steps:
+      - name: Code checkout
+        uses: https://github.com/actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: .env symlink creation
+        run: ln -s .env.example .env
+
+      - name: Tailwind CSS output creation
+        run: touch assets/tailwind.css
+
+      - name: Check
+        uses: https://codeberg.org/matous-volf/action-docker-build-check@26538db280c68fdb16424e0470941021ea998bc5 # v1.0.0
+        with:
+          compose_file: ${{ matrix.compose_file }}
