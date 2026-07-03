@@ -38,7 +38,7 @@ pub(crate) fn Input(
                 }
             },
             onchange: move |event| {
-                if let Some(onchange) = oninput {
+                if let Some(onchange) = onchange {
                     onchange.call(event);
                 }
             },
