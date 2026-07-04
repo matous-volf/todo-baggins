@@ -51,7 +51,7 @@ FROM builder_base AS builder_web
 RUN dx bundle --locked --release
 
 
-FROM debian:bookworm@sha256:b877a1a3fdf02469440f1768cf69c9771338a875b7add5e80c45b756c92ac20a AS runner_web
+FROM debian:bookworm@sha256:30482e873082e906a4908c10529180aefb6f77620aea7404b909829fadc5d168 AS runner_web
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
