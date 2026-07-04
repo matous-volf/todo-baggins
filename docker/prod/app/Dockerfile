@@ -1,6 +1,6 @@
 FROM rust:1.92.0-bookworm@sha256:e90e846de4124376164ddfbaab4b0774c7bdeef5e738866295e5a90a34a307a2 AS builder_base
 
-RUN cargo install --git https://github.com/diesel-rs/diesel --rev 207604888d28a490061698f07a25090438be42fe --locked diesel_cli \
+RUN cargo install --git https://github.com/diesel-rs/diesel --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face --locked diesel_cli \
  && cargo install --git https://github.com/DioxusLabs/dioxus --rev 22b06badde44ba1af0fcf339c91b66483175b660 --locked dioxus-cli --features disable-telemetry
 
 COPY . /srv/app
