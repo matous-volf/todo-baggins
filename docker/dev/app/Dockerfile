@@ -1,4 +1,4 @@
-FROM rust:1.92.0-bookworm@sha256:9676d0547a259997add8f5924eb6b959c589ed39055338e23b99aba7958d6d31
+FROM rust:1.92.0-bookworm@sha256:e90e846de4124376164ddfbaab4b0774c7bdeef5e738866295e5a90a34a307a2
 
 RUN useradd -m -u 1000 -s /bin/bash app_user \
  && rustup target add wasm32-unknown-unknown
