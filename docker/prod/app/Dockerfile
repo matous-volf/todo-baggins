@@ -1,4 +1,4 @@
-FROM rust:1.96.1-bookworm@sha256:a339861ae23e9abb272cea45dfafde21760d2ce6577a70f8a926153677902663 AS builder_base
+FROM rust:1.96.1-trixie@sha256:1f0dbad1df66647807e6952d1db85d0b2bda7606cb2139d82517e4f009967376 AS builder_base
 
 RUN cargo install --git https://github.com/diesel-rs/diesel --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face --locked diesel_cli \
  && cargo install --git https://github.com/DioxusLabs/dioxus --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de --locked dioxus-cli --features disable-telemetry
@@ -21,8 +21,8 @@ ENV ANDROID_SDK_ROOT=/opt/android-sdk
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # renovate: repology=debian_12/openjdk-17-jdk-headless
-    openjdk-17-jdk-headless=17.0.18+8-1~deb12u1 \
+    # renovate: repology=debian_13/openjdk-25-jdk-headless
+    openjdk-25-jdk-headless=25.0.3+9-2~deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && rustup target add aarch64-linux-android \
@@ -51,12 +51,12 @@ FROM builder_base AS builder_web
 RUN dx bundle --locked --release
 
 
-FROM debian:bookworm@sha256:30482e873082e906a4908c10529180aefb6f77620aea7404b909829fadc5d168 AS runner_web
+FROM debian:trixie@sha256:d07d1b51c39f51188e60be9b64e6bf769fa94e187f092bc32b91305cfa34ba5a AS runner_web
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
- # renovate: repology=debian_12/libpq5
- libpq5=15.18-0+deb12u1 \
+ # renovate: repology=debian_13/libpq5
+ libpq5=17.10-0+deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
