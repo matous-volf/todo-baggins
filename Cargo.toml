@@ -12,7 +12,7 @@ chrono = { version = "0.4.43", features = ["serde", "unstable-locales"] }
 dioxus = { version = "0.7.3", features = ["fullstack", "router"] }
 # TODO: Remove this once https://github.com/DioxusLabs/dioxus/issues/4765 is resolved.
 dioxus-html = { version = "0.7.3", features = ["serialize"] }
-feruca = { version = "0.11.5" }
+feruca = { version = "0.12.0" }
 serde = { version = "1.0.228" }
 serde_json = { version = "1.0.149" }
 serde_with = { version = "3.16.1", features = ["chrono_0_4"] }
