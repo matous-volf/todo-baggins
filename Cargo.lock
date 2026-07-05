@@ -6238,7 +6238,7 @@ dependencies = [
  "dioxus-i18n",
  "feruca",
  "load-dotenv",
- "rand 0.9.4",
+ "rand 0.10.2",
  "serde",
  "serde_json",
  "serde_with",
