@@ -18,7 +18,7 @@ services:
     depends_on: ["db"]
 
   db:
-    image: postgres:16.11-alpine3.23@sha256:4327b9fd295502f326f44153a1045a7170ddbfffed1c3829798328556cfd09e2
+    image: postgres:16.14-alpine3.23@sha256:a5824d29054ed662a86533ab89919d3d7e79987a16e22555f8a98b8a7be45de4
     volumes: ["db_data:/var/lib/postgresql/data"]
     ports: ["5432:5432"]
     environment:
