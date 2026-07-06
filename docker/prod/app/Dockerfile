@@ -72,4 +72,4 @@ USER 1000:1000
 
 ENV IP="0.0.0.0"
 ENV PORT="80"
-CMD ["./todo_baggins"]
+CMD ["./server"]
