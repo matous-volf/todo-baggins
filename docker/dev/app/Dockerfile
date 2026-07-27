@@ -5,8 +5,16 @@ RUN useradd -m -u 1000 -s /bin/bash app_user \
 
 USER app_user
 
-RUN cargo install --git https://github.com/diesel-rs/diesel --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face --locked diesel_cli \
- && cargo install --git https://github.com/DioxusLabs/dioxus --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de --locked dioxus-cli
+# renovate: version=v2.3.10
+RUN cargo install --locked \
+    --git https://github.com/diesel-rs/diesel \
+    --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face \
+    diesel_cli \
+# renovate: version=v0.7.9
+ && cargo install --locked \
+    --git https://github.com/DioxusLabs/dioxus \
+    --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de \
+    dioxus-cli
 
 COPY --chown=app_user . /srv/app
 WORKDIR /srv/app

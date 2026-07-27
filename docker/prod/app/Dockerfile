@@ -1,7 +1,15 @@
 FROM rust:1.96.1-trixie@sha256:1f0dbad1df66647807e6952d1db85d0b2bda7606cb2139d82517e4f009967376 AS builder_base
 
-RUN cargo install --git https://github.com/diesel-rs/diesel --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face --locked diesel_cli \
- && cargo install --git https://github.com/DioxusLabs/dioxus --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de --locked dioxus-cli --features disable-telemetry
+# renovate: version=v2.3.10
+RUN cargo install --locked \
+    --git https://github.com/diesel-rs/diesel \
+    --rev 7b4f88861420ba7902f2cf7ef7f7c36a0e34face \
+    diesel_cli \
+# renovate: version=v0.7.9
+ && cargo install --locked \
+    --git https://github.com/DioxusLabs/dioxus \
+    --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de \
+    dioxus-cli
 
 COPY . /srv/app
 WORKDIR /srv/app
