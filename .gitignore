@@ -7,5 +7,7 @@
 /target
 /bundle
 
+/.direnv
+
 /**/*.rs.bk
 /.DS_Store
