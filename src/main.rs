@@ -20,7 +20,6 @@ mod views;
 
 use components::app::App;
 use dioxus::prelude::*;
-use tracing::info;
 
 fn main() {
     info!("Running migrations.");

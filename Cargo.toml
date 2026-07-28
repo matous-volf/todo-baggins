@@ -1,54 +1,68 @@
 [package]
 name = "todo_baggins"
 version = "0.1.0"
-authors = ["Matouš Volf <git@matousvolf.cz>"]
 edition = "2024"
+license = "AGPL-3.0-only"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = { version = "0.4.43", features = ["serde", "unstable-locales"] }
+chrono = { version = "0.4.43", default-features = false, features = [
+    "serde",
+    "unstable-locales",
+] }
 # Remember to update the CLI as well.
 dioxus = { version = "0.7.3", features = ["fullstack", "router"] }
 # TODO: Remove this once https://github.com/DioxusLabs/dioxus/issues/4765 is resolved.
-dioxus-html = { version = "0.7.3", features = ["serialize"] }
-feruca = { version = "0.12.0" }
-serde = { version = "1.0.228" }
-serde_json = { version = "1.0.149" }
-serde_with = { version = "3.16.1", features = ["chrono_0_4"] }
-tracing = "0.1.44"
-unic-langid-impl = { version = "0.9.6", features = ["serde"] }
-validator = { version = "0.21.0", features = ["derive"] }
+dioxus-html = { version = "0.7.3", default-features = false, features = [
+    "serialize",
+] }
+feruca = { version = "0.12.0", default-features = false }
+serde = { version = "1.0.228", default-features = false }
+serde_json = { version = "1.0.149", default-features = false }
+serde_with = { version = "3.16.1", default-features = false, features = [
+    "macros",
+    "std",
+    "chrono_0_4",
+] }
+unic-langid-impl = { version = "0.9.6", default-features = false, features = [
+    "serde",
+] }
+validator = { version = "0.21.0", default-features = false, features = [
+    "derive",
+] }
 
 # Remember to update the CLI as well.
-diesel = { version = "2.3.6", features = [
+diesel = { version = "2.3.6", default-features = false, features = [
+    "32-column-tables",
     "chrono",
     "postgres",
     "postgres_backend",
     "serde_json",
+    "with-deprecated",
 ], optional = true }
-diesel_migrations = { version = "2.3.1", features = [
+diesel_migrations = { version = "2.3.1", default-features = false, features = [
     "postgres",
 ], optional = true }
-rand = { version = "0.10.0", optional = true }
-time = { version = "0.3.45", optional = true }
-tokio = { version = "1.49.0", optional = true }
+rand = { version = "0.10.0", default-features = false, features = [
+    "thread_rng",
+], optional = true }
+time = { version = "0.3.45", default-features = false, optional = true }
+tokio = { version = "1.49.0", default-features = false, optional = true }
 
-async-std = { version = "1.13.2", optional = true }
-dioxus-i18n = "0.5.1"
-voca_rs = "1.15.2"
-load-dotenv = "0.1.2"
+dioxus-i18n = { version = "0.5.1", default-features = false }
+voca_rs = { version = "1.15.2", default-features = false }
+load-dotenv = { version = "0.1.2", default-features = false }
 # TODO: Switch to upstream once it merges the changes.
-dioxus-free-icons = { git = "https://github.com/matous-volf/dioxus-free-icons", rev = "6488400003a3d6829e771a84a565c5c5f08a9aa0", features = [
+dioxus-free-icons = { git = "https://github.com/matous-volf/dioxus-free-icons", rev = "6488400003a3d6829e771a84a565c5c5f08a9aa0", default-features = false, features = [
     "font-awesome-regular",
     "font-awesome-solid",
 ] }
 
 [features]
 default = ["web"]
-web = ["dioxus/web", "dep:async-std"]
-mobile = ["dioxus/mobile", "dep:async-std"]
-desktop = ["dioxus/desktop"]
+web = ["dioxus/web"]
+mobile = ["dioxus/mobile"]
 server = [
     "dioxus/server",
     "dep:diesel",
@@ -69,3 +83,7 @@ inherits = "dev"
 
 [profile.android-dev]
 inherits = "dev"
+
+[package.metadata.cargo-machete]
+# See https://github.com/DioxusLabs/dioxus/issues/4765.
+ignored = ["dioxus-html"]
