@@ -29,7 +29,7 @@ ENV ANDROID_SDK_ROOT=/opt/android-sdk
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # renovate: repology=debian_13/openjdk-25-jdk-headless
+    # renovate: repology=debian_13/openjdk-25
     openjdk-25-jdk-headless=25.0.3+9-2~deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
@@ -63,7 +63,7 @@ FROM debian:trixie@sha256:fac46bff2e02f51425b6e33b0e1169f55dfb053d83511ca28aa50c
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
- # renovate: repology=debian_13/libpq5
+ # renovate: repology=debian_13/postgresql-17
  libpq5=17.10-0+deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
