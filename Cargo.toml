@@ -18,7 +18,7 @@ serde_json = { version = "1.0.149" }
 serde_with = { version = "3.16.1", features = ["chrono_0_4"] }
 tracing = "0.1.44"
 unic-langid-impl = { version = "0.9.6", features = ["serde"] }
-validator = { version = "0.20.0", features = ["derive"] }
+validator = { version = "0.21.0", features = ["derive"] }
 
 # Remember to update the CLI as well.
 diesel = { version = "2.3.6", features = [
