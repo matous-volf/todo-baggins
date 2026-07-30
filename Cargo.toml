@@ -10,6 +10,7 @@ license = "AGPL-3.0-only"
 chrono = { version = "0.4.43", default-features = false, features = [
     "serde",
     "unstable-locales",
+    "wasmbind",
 ] }
 # Remember to update the CLI as well.
 dioxus = { version = "0.7.3", features = ["fullstack", "router"] }
