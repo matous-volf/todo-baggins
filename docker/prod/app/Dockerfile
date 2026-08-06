@@ -59,7 +59,7 @@ FROM builder_base AS builder_web
 RUN dx bundle --locked --release
 
 
-FROM debian:trixie@sha256:fac46bff2e02f51425b6e33b0e1169f55dfb053d83511ca28aa50c09fd5ed7a4 AS runner_web
+FROM debian:trixie@sha256:34cd9e9fd437c0a095ec39cb2e73422c9f30821b0d0848ed74fd0d43bae4d958 AS runner_web
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
