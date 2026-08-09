@@ -9,7 +9,7 @@ RUN cargo install --locked \
  && cargo install --locked \
     --git https://github.com/DioxusLabs/dioxus \
     --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de \
-    dioxus-cli
+    dioxus-cli --features disable-telemetry
 
 COPY . /srv/app
 WORKDIR /srv/app
