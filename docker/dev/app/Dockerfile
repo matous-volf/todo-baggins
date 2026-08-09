@@ -10,10 +10,10 @@ RUN cargo install --locked \
     --git https://github.com/diesel-rs/diesel \
     --rev 07a80d4e9f32d62bec3d425d85c1ef5b8cddc80d \
     diesel_cli \
-# renovate: version=v0.7.9
+# renovate: version=v0.7.10
  && cargo install --locked \
     --git https://github.com/DioxusLabs/dioxus \
-    --rev 3e43ffa6cf1488d5388c888eb5f2494a006ae6de \
+    --rev 57d6794ad60b949e5bd8aa282f6f8c3dc97a365e \
     dioxus-cli
 
 COPY --chown=app_user . /srv/app
