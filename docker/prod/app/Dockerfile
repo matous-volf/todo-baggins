@@ -30,7 +30,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # renovate: repology=debian_13/openjdk-25
-    openjdk-25-jdk-headless=25.0.3+9-2~deb13u1 \
+    openjdk-25-jdk-headless=25.0.4.1+1-1~deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && rustup target add aarch64-linux-android \
