@@ -5,10 +5,10 @@ RUN useradd -m -u 1000 -s /bin/bash app_user \
 
 USER app_user
 
-# renovate: version=v2.3.11
+# renovate: version=v2.3.13
 RUN cargo install --locked \
     --git https://github.com/diesel-rs/diesel \
-    --rev 07a80d4e9f32d62bec3d425d85c1ef5b8cddc80d \
+    --rev 9628f5ca470dea2adaa8194365541e304e3d56dc \
     diesel_cli \
 # renovate: version=v0.7.10
  && cargo install --locked \
