@@ -17,6 +17,6 @@ jobs:
           fetch-depth: 0
 
       - name: Check
-        uses: https://github.com/bridgecrewio/checkov-action@9b70310bcd306d11740313070b940167d6b23085 # v12.3115.0
+        uses: https://github.com/bridgecrewio/checkov-action@f967808197a8d784d3e72919f38c3ff0cda7884e # v12.3122.0
         with:
           directory: .
