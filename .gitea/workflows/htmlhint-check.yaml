@@ -17,4 +17,4 @@ jobs:
           fetch-depth: 0
 
       - name: Check
-        uses: https://codeberg.org/matous-volf/action-htmlhint-check@24b0cfeba3720f6067b36c69998c99e514116f63 # v1.0.0
+        uses: https://codeberg.org/matous-volf/action-htmlhint-check@7f481d5c561f9c1ef4adf067a39a52725c460867 # v1.0.1
