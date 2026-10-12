@@ -13,9 +13,7 @@ pub(crate) fn Bottom(is_expanded: Signal<bool>) -> Element {
         div {
             class: "grid grid-cols-5 justify-stretch",
             button {
-                class: format!(
-                    "py-2 flex flex-row justify-center items-center sm:hidden cursor-pointer",
-                ),
+                class: "py-2 flex flex-row justify-center items-center sm:hidden cursor-pointer",
                 onclick: move |_| is_expanded.set(!is_expanded()),
                 div {
                     class: format!("pt-2.5 px-4 {} transition-all duration-150",

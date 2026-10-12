@@ -9,9 +9,7 @@ pub(crate) fn Item<I: IconShape + Clone + PartialEq + 'static>(route: Route, ico
     rsx! {
         Link {
             to: route.clone(),
-            class: format!(
-                "py-2.5 sm:px-6 flex flex-row justify-center items-center hover:*:bg-gray-900 active:*:text-gray-400",
-            ),
+            class: "py-2.5 sm:px-6 flex flex-row justify-center items-center hover:*:bg-gray-900 active:*:text-gray-400",
             div {
                 class: format!("pt-2.5 px-4 {} transition-all duration-150",
                     if current_route == route { "pb-2 mt-1 bg-gray-900 text-gray-400 rounded-xl drop-shadow-[0_calc(0px_-_var(--spacing))_0_var(--color-gray-950)]" }

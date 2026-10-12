@@ -30,7 +30,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # renovate: repology=debian_13/openjdk-25
-    openjdk-25-jdk-headless=25.0.3+9-2~deb13u1 \
+    openjdk-25-jdk-headless=25.0.4.1+1-1~deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && rustup target add aarch64-linux-android \
@@ -64,7 +64,7 @@ FROM debian:trixie@sha256:34cd9e9fd437c0a095ec39cb2e73422c9f30821b0d0848ed74fd0d
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
  # renovate: repology=debian_13/postgresql-17
- libpq5=17.10-0+deb13u1 \
+ libpq5=17.11-0+deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
