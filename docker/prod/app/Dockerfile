@@ -74,7 +74,7 @@ RUN chown -R 1000:1000 /srv/app/web
 
 WORKDIR /srv/app/web
 
-HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost || exit 1
+HEALTHCHECK CMD ["curl", "--fail", "-H", "Accept: text/html", "http://localhost:8000"]
 
 USER 1000:1000
 
