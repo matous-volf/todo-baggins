@@ -51,7 +51,7 @@ rand = { version = "0.10.0", default-features = false, features = [
 time = { version = "0.3.45", default-features = false, optional = true }
 tokio = { version = "1.49.0", default-features = false, optional = true }
 
-dioxus-i18n = { version = "0.5.1", default-features = false }
+dioxus-i18n = { version = "0.6.0", default-features = false }
 voca_rs = { version = "1.15.2", default-features = false }
 load-dotenv = { version = "0.1.2", default-features = false }
 # TODO: Switch to upstream once it merges the changes.
