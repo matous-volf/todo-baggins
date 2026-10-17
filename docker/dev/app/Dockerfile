@@ -3,6 +3,7 @@ FROM rust:1.99.0-trixie@sha256:81015672d6939b0265f09adf96d5de125482bb13301060769
 RUN useradd -m -u 1000 -s /bin/bash app_user \
  && rustup target add wasm32-unknown-unknown
 
+# hadolint ignore=DL3066
 USER app_user
 
 # renovate: version=v2.3.14
@@ -19,6 +20,6 @@ RUN cargo install --locked \
 COPY --chown=app_user . /srv/app
 WORKDIR /srv/app
 
-HEALTHCHECK CMD curl --fail -H "Accept: text/html" http://localhost:8000 || exit 1
+HEALTHCHECK CMD ["curl", "--fail", "-H", "Accept: text/html", "http://localhost:8000"]
 
 CMD ["sleep", "infinity"]
