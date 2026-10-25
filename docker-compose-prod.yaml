@@ -9,7 +9,7 @@ services:
     depends_on: ["db"]
 
   db:
-    image: postgres:16.15-alpine3.23@sha256:621a761097839bdb50207afd6b87a72f38e2d718dd46c3d744828d8917c4f1e0
+    image: postgres:16.15-alpine3.23@sha256:731499cca67dd6cbb34bbffbf489bda72aa31252b14bcc0eafdccbb92c4b2446
     volumes: ["db_data:/var/lib/postgresql/data"]
     networks:
       - default
