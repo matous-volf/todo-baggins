@@ -27,7 +27,7 @@ jobs:
             # renovate: repology=alpine_3_24/glib-dev
             glib-dev=2.88.1-r1
             # renovate: repology=alpine_3_24/musl-dev
-            musl-dev=1.2.6-r2
+            musl-dev=1.2.6-r3
             # renovate: repology=alpine_3_24/openssl-dev
             openssl-dev=3.5.9-r0
             # renovate: repology=alpine_3_24/openssl-libs-static
