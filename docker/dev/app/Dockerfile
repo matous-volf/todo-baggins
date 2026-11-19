@@ -6,10 +6,10 @@ RUN useradd -m -u 1000 -s /bin/bash app_user \
 # hadolint ignore=DL3066
 USER app_user
 
-# renovate: version=v2.3.14
+# renovate: version=v2.4.0
 RUN cargo install --locked \
     --git https://github.com/diesel-rs/diesel \
-    --rev 4007d771b1e808839f771a693f6bae9f821f0e64 \
+    --rev 48acdc824d1eb93beaf169541b8dab3d3e5eaf3c \
     diesel_cli \
 # renovate: version=v0.7.10
  && cargo install --locked \

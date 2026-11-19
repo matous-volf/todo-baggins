@@ -1,9 +1,9 @@
 FROM rust:1.99.1-trixie@sha256:09027f873d45b8ecd1dc86f1fa13b7a62b875c961f017a0e331267b350430137 AS builder_base
 
-# renovate: version=v2.3.14
+# renovate: version=v2.4.0
 RUN cargo install --locked \
     --git https://github.com/diesel-rs/diesel \
-    --rev 4007d771b1e808839f771a693f6bae9f821f0e64 \
+    --rev 48acdc824d1eb93beaf169541b8dab3d3e5eaf3c \
     diesel_cli \
 # renovate: version=v0.7.10
  && cargo install --locked \
