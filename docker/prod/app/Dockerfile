@@ -64,7 +64,7 @@ FROM debian:trixie@sha256:2dc419c6d7fe3dad0a2f9fd469c34cc90b0f9ba642d8fde837fe3d
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
  # renovate: repology=debian_13/postgresql-17
- libpq5=17.11-0+deb13u1 \
+ libpq5=17.12-0+deb13u1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
